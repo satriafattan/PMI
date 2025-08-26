@@ -20,6 +20,9 @@ Route::get('/about', fn() => view('about'))->name('about');
 Route::get('/pemesanan', [PublicPemesananController::class,'create'])->name('pemesanan.create');
 Route::post('/pemesanan', [PublicPemesananController::class,'store'])->name('pemesanan.store');
 
+//Stok darah
+Route::get('/stok', \App\Http\Controllers\Public\StokController::class)->name('stok');
+
 // Auth admin
 Route::get('/admin/login', [AuthController::class,'showLogin'])->name('admin.login');
 Route::post('/admin/login', [AuthController::class,'login'])->name('admin.login.submit');
