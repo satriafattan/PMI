@@ -6,15 +6,15 @@
         {{-- Logo --}}
         <a href="/" class="flex items-center gap-3">
           <div class="h-9 w-9 rounded-xl bg-red-600 grid place-items-center text-white font-bold">UDD</div>
-          <span class="font-semibold">PMI Provinsi Lampung</span>
+          <span class="font-bold">PMI Provinsi Lampung</span>
         </a>
   
         {{-- Menu desktop --}}
         <nav class="hidden md:flex items-center gap-8 text-sm">
-          <a href="{{ url('/') }}" class="{{ request()->is('/') ? 'text-red-600 font-medium' : 'hover:text-red-600' }}">Beranda</a>
-          <a href="{{ url('/pemesanan') }}" class="{{ request()->is('pemesanan*') ? 'text-red-600 font-medium' : 'hover:text-red-600' }}">Pemesanan</a>
-          <a href="{{ url('/stok') }}" class="{{ request()->is('stok*') ? 'text-red-600 font-medium' : 'hover:text-red-600' }}">Stok darah</a>
-          <a href="{{ url('/about') }}" class="{{ request()->is('about*') ? 'text-red-600 font-medium' : 'hover:text-red-600' }}">Tentang Kami</a>
+          <a href="{{ url('/') }}" class="{{ request()->is('/') ? 'text-red-600 font-bold' : 'hover:text-red-600 font-bold' }}">Beranda</a>
+          <a href="{{ url('/pemesanan') }}" class="{{ request()->is('pemesanan*') ? 'text-red-600 font-bold' : 'hover:text-red-600 font-bold' }}">Pemesanan</a>
+          <a href="{{ url('/stok') }}" class="{{ request()->is('stok*') ? 'text-red-600 font-bold' : 'hover:text-red-600 font-bold' }}">Stok darah</a>
+          <a href="{{ url('/about') }}" class="{{ request()->is('about*') ? 'text-red-600 font-bold' : 'hover:text-red-600 font-bold' }}">Tentang Kami</a>
         </nav>
   
   

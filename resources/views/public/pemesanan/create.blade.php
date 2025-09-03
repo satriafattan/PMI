@@ -38,15 +38,10 @@
               <h1 id="stepTitle"
                   class="text-lg font-bold sm:text-xl">Data Pasien & Rumah Sakit</h1>
             </div>
-            <div class="hidden items-center gap-3 text-xs text-slate-500 sm:flex">
-              <span>Progress</span>
-              <div class="h-1.5 w-28 overflow-hidden rounded-full bg-slate-100">
-                <div id="bar"
-                     class="h-full bg-red-500"
-                     style="width:0%"></div>
-              </div>
-              <span id="pct"
-                    class="font-semibold text-red-500">0%</span>
+            <div class="hidden items-center gap-3 text-sm text-slate-500 sm:flex">
+              <span>Page</span>
+              <span id="pageNumber"
+                    class="text-lg font-semibold text-red-500">1</span>
             </div>
           </div>
 
@@ -420,32 +415,15 @@
       4: 'Pemesanan'
     };
 
-    function progressFor(step) {
-      const g = document.getElementById('jenis_kelamin')?.value;
-      if (g === 'P') { // 4 step
-        return {
-          1: 25,
-          2: 50,
-          3: 75,
-          4: 100
-        } [step] || 0;
-      } else { // 3 step (1,2,4)
-        return {
-          1: 34,
-          2: 67,
-          4: 100
-        } [step] || 0;
-      }
-    }
+
 
     function showStep(n) {
       document.querySelectorAll('.step').forEach(el => el.classList.add('hidden'));
       document.getElementById('step-' + n).classList.remove('hidden');
       currentStep = n;
       document.getElementById('stepTitle').textContent = titleMap[n];
-      const p = progressFor(n);
-      document.getElementById('bar').style.width = p + '%';
-      document.getElementById('pct').textContent = p + '%';
+      // Update page number display instead of progress bar
+      document.getElementById('pageNumber').textContent = n;
     }
 
     function nextAfterStep2() {
