@@ -6,7 +6,7 @@
 @section('content')
 <div class="min-h-screen bg-white text-slate-800">
 
-  {{-- (opsional) kalau navbar sudah jadi komponen --}}
+
   <x-navbar />
 
   {{-- WRAPPER --}}

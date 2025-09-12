@@ -9,6 +9,7 @@ use App\Http\Controllers\Admin\RekapStokController;
 use App\Http\Controllers\Admin\VerifikasiPemesananController;
 use App\Http\Controllers\Admin\RiwayatController;
 use App\Http\Controllers\Public\PublicPemesananController;
+use App\Http\Controllers\Public\EventScheduleController;
 
 // Halaman landing
 Route::view('/', 'welcome')->name('home');
@@ -19,6 +20,10 @@ Route::get('/about', fn() => view('about'))->name('about');
 // Publik: pemesan non-login
 Route::get('/pemesanan', [PublicPemesananController::class,'create'])->name('pemesanan.create');
 Route::post('/pemesanan', [PublicPemesananController::class,'store'])->name('pemesanan.store');
+
+//Penjadwalan Event
+Route::get('/jadwal-event',  [EventScheduleController::class, 'create'])->name('public.event.create');
+Route::post('/jadwal-event', [EventScheduleController::class, 'store'])->name('public.event.store');
 
 //Stok darah
 Route::get('/stok', \App\Http\Controllers\Public\StokController::class)->name('stok');

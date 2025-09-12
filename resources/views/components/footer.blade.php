@@ -9,6 +9,7 @@
     ['label' => 'Pemesanan',      'href' => url('/pemesanan')],
     ['label' => 'Stok Darah',     'href' => url('/stok')],
     ['label' => 'Tentang Kami',   'href' => url('/about')],
+    ['label' => 'Penjadwalan Event',   'href' => url('/jadwal-event')],
     ['label' => 'Kontak',         'href' => 'https://wa.me/628987311125'],
   ],
 ])

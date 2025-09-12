@@ -142,7 +142,7 @@
               <div class="mt-8 flex justify-end">
                 <button type="button"
                         class="rounded-xl bg-red-600 px-5 py-3 text-white shadow hover:bg-red-700"
-                        onclick="showStep(2)">Berikutnya</button>
+                        onclick="nextFromStep1()">Berikutnya</button>
               </div>
             </div>
 
@@ -324,7 +324,7 @@
                         onclick="showStep(2)">Kembali</button>
                 <button type="button"
                         class="rounded-xl bg-red-600 px-5 py-3 text-white shadow hover:bg-red-700"
-                        onclick="showStep(4)">Berikutnya</button>
+                        onclick="nextFromStep3()">Berikutnya</button>
               </div>
             </div>
 
@@ -341,7 +341,8 @@
                         <input type="checkbox"
                                name="produk_multi[]"
                                value="{{ $j }}"
-                               class="{{ $check }}">
+                               class="{{ $check }}"
+                               onclick="selectSingleJenisDarah(this)">
                         <span>{{ $j }}</span>
                       </label>
                     @endforeach
@@ -378,7 +379,8 @@
                         <input type="checkbox"
                                name="alasan_multi[]"
                                value="{{ $a }}"
-                               class="{{ $check }}">
+                               class="{{ $check }}"
+                               onclick="selectSingleAlasanTransfusi(this)">
                         <span>{{ $a }}</span>
                       </label>
                     @endforeach
@@ -390,8 +392,9 @@
                 <button type="button"
                         class="rounded-xl border border-slate-200 px-5 py-3 hover:bg-slate-50"
                         onclick="backFromStep4()">Kembali</button>
-                <button type="submit"
-                        class="rounded-xl bg-red-600 px-5 py-3 text-white shadow hover:bg-red-700">
+                <button type="button"
+                        class="rounded-xl bg-red-600 px-5 py-3 text-white shadow hover:bg-red-700"
+                        onclick="submitForm()">
                   Kirim Formulir
                 </button>
               </div>
@@ -415,8 +418,6 @@
       4: 'Pemesanan'
     };
 
-
-
     function showStep(n) {
       document.querySelectorAll('.step').forEach(el => el.classList.add('hidden'));
       document.getElementById('step-' + n).classList.remove('hidden');
@@ -426,16 +427,195 @@
       document.getElementById('pageNumber').textContent = n;
     }
 
+    function validateStep1() {
+      const requiredFields = [
+        'rs_pemesan',
+        'jenis_kelamin',
+        'no_regis_rs',
+        'nama_dokter',
+        'nama_pasien'
+      ];
+
+      let isValid = true;
+      requiredFields.forEach(field => {
+        const element = document.querySelector(`[name="${field}"]`);
+        if (!element.value.trim()) {
+          element.style.borderColor = 'red';
+          isValid = false;
+        } else {
+          element.style.borderColor = '';
+        }
+      });
+
+      if (!isValid) {
+        alert('Harap isi semua field yang wajib diisi sebelum melanjutkan.');
+      }
+      return isValid;
+    }
+
+    function validateStep2() {
+      const tanggalDiperlukan = document.querySelector('[name="tanggal_transfusi"]');
+      const pernahSerologi = document.querySelector('[name="pernah_serologi"]');
+      const diagnosaKlinik = document.querySelector('[name="diagnosa_klinik"]');
+      const lokasiSerologi = document.querySelector('[name="lokasi_serologi"]');
+      const tanggalTransfusi = document.querySelectorAll('[name="tanggal_transfusi"]');
+      const alasanTransfusi = document.querySelector('[name="alasan_transfusi"]');
+      const hasilSerologi = document.querySelector('[name="hasil_serologi"]');
+  
+      let isValid = true;
+  
+      // Validate always required fields
+      if (!tanggalDiperlukan.value.trim()) {
+        tanggalDiperlukan.style.borderColor = 'red';
+        isValid = false;
+      } else {
+        tanggalDiperlukan.style.borderColor = '';
+      }
+  
+      if (!pernahSerologi.value.trim()) {
+        pernahSerologi.style.borderColor = 'red';
+        isValid = false;
+      } else {
+        pernahSerologi.style.borderColor = '';
+      }
+  
+      if (!diagnosaKlinik.value.trim()) {
+        diagnosaKlinik.style.borderColor = 'red';
+        isValid = false;
+      } else {
+        diagnosaKlinik.style.borderColor = '';
+      }
+  
+      // If pernah_serologi is "Ya", then lokasi_serologi, tanggal_serologi, hasil_serologi are required
+      if (pernahSerologi.value === 'Ya') {
+        if (!lokasiSerologi.value.trim()) {
+          lokasiSerologi.style.borderColor = 'red';
+          isValid = false;
+        } else {
+          lokasiSerologi.style.borderColor = '';
+        }
+  
+        // tanggal_serologi is the last input of tanggal_transfusi inputs (assuming order)
+        const tanggalSerologiInput = tanggalTransfusi[tanggalTransfusi.length - 1];
+        if (!tanggalSerologiInput.value.trim()) {
+          tanggalSerologiInput.style.borderColor = 'red';
+          isValid = false;
+        } else {
+          tanggalSerologiInput.style.borderColor = '';
+        }
+  
+        if (!hasilSerologi.value.trim()) {
+          hasilSerologi.style.borderColor = 'red';
+          isValid = false;
+        } else {
+          hasilSerologi.style.borderColor = '';
+        }
+      } else {
+        // If pernah_serologi is not "Ya", clear error styles for these optional fields
+        lokasiSerologi.style.borderColor = '';
+        // tanggal_serologi input clear style
+        const tanggalSerologiInput = tanggalTransfusi[tanggalTransfusi.length - 1];
+        tanggalSerologiInput.style.borderColor = '';
+        hasilSerologi.style.borderColor = '';
+      }
+  
+      if (!alasanTransfusi.value.trim()) {
+        alasanTransfusi.style.borderColor = 'red';
+        isValid = false;
+      } else {
+        alasanTransfusi.style.borderColor = '';
+      }
+  
+      if (!isValid) {
+        alert('Harap isi semua field yang wajib diisi sebelum melanjutkan.');
+      }
+      return isValid;
+    }
+
+    function validateStep4() {
+      const produkCheckboxes = document.querySelectorAll('input[name="produk_multi[]"]');
+      const jumlahKantong = document.querySelector('[name="jumlah_kantong"]');
+      const alasanTransfusi = document.querySelector('[name="alasan_transfusi"]');
+
+      let isValid = true;
+
+      // Check if at least one produk is selected
+      const produkSelected = Array.from(produkCheckboxes).some(cb => cb.checked);
+      if (!produkSelected) {
+        alert('Harap pilih setidaknya satu jenis darah.');
+        isValid = false;
+      }
+
+      // Check jumlah_kantong
+      if (!jumlahKantong.value.trim()) {
+        jumlahKantong.style.borderColor = 'red';
+        isValid = false;
+      } else {
+        jumlahKantong.style.borderColor = '';
+      }
+
+      // Check alasan_transfusi
+      if (!alasanTransfusi.value.trim()) {
+        alasanTransfusi.style.borderColor = 'red';
+        isValid = false;
+      } else {
+        alasanTransfusi.style.borderColor = '';
+      }
+
+      if (!isValid) {
+        alert('Harap isi semua field yang wajib diisi sebelum mengirim formulir.');
+      }
+      return isValid;
+    }
+
+    function nextFromStep1() {
+      if (validateStep1()) {
+        showStep(2);
+      }
+    }
+
     function nextAfterStep2() {
-      const g = document.getElementById('jenis_kelamin').value;
-      if (g === 'P') showStep(3);
-      else showStep(4);
+      if (validateStep2()) {
+        const g = document.getElementById('jenis_kelamin').value;
+        if (g === 'P') showStep(3);
+        else showStep(4);
+      }
+    }
+
+    function nextFromStep3() {
+      showStep(4);
+    }
+
+    function submitForm() {
+      if (validateStep4()) {
+        document.getElementById('multiStepForm').submit();
+      }
     }
 
     function backFromStep4() {
       const g = document.getElementById('jenis_kelamin').value;
       if (g === 'P') showStep(3);
       else showStep(2);
+    }
+
+    function selectSingleJenisDarah(selectedCheckbox) {
+      // Uncheck all jenis darah checkboxes
+      const jenisDarahCheckboxes = document.querySelectorAll('input[name="produk_multi[]"]');
+      jenisDarahCheckboxes.forEach(checkbox => {
+        if (checkbox !== selectedCheckbox) {
+          checkbox.checked = false;
+        }
+      });
+    }
+
+    function selectSingleAlasanTransfusi(selectedCheckbox) {
+      // Uncheck all alasan transfusi checkboxes
+      const alasanTransfusiCheckboxes = document.querySelectorAll('input[name="alasan_multi[]"]');
+      alasanTransfusiCheckboxes.forEach(checkbox => {
+        if (checkbox !== selectedCheckbox) {
+          checkbox.checked = false;
+        }
+      });
     }
 
     document.addEventListener('DOMContentLoaded', () => showStep(1));

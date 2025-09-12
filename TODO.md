@@ -1,5 +1,6 @@
-# TODO: Replace Progress Bar with Page Number in Pemesanan Form
-
-- [x] Update HTML header to remove progress bar and percentage, add page number display
-- [x] Update JavaScript showStep function to update page number instead of progress bar
-- [x] Test the form UI to confirm changes work correctly
+- [ ] Update color scheme from red to blue (focus rings and button background)
+- [ ] Wrap sections A, B, C, D in card containers with shadows and borders
+- [ ] Add icons to section headers
+- [ ] Improve spacing and typography (margins, paddings, font sizes)
+- [ ] Add hover effects to inputs and button
+- [ ] Enhance button with gradient and transitions

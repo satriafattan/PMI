@@ -30,7 +30,7 @@
         <div class="grid lg:grid-cols-2 gap-10 items-center">
           <div class="text-white">
             <h1 class="text-4xl sm:text-5xl font-extrabold leading-tight">
-              Selamatkan Nyawa <span class="block">dengan</span>
+              Selamatkan Nyawa <span class="block">dengan Iman</span>
             </h1>
             <p class="mt-4 text-white/90 max-w-xl">
               Bergabunglah dengan misi untuk menyediakan darah berkualitas bagi yang membutuhkan. Setiap tetes dapat menyelamatkan hingga 3 nyawa.
