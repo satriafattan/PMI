@@ -83,7 +83,7 @@
             </div>
 
             {{-- Dokter --}}
-            <div class="sm:col-span-1">
+            <div>
               <label class="block text-sm font-medium text-slate-700">Nama Dokter <span class="text-red-600">*</span></label>
               <input type="text" name="nama_dokter" value="{{ old('nama_dokter') }}" required
                 class="mt-2 w-full rounded-xl border-slate-200 focus:border-red-500 focus:ring-red-500 bg-slate-50/50"
@@ -92,7 +92,7 @@
             </div>
 
             {{-- Pasien --}}
-            <div class="sm:col-span-1">
+            <div>
               <label class="block text-sm font-medium text-slate-700">Nama Pasien <span class="text-red-600">*</span></label>
               <input type="text" name="nama_pasien" value="{{ old('nama_pasien') }}" required
                 class="mt-2 w-full rounded-xl border-slate-200 focus:border-red-500 focus:ring-red-500 bg-slate-50/50"
@@ -100,6 +100,23 @@
               @error('nama_pasien') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
             </div>
 
+            {{-- 🔴 Nomor Telepon --}}
+            <div>
+              <label class="block text-sm font-medium text-slate-700">Nomor Telepon <span class="text-red-600">*</span></label>
+              <input type="text" name="nomor_telepon" value="{{ old('nomor_telepon') }}" required
+                class="mt-2 w-full rounded-xl border-slate-200 focus:border-red-500 focus:ring-red-500 bg-slate-50/50"
+                placeholder="08xxxxxxxxxx" />
+              @error('nomor_telepon') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
+            </div>
+
+            {{-- 🔴 Email --}}
+            <div>
+              <label class="block text-sm font-medium text-slate-700">Email <span class="text-red-600">*</span></label>
+              <input type="email" name="email" value="{{ old('email') }}" required
+                class="mt-2 w-full rounded-xl border-slate-200 focus:border-red-500 focus:ring-red-500 bg-slate-50/50"
+                placeholder="nama@email.com" />
+              @error('email') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
+            </div>
           </div>
 
           {{-- ACTIONS --}}

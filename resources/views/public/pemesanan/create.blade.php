@@ -139,6 +139,46 @@
                 </div>
               </div>
 
+              <div class="grid gap-5 sm:grid-cols-2">
+                {{-- Nomor Telepon --}}
+                <div>
+                  <label class="block text-sm font-medium text-slate-700">
+                    Nomor Telepon <span class="text-red-600">*</span>
+                  </label>
+                  <input
+                    type="tel"
+                    name="nomor_telepon"
+                    value="{{ old('nomor_telepon') }}"
+                    required
+                    pattern="^[0-9+\s()-]{8,20}$"
+                    class="{{ $field }}"
+                    placeholder="08xxxxxxxxxx"
+                  >
+                  @error('nomor_telepon')
+                    <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
+                  @enderror
+                </div>
+
+                {{-- Email --}}
+                <div>
+                  <label class="block text-sm font-medium text-slate-700">
+                    Email <span class="text-red-600">*</span>
+                  </label>
+                  <input
+                    type="email"
+                    name="email"
+                    value="{{ old('email') }}"
+                    required
+                    class="{{ $field }}"
+                    placeholder="nama@email.com"
+                  >
+                  @error('email')
+                    <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
+                  @enderror
+                </div>
+              </div>
+
+
               <div class="mt-8 flex justify-end">
                 <button type="button"
                         class="rounded-xl bg-red-600 px-5 py-3 text-white shadow hover:bg-red-700"
@@ -434,6 +474,8 @@
         'no_regis_rs',
         'nama_dokter',
         'nama_pasien'
+        'nomor_telepon',   // <— ditambahkan
+        'email'
       ];
 
       let isValid = true;

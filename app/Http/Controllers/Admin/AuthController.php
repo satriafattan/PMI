@@ -8,26 +8,38 @@ use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
 {
-    public function showLogin()
+    public function showLoginForm()
     {
         return view('admin.auth.login');
     }
 
-    public function login(Request $r)
+    public function login(Request $request)
     {
-        $cred = $r->validate(['email'=>'required|email','password'=>'required']);
-        if (Auth::guard('admin')->attempt($cred, $r->boolean('remember'))) {
-            $r->session()->regenerate();
-            return redirect()->route('admin.dashboard');
+        $credentials = $request->validate([
+            'email'    => ['required', 'email'],
+            'password' => ['required'],
+        ]);
+
+        $remember = $request->filled('remember');
+
+        // guard khusus admin (pastikan sudah ada guard 'admin' di config/auth.php)
+        if (Auth::guard('admin')->attempt($credentials, $remember)) {
+            $request->session()->regenerate();
+            return redirect()->intended('/admin/dashboard')
+                ->with('success', 'Selamat datang kembali!');
         }
-        return back()->withErrors(['email'=>'Email atau password salah.']);
+
+        return back()->withErrors([
+            'email' => 'Email atau password salah.',
+        ])->onlyInput('email');
     }
 
-    public function logout(Request $r)
+    public function logout(Request $request)
     {
         Auth::guard('admin')->logout();
-        $r->session()->invalidate();
-        $r->session()->regenerateToken();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
         return redirect()->route('admin.login');
     }
 }

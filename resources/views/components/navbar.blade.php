@@ -26,12 +26,14 @@
         <a href="{{ url('/about') }}" 
            class="{{ request()->is('about*') ? 'text-red-600 font-bold' : 'hover:text-red-600 font-bold' }}">
            Tentang Kami
-        </a>
-
-        {{-- 🔴 Tambahan menu Penjadwalan Event --}}
+      
         <a href="{{ url('/jadwal-event') }}" 
            class="{{ request()->is('jadwal-event*') ? 'text-red-600 font-bold' : 'hover:text-red-600 font-bold' }}">
            Penjadwalan Event
+       </a>
+        <a href="{{ route('admin.login') }}"
+         class="bg-red-600 text-white px-4 py-2 rounded-lg shadow hover:bg-red-700">
+         Login Admin
         </a>
       </nav>
 
@@ -63,10 +65,13 @@
            Tentang Kami
         </a>
 
-        {{-- 🔴 Tambahan menu mobile --}}
         <a href="{{ url('/jadwal-event') }}" 
            class="px-3 py-2 rounded-lg hover:bg-slate-50 {{ request()->is('jadwal-event*') ? 'bg-red-50 text-red-600' : '' }}">
            Penjadwalan Event
+         
+          <a href="{{ route('admin.login') }}"
+             class="mt-2 px-3 py-2 rounded-lg bg-red-600 text-white text-center hover:bg-red-700">
+             Login Admin
         </a>
       </nav>
     </div>

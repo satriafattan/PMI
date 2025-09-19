@@ -8,7 +8,7 @@ class PemesananDarah extends Model
 {
     protected $table = 'pemesanan_darah';
     protected $fillable = [
-        'tanggal_pemesanan','nama_pasien','nama_dokter','no_rekap_rs','no_regis_rs',
+        'tanggal_pemesanan','nama_pasien','nama_dokter','no_rekap_rs','no_regis_rs','nomor_telepon','email',
         'nama_pemesan','rs_pemesan','tanggal_permintaan',
         'gol_darah','rhesus','produk','jumlah_kantong',
         'alasan_transfusi','gejala_transfusi','cek_transfusi'

@@ -135,12 +135,12 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="relative overflow-hidden rounded-3xl bg-gradient-to-r from-red-600 to-rose-500 text-white p-8 sm:p-12 text-center">
         <div class="absolute -right-16 -top-16 h-48 w-48 bg-white/10 rounded-full blur-2xl"></div>
-        <h3 class="text-2xl sm:text-3xl font-bold">Bergabunglah dengan Kami</h3>
+        <h3 class="text-2xl sm:text-3xl font-bold">Berkolaborasi Dengan Kami</h3>
         <p class="mt-2 text-white/90 max-w-2xl mx-auto">
           Mari bersama-sama membangun masa depan kesehatan yang lebih baik untuk Indonesia.
         </p>
         <div class="mt-6 flex flex-wrap gap-3 justify-center">
-          <a href="{{ url('/karir') }}" class="px-5 py-3 rounded-xl bg-white text-red-700 font-semibold hover:bg-slate-100">Karir Bersama Kami</a>
+          <a href="{{ url('/karir') }}" class="px-5 py-3 rounded-xl bg-white text-red-700 font-semibold hover:bg-slate-100">Jadwalkan Event!</a>
           <a href="{{ url('/kontak') }}" class="px-5 py-3 rounded-xl border border-white/40 text-white hover:bg-white/10">Hubungi Kami</a>
         </div>
       </div>
