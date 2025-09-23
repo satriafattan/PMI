@@ -28,6 +28,7 @@ Route::post('/jadwal-event', [EventScheduleController::class, 'store'])->name('p
 //Stok darah
 Route::get('/stok', \App\Http\Controllers\Public\StokController::class)->name('stok');
 
+
 // Auth admin
 Route::get('/admin/login', [AuthController::class, 'showLoginForm'])->name('admin.login');
 Route::post('/admin/login', [AuthController::class, 'login'])->name('admin.login.submit');
@@ -42,6 +43,9 @@ Route::middleware('auth:admin')->prefix('admin')->name('admin.')->group(function
 
     // Rekap Stok
     Route::resource('rekap-stok', RekapStokController::class)->except(['show']);
+
+    // Stok Darah
+    Route::resource('stok-darah', StokDarahController::class)->except(['show']);
 
     // Verifikasi
     Route::get('verifikasi', [VerifikasiPemesananController::class,'index'])->name('verifikasi.index');
