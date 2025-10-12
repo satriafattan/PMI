@@ -8,19 +8,34 @@ class PemesananDarah extends Model
 {
     protected $table = 'pemesanan_darah';
     protected $fillable = [
-        'tanggal_pemesanan','nama_pasien','nama_dokter','no_rekap_rs','no_regis_rs','nomor_telepon','email',
-        'nama_pemesan','rs_pemesan','tanggal_permintaan',
-        'gol_darah','rhesus','produk','jumlah_kantong',
-        'alasan_transfusi','gejala_transfusi','cek_transfusi'
+        'kode',
+        'status',
+        'tanggal_pemesanan',
+        'rs_pemesan',
+        'nama_pasien',
+        'nama_dokter',
+        'jenis_kelamin',
+        'no_regis_rs',
+        'nama_suami_istri',
+        'diagnosa_klinik',
+        'pernah_serologi',
+        'lokasi_serologi',
+        'tanggal_transfusi',
+        'hasil_serologi',
+        'alasan_transfusi',
+        'produk',
+        'jumlah_kantong',
+        'gol_darah',
+        'rhesus',
+        'nomor_telepon',
+        'email',
+        'cek_transfusi',
+        // tambahkan field lain yang memang ada di skema kamu
     ];
 
-    public function verifikasi()
-    {
-        return $this->hasOne(VerifikasiPemesanan::class,'pemesanan_id');
-    }
-
-    public function riwayat()
-    {
-        return $this->hasMany(RiwayatPemesanan::class,'pemesanan_id');
-    }
+    protected $casts = [
+        'tanggal_pemesanan' => 'date',
+        'tanggal_transfusi' => 'date',
+        'cek_transfusi'     => 'boolean',
+    ];
 }

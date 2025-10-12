@@ -12,6 +12,7 @@ class EventSchedule extends Model
         'institusi_pemohon',
         'nomor_telefon',
         'email',
+        'surat_instansi_path',
         // B
         'tanggal_event',
         'jam_mulai',
@@ -26,15 +27,7 @@ class EventSchedule extends Model
         // D
         'catatan_tambahan',
         'izin_publikasi',
-        // opsional
+        // Opsional admin
         'status',
-    ];
-
-    protected $casts = [
-        'tanggal_event'   => 'date',
-        'jam_mulai'       => 'datetime:H:i',
-        'jam_selesai'     => 'datetime:H:i',
-        'butuh_mobil_unit' => 'boolean',
-        'izin_publikasi'  => 'boolean',
     ];
 }

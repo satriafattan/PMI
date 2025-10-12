@@ -10,6 +10,7 @@ use App\Http\Controllers\Admin\VerifikasiPemesananController;
 use App\Http\Controllers\Admin\RiwayatController;
 use App\Http\Controllers\Public\PublicPemesananController;
 use App\Http\Controllers\Public\EventScheduleController;
+use App\Http\Controllers\Admin\StokDarahController;
 
 // Halaman landing
 Route::view('/', 'welcome')->name('home');
@@ -20,6 +21,8 @@ Route::get('/about', fn() => view('about'))->name('about');
 // Publik: pemesan non-login
 Route::get('/pemesanan', [PublicPemesananController::class,'create'])->name('pemesanan.create');
 Route::post('/pemesanan', [PublicPemesananController::class,'store'])->name('pemesanan.store');
+Route::get('/pemesanan/konfirmasi/{kode}', [PublicPemesananController::class, 'konfirmasi'])
+    ->name('pemesanan.konfirmasi');
 
 //Penjadwalan Event
 Route::get('/jadwal-event',  [EventScheduleController::class, 'create'])->name('public.event.create');

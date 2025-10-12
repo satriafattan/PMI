@@ -15,19 +15,20 @@ return new class extends Migration {
             $table->string('institusi_pemohon');
             $table->string('nomor_telefon', 30);
             $table->string('email');
+            $table->string('surat_instansi_path')->nullable();
 
             // B. Detail Event
             $table->date('tanggal_event');
             $table->time('jam_mulai')->nullable();
             $table->time('jam_selesai')->nullable();
-            $table->string('jenis_event');      // Donor Darah, Penyuluhan, MU Kunjungan, Baksos, Lainnya
+            $table->string('jenis_event');      
             $table->text('lokasi_lengkap')->nullable();
 
             // C. Estimasi & Kebutuhan
             $table->unsignedInteger('jumlah_peserta')->nullable();
-            $table->string('target_peserta')->nullable();   // Mahasiswa/Karyawan/Umum/Klub, dll.
+            $table->string('target_peserta')->nullable();   
             $table->boolean('butuh_mobil_unit')->default(false);
-            $table->text('fasilitas_tersedia')->nullable(); // meja, kursi, tenda, listrik, parkir
+            $table->text('fasilitas_tersedia')->nullable(); 
 
             // D. Lainnya
             $table->text('catatan_tambahan')->nullable();

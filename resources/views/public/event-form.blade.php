@@ -1,20 +1,33 @@
-    @extends('layouts.app')
-    <x-navbar />
-    @section('content')
+@extends('layouts.app')
+<x-navbar />
+@section('content')
 
-<main class="max-w-5xl mx-auto px-6 py-12">
-  <div class="text-center mb-8">
-    <h1 class="text-3xl font-bold text-gray-800 mb-2">Form Penjadwalan Event Donor Darah</h1>
-    <p class="text-gray-600">Isi formulir di bawah untuk mengajukan penjadwalan event donor darah</p>
-  </div>
+<main class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-10">
 
+  {{-- Hero --}}
+ <div class="mb-8 text-center">
+  <h1 class="mt-3 text-3xl sm:text-4xl font-bold tracking-tight text-slate-900">
+    Ajukan Event Donor Darah
+  </h1>
+  <p class="mt-2 max-w-3xl mx-auto text-slate-600">
+    Lengkapi data pemohon dan detail kegiatan. Tim kami akan meninjau & menghubungi Anda melalui email/telepon.
+  </p>
+</div>
+
+  {{-- Errors --}}
   @if ($errors->any())
-    <div class="mb-6 rounded bg-red-100 p-4 text-red-700">
-      <ul class="ml-5 list-disc">
-        @foreach ($errors->all() as $e)
-          <li>{{ $e }}</li>
-        @endforeach
-      </ul>
+    <div class="mb-6 rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-red-700">
+      <div class="flex items-start gap-3">
+        <div class="mt-0.5 grid h-6 w-6 place-items-center rounded-full border border-red-300 bg-white/70 text-red-600 text-xs font-bold">!</div>
+        <div>
+          <p class="font-semibold">Harap koreksi input berikut:</p>
+          <ul class="mt-1 ml-5 list-disc text-sm">
+            @foreach ($errors->all() as $e)
+              <li>{{ $e }}</li>
+            @endforeach
+          </ul>
+        </div>
+      </div>
     </div>
   @endif
 
@@ -22,115 +35,154 @@
     id="eventForm"
     method="POST"
     action="{{ route('public.event.store') }}"
+    enctype="multipart/form-data"
     class="grid gap-6 md:grid-cols-2"
   >
     @csrf
 
     {{-- A. Data Pemohon --}}
-    <section class="md:col-span-2 bg-white shadow-lg rounded-lg p-6 border border-gray-200">
-      <h2 class="mb-4 text-xl font-semibold text-red-700 flex items-center">
-        <svg class="w-6 h-6 mr-2" fill="currentColor" viewBox="0 0 20 20">
-          <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"></path>
-        </svg>
-        A. Data Pemohon
-      </h2>
+    <section class="md:col-span-2 rounded-2xl border border-slate-200 bg-white/80 backdrop-blur-sm p-6 shadow-sm">
+      <div class="mb-5 flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <div class="grid h-9 w-9 place-items-center rounded-xl bg-red-600 text-white ring-4 ring-white shadow">A</div>
+          <h2 class="text-lg sm:text-xl font-semibold text-slate-900">Data Pemohon</h2>
+        </div>
+        <span class="text-xs text-slate-500">Wajib diisi</span>
+      </div>
+
       <div class="grid gap-6 md:grid-cols-2">
+        {{-- Nama --}}
         <div>
-          <label class="block text-sm font-medium">Nama</label>
+          <label class="block text-sm font-medium text-slate-700">Nama</label>
           <input
             type="text"
             name="nama"
             required
             value="{{ old('nama') }}"
-            class="mt-1 w-full rounded border p-2 focus:outline-none focus:ring-2 focus:ring-red-500"
-          />
+            class="mt-1 w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-[15px] shadow-inner focus:border-red-500 focus:outline-none focus:ring-2 focus:ring-red-500/20"
+          >
+          @error('nama') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
         </div>
 
+        {{-- Institusi --}}
         <div>
-          <label class="block text-sm font-medium">Institusi Pemohon</label>
+          <label class="block text-sm font-medium text-slate-700">Institusi Pemohon</label>
           <input
             type="text"
             name="institusi_pemohon"
             required
             value="{{ old('institusi_pemohon') }}"
-            class="mt-1 w-full rounded border p-2 focus:outline-none focus:ring-2 focus:ring-red-500"
-          />
+            class="mt-1 w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-[15px] shadow-inner focus:border-red-500 focus:outline-none focus:ring-2 focus:ring-red-500/20"
+          >
+          @error('institusi_pemohon') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
         </div>
 
+        {{-- Telepon --}}
         <div>
-          <label class="block text-sm font-medium">Nomor Telefon</label>
+          <div class="flex items-center justify-between">
+            <label class="block text-sm font-medium text-slate-700">Nomor Telepon</label>
+            <span class="text-[11px] text-slate-500">Contoh: 0812xxxxxxx</span>
+          </div>
           <input
             type="text"
             name="nomor_telefon"
             required
             placeholder="0812xxxxxxx"
             value="{{ old('nomor_telefon') }}"
-            class="mt-1 w-full rounded border p-2 focus:outline-none focus:ring-2 focus:ring-red-500"
-          />
+            class="mt-1 w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-[15px] shadow-inner focus:border-red-500 focus:outline-none focus:ring-2 focus:ring-red-500/20"
+          >
+          @error('nomor_telefon') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
         </div>
 
+        {{-- Email --}}
         <div>
-          <label class="block text-sm font-medium">Email</label>
+          <label class="block text-sm font-medium text-slate-700">Email</label>
           <input
             type="email"
             name="email"
             required
             value="{{ old('email') }}"
-            class="mt-1 w-full rounded border p-2 focus:outline-none focus:ring-2 focus:ring-red-500"
-          />
+            class="mt-1 w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-[15px] shadow-inner focus:border-red-500 focus:outline-none focus:ring-2 focus:ring-red-500/20"
+          >
+          @error('email') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
         </div>
+
+        {{-- Surat Instansi --}}
+        <div class="md:col-span-1">
+          <label class="block text-sm font-medium text-slate-700">Surat Instansi (PDF/JPG/PNG)</label>
+          <div class="mt-1 rounded-xl border-2 border-dashed border-slate-200 bg-slate-50/60 p-4">
+            <input
+              type="file"
+              name="surat_instansi"
+              accept=".pdf,.jpg,.jpeg,.png"
+              class="block w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-[15px] file:mr-4 file:rounded-md file:border-0 file:bg-red-600 file:px-3 file:py-2 file:text-sm file:font-medium file:text-white hover:file:bg-red-700 focus:border-red-500 focus:outline-none focus:ring-2 focus:ring-red-500/20"
+            >
+            <p class="mt-2 text-xs text-slate-500">Maksimal 2 MB. Contoh: surat permohonan kegiatan dari institusi.</p>
+
+            @isset($event)
+              @if($event->surat_instansi_path)
+                <a href="{{ Storage::url($event->surat_instansi_path) }}"
+                   class="mt-2 inline-flex items-center gap-2 text-sm text-red-600 hover:underline">
+                  Lihat surat yang sudah diunggah
+                </a>
+              @endif
+            @endisset
+          </div>
+          @error('surat_instansi') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
+        </div>
+
+        {{-- spacer --}}
+        <div class="md:col-span-1"></div>
       </div>
     </section>
 
     {{-- B. Detail Event --}}
-    <section class="md:col-span-2 bg-white shadow-lg rounded-lg p-6 border border-gray-200">
-      <h2 class="mb-4 text-xl font-semibold text-red-700 flex items-center">
-        <svg class="w-6 h-6 mr-2" fill="currentColor" viewBox="0 0 20 20">
-          <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"></path>
-        </svg>
-        B. Detail Event
-      </h2>
+    <section class="md:col-span-2 rounded-2xl border border-slate-200 bg-white/80 backdrop-blur-sm p-6 shadow-sm">
+      <div class="mb-5 flex items-center gap-3">
+        <div class="grid h-9 w-9 place-items-center rounded-xl bg-red-600 text-white ring-4 ring-white shadow">B</div>
+        <h2 class="text-lg sm:text-xl font-semibold text-slate-900">Detail Event</h2>
+      </div>
 
       <div class="grid gap-6 md:grid-cols-3">
         <div>
-          <label class="block text-sm font-medium">Tanggal Event</label>
+          <label class="block text-sm font-medium text-slate-700">Tanggal Event</label>
           <input
             type="date"
             name="tanggal_event"
             required
             value="{{ old('tanggal_event') }}"
-            class="mt-1 w-full rounded border p-2 focus:outline-none focus:ring-2 focus:ring-red-500"
-          />
+            class="mt-1 w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-[15px] shadow-inner focus:border-red-500 focus:outline-none focus:ring-2 focus:ring-red-500/20"
+          >
         </div>
 
         <div>
-          <label class="block text-sm font-medium">Jam Mulai</label>
+          <label class="block text-sm font-medium text-slate-700">Jam Mulai</label>
           <input
             type="time"
             name="jam_mulai"
             value="{{ old('jam_mulai') }}"
-            class="mt-1 w-full rounded border p-2 focus:outline-none focus:ring-2 focus:ring-red-500"
-          />
+            class="mt-1 w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-[15px] shadow-inner focus:border-red-500 focus:outline-none focus:ring-2 focus:ring-red-500/20"
+          >
         </div>
 
         <div>
-          <label class="block text-sm font-medium">Jam Selesai</label>
+          <label class="block text-sm font-medium text-slate-700">Jam Selesai</label>
           <input
             type="time"
             name="jam_selesai"
             value="{{ old('jam_selesai') }}"
-            class="mt-1 w-full rounded border p-2 focus:outline-none focus:ring-2 focus:ring-red-500"
-          />
+            class="mt-1 w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-[15px] shadow-inner focus:border-red-500 focus:outline-none focus:ring-2 focus:ring-red-500/20"
+          >
         </div>
       </div>
 
       <div class="mt-6 grid gap-6 md:grid-cols-2">
         <div>
-          <label class="block text-sm font-medium">Jenis Event</label>
+          <label class="block text-sm font-medium text-slate-700">Jenis Event</label>
           <select
             name="jenis_event"
             required
-            class="mt-1 w-full rounded border bg-white p-2 focus:outline-none focus:ring-2 focus:ring-red-500"
+            class="mt-1 w-full appearance-none rounded-xl border border-slate-200 bg-white px-3 py-2.5 pr-10 text-[15px] shadow-inner focus:border-red-500 focus:outline-none focus:ring-2 focus:ring-red-500/20"
           >
             <option value="">-- Pilih Jenis Event --</option>
             @foreach ($eventTypes as $type)
@@ -140,43 +192,41 @@
         </div>
 
         <div>
-          <label class="block text-sm font-medium">Lokasi Lengkap</label>
+          <label class="block text-sm font-medium text-slate-700">Lokasi Lengkap</label>
           <textarea
             name="lokasi_lengkap"
             rows="3"
             placeholder="Alamat lengkap / nama gedung / patokan"
-            class="mt-1 w-full rounded border p-2 focus:outline-none focus:ring-2 focus:ring-red-500"
+            class="mt-1 w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-[15px] shadow-inner focus:border-red-500 focus:outline-none focus:ring-2 focus:ring-red-500/20"
           >{{ old('lokasi_lengkap') }}</textarea>
         </div>
       </div>
     </section>
 
     {{-- C. Estimasi & Kebutuhan --}}
-    <section class="md:col-span-2 bg-white shadow-lg rounded-lg p-6 border border-gray-200">
-      <h2 class="mb-4 text-xl font-semibold text-red-700 flex items-center">
-        <svg class="w-6 h-6 mr-2" fill="currentColor" viewBox="0 0 20 20">
-          <path d="M2 11a1 1 0 011-1h2a1 1 0 011 1v5a1 1 0 01-1 1H3a1 1 0 01-1-1v-5zM8 7a1 1 0 011-1h2a1 1 0 011 1v9a1 1 0 01-1 1H9a1 1 0 01-1-1V7zM14 4a1 1 0 011-1h2a1 1 0 011 1v12a1 1 0 01-1 1h-2a1 1 0 01-1-1V4z"></path>
-        </svg>
-        C. Estimasi & Kebutuhan
-      </h2>
+    <section class="md:col-span-2 rounded-2xl border border-slate-200 bg-white/80 backdrop-blur-sm p-6 shadow-sm">
+      <div class="mb-5 flex items-center gap-3">
+        <div class="grid h-9 w-9 place-items-center rounded-xl bg-red-600 text-white ring-4 ring-white shadow">C</div>
+        <h2 class="text-lg sm:text-xl font-semibold text-slate-900">Estimasi & Kebutuhan</h2>
+      </div>
 
       <div class="grid gap-6 md:grid-cols-3">
         <div>
-          <label class="block text-sm font-medium">Jumlah Peserta (perkiraan)</label>
+          <label class="block text-sm font-medium text-slate-700">Jumlah Peserta (perkiraan)</label>
           <input
             type="number"
             name="jumlah_peserta"
             min="1"
             value="{{ old('jumlah_peserta') }}"
-            class="mt-1 w-full rounded border p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
+            class="mt-1 w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-[15px] shadow-inner focus:border-red-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+          >
         </div>
 
         <div>
-          <label class="block text-sm font-medium">Target Peserta</label>
+          <label class="block text-sm font-medium text-slate-700">Target Peserta</label>
           <select
             name="target_peserta"
-            class="mt-1 w-full rounded border bg-white p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            class="mt-1 w-full appearance-none rounded-xl border border-slate-200 bg-white px-3 py-2.5 pr-10 text-[15px] shadow-inner focus:border-red-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
           >
             <option value="">-- Pilih Target --</option>
             @foreach ($targetOptions as $t)
@@ -185,30 +235,30 @@
           </select>
         </div>
 
-        <div class="mt-7 flex items-center gap-3 md:mt-7">
+        <div class="flex items-center gap-3 md:mt-7">
           <input
             id="butuhMU"
             type="checkbox"
             name="butuh_mobil_unit"
             value="1"
             @checked(old('butuh_mobil_unit'))
-            class="h-5 w-5 rounded border"
-          />
-          <label for="butuhMU" class="text-sm">Butuh Mobil Unit</label>
+            class="h-5 w-5 rounded border border-slate-300 text-red-600 focus:ring-2 focus:ring-red-500"
+          >
+          <label for="butuhMU" class="text-sm text-slate-700">Butuh Mobil Unit</label>
         </div>
       </div>
 
       <div class="mt-6">
-        <label class="block text-sm font-medium">Fasilitas Tersedia</label>
-          <textarea
-            name="fasilitas_tersedia"
-            rows="3"
-            placeholder="Contoh: Ruang ber-AC, meja & kursi, listrik, parkir, tenda"
-            class="mt-1 w-full rounded border p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-          >{{ old('fasilitas_tersedia') }}</textarea>
+        <label class="block text-sm font-medium text-slate-700">Fasilitas Tersedia</label>
+        <textarea
+          name="fasilitas_tersedia"
+          rows="3"
+          placeholder="Contoh: Ruang ber-AC, meja & kursi, listrik, parkir, tenda"
+          class="mt-1 w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-[15px] shadow-inner focus:border-red-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+        >{{ old('fasilitas_tersedia') }}</textarea>
 
         @isset($facilityHints)
-          <p class="mt-1 text-xs text-slate-500">
+          <p class="mt-2 text-xs text-slate-500">
             Saran:
             @foreach ($facilityHints as $fh)
               <span>{{ $fh }}</span>@if (! $loop->last), @endif
@@ -219,22 +269,20 @@
     </section>
 
     {{-- D. Lainnya --}}
-    <section class="md:col-span-2 bg-white shadow-lg rounded-lg p-6 border border-gray-200">
-      <h2 class="mb-4 text-xl font-semibold text-red-700 flex items-center">
-        <svg class="w-6 h-6 mr-2" fill="currentColor" viewBox="0 0 20 20">
-          <path fill-rule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z" clip-rule="evenodd"></path>
-        </svg>
-        D. Lainnya
-      </h2>
+    <section class="md:col-span-2 rounded-2xl border border-slate-200 bg-white/80 backdrop-blur-sm p-6 shadow-sm">
+      <div class="mb-5 flex items-center gap-3">
+        <div class="grid h-9 w-9 place-items-center rounded-xl bg-red-600 text-white ring-4 ring-white shadow">D</div>
+        <h2 class="text-lg sm:text-xl font-semibold text-slate-900">Lainnya</h2>
+      </div>
 
       <div class="grid gap-6 md:grid-cols-2">
         <div>
-          <label class="block text-sm font-medium">Catatan Tambahan</label>
+          <label class="block text-sm font-medium text-slate-700">Catatan Tambahan</label>
           <textarea
             name="catatan_tambahan"
             rows="3"
             placeholder="Info khusus, kebutuhan tambahan, dll."
-            class="mt-1 w-full rounded border p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            class="mt-1 w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-[15px] shadow-inner focus:border-red-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
           >{{ old('catatan_tambahan') }}</textarea>
         </div>
 
@@ -245,30 +293,68 @@
             name="izin_publikasi"
             value="1"
             @checked(old('izin_publikasi'))
-            class="h-5 w-5 rounded border"
-          />
-          <label for="izinPublikasi" class="text-sm">Mengizinkan dokumentasi & publikasi kegiatan</label>
+            class="h-5 w-5 rounded border border-slate-300 text-red-600 focus:ring-2 focus:ring-red-500"
+          >
+          <label for="izinPublikasi" class="text-sm text-slate-700">Mengizinkan dokumentasi & publikasi kegiatan</label>
         </div>
       </div>
     </section>
 
+    {{-- Submit --}}
     <div class="md:col-span-2">
-      <div class="flex justify-end">
+      <div class="flex items-center justify-between">
+        <p class="text-xs text-slate-500"></p>
         <button
           id="submitBtn"
           type="submit"
-          class="inline-flex items-center justify-center gap-2 rounded-xl bg-red-600 hover:bg-red-700 text-white px-6 py-3 shadow"
+          class="inline-flex items-center gap-2 rounded-xl bg-red-600 px-6 py-3 text-white shadow hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500/30"
         >
+
           Ajukan Penjadwalan
         </button>
       </div>
     </div>
   </form>
+
+  {{-- Success Modal --}}
+ <div id="successModal" class="fixed inset-0 z-[9999] hidden items-center justify-center">
+  <div class="absolute inset-0 bg-black/40"></div>
+
+  <div class="relative z-10 w-[90%] max-w-2xl rounded-3xl bg-white p-10 shadow-2xl text-center">
+    <button type="button"
+            class="absolute right-4 top-4 text-slate-400 hover:text-slate-600 text-2xl"
+            onclick="hideSuccessModal()">✕</button>
+
+    <div class="mx-auto mb-4 grid h-16 w-16 place-items-center rounded-full bg-emerald-100 text-3xl text-emerald-700">
+      ✔
+    </div>
+
+    <!-- GANTI JUDUL DI SINI -->
+    <h3 id="successTitle" class="text-2xl font-bold text-slate-800">
+      Pengajuan Berhasil Dikirim!
+    </h3>
+
+    <!-- GANTI PESAN DI SINI -->
+    <p id="successMessage" class="mt-3 text-lg text-slate-600">
+      Silakan cek email secara berkala untuk informasi selanjutnya.
+    </p>
+
+    <div class="mt-8 flex flex-col sm:flex-row justify-center gap-3">
+      <button type="button"
+              class="rounded-lg border border-slate-300 px-6 py-3 text-slate-700 hover:bg-slate-50 transition"
+              onclick="hideSuccessModal()">Tutup</button>
+      <a href="{{ route('public.event.create') }}"
+         class="rounded-lg bg-red-600 px-6 py-3 text-white hover:bg-red-700 transition">Ajukan Lagi</a>
+    </div>
+  </div>
+</div>
+
+
 </main>
 
 <x-footer />
 
-{{-- Disable submit jika field wajib belum lengkap (A & B minimal) --}}
+{{-- Scripts --}}
 <script>
   const form = document.getElementById('eventForm');
   const submitBtn = document.getElementById('submitBtn');
@@ -281,7 +367,34 @@
     return ok;
   }
 
-  function toggleSubmit() { submitBtn.disabled = !allRequiredFilled(); }
+  function toggleSubmit() {
+    submitBtn.disabled = !allRequiredFilled();
+    submitBtn.classList.toggle('opacity-60', submitBtn.disabled);
+    submitBtn.classList.toggle('cursor-not-allowed', submitBtn.disabled);
+  }
+
   form.addEventListener('input', toggleSubmit);
   document.addEventListener('DOMContentLoaded', toggleSubmit);
+
+  function showSuccessModal(message) {
+    const modal = document.getElementById('successModal');
+    const msgEl = document.getElementById('successMessage');
+    if (message && msgEl) msgEl.textContent = message;
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
+  }
+
+  function hideSuccessModal() {
+    const modal = document.getElementById('successModal');
+    modal.classList.add('hidden');
+    modal.classList.remove('flex');
+  }
+
+  // Auto show modal jika ada flash session "success"
+  document.addEventListener('DOMContentLoaded', () => {
+    @if(session('success'))
+      showSuccessModal(@json(session('success')));
+    @endif
+  });
 </script>
+@endsection
