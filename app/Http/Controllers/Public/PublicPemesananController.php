@@ -25,94 +25,106 @@ class PublicPemesananController extends Controller
      */
     public function store(StorePemesananRequest $r)
     {
-        // 1) data tervalidasi dari FormRequest
-        dd('masuk store'); // kalau ini pun tidak muncul, berarti belum masuk method
+        // 1) data tervalidasi
         $data = $r->validated();
-        dd($data);
 
-        // dd($order);
-        // 2) default tanggal pemesanan kalau tidak diisi UI
+        // 2) tanggal default
         $data['tanggal_pemesanan'] = $data['tanggal_pemesanan'] ?? now()->toDateString();
 
-        // 3) gabungkan input multipilih (kalau ada) → kolom yang tersedia di tabel
+        // 3) mapping nama field (request -> kolom DB)
+        //    Form minta "tanggal_diperlukan", di DB kolomnya "tanggal_permintaan"
+        if (!empty($data['tanggal_diperlukan'])) {
+            $data['tanggal_permintaan'] = $data['tanggal_diperlukan'];
+            unset($data['tanggal_diperlukan']);
+        }
+
+        // 4) gabung multi-value -> single column
         $produkMulti = $data['produk_multi'] ?? [];
         $alasanMulti = $data['alasan_multi'] ?? [];
 
         if (is_array($produkMulti) && count($produkMulti)) {
             $data['produk'] = implode(', ', $produkMulti);
         } else {
-            // pakai single value bila ada
-            $data['produk'] = $data['produk'] ?? null;
+            $data['produk'] = $data['produk'] ?? null; // pastikan rules menutup ini agar tidak null
         }
 
         if (is_array($alasanMulti) && count($alasanMulti)) {
             $data['alasan_transfusi'] = implode('; ', $alasanMulti);
         } elseif (!empty($data['diagnosa_klinik']) && empty($data['alasan_transfusi'])) {
-            // fallback: jika alasan kosong, pakai diagnosa_klinik
             $data['alasan_transfusi'] = $data['diagnosa_klinik'];
         }
 
-        // bersihkan key yang tidak ada kolomnya
+        // bersihkan key non-kolom
         unset($data['produk_multi'], $data['alasan_multi']);
 
-        // 4) boolean
+        // 5) boolean normalize
         $data['cek_transfusi'] = (bool)($data['cek_transfusi'] ?? false);
 
-        // 5) status + kode unik
+        // 6) status + kode unik (kalau memang ada kolom "kode" di tabel & fillable)
         $data['status'] = $data['status'] ?? 'pending';
-        $data['kode']   = $data['kode'] ?? $this->generateKodeUnik();
+        // Jika kamu punya kolom "kode" di tabel:
+        // $data['kode'] = $data['kode'] ?? Str::upper(Str::random(8));
 
-        // 6) Simpan atomic: order + riwayat
+        // --- FAIL FAST untuk email (agar errornya jelas di level validasi, bukan SQL) ---
+        if (empty($data['email'])) {
+            return back()->withErrors(['email' => 'Email wajib diisi.'])->withInput();
+        }
+
+        // 7) Simpan atomic
         /** @var PemesananDarah $order */
         $order = DB::transaction(function () use ($data) {
-            // simpan order
             $order = PemesananDarah::create($data);
 
-            // simpan riwayat
-            RiwayatPemesanan::create([
-                'pemesanan_id'   => $order->id,
-                'nama'           => $order->nama_pasien,
-                'tanggal'        => $order->tanggal_pemesanan,
-                'gol_darah'      => $order->gol_darah ?? null,
-                'rhesus'         => $order->rhesus ?? null,
-                'jumlah_kantong' => $order->jumlah_kantong ?? null,
-                'produk'         => $order->produk ?? null,
-                'aksi'           => 'dibuat (public)',
-            ]);
+            // RiwayatPemesanan: jangan pakai $order->nama_pasien jika kolom itu tidak ada
+            // RiwayatPemesanan::create([
+            //     'pemesanan_id'   => $order->id,
+            //     'nama'           => $order->nama_pemesan, // pakai nama_pemesan yang memang ada
+            //     'tanggal'        => $order->tanggal_pemesanan,
+            //     'gol_darah'      => $order->gol_darah,
+            //     'rhesus'         => $order->rhesus,
+            //     'jumlah_kantong' => $order->jumlah_kantong,
+            //     'produk'         => $order->produk,
+            //     'aksi'           => 'dibuat (public)',
+            // ]);
 
             return $order;
         });
 
-        
+        // 8) Redirect
+        // Jika kamu TIDAK punya kolom "kode", jangan pakai ->kode di route
+        // return redirect()->route('pemesanan.konfirmasi', $order->id);
+        // Jika kamu ADA kolom "kode":
+        // return redirect()->route('pemesanan.konfirmasi', $order->kode)
+        //                  ->with('success', 'Pemesanan Anda sedang diproses. Simpan kode: '.$order->kode);
 
-        // 7) redirect ke halaman konfirmasi (tracking by kode)
-        // return redirect()
-        //     ->route('pemesanan.konfirmasi', $order->kode)
-        //     ->with('success', 'Pemesanan Anda sedang diproses. Simpan kode: '.$order->kode);
+        return redirect()
+            ->route('pemesanan.create')
+            ->with('success', 'Pemesanan Anda sedang diproses.');
+            
     }
+
+
 
     /**
      * Halaman konfirmasi (menampilkan ringkasan pemesanan berbasis kode).
      * Public dapat memantau status: pending/approved/rejected
      */
-    public function konfirmasi(string $kode)
+    public function konfirmasi(int $id)
     {
-        // load relasi verifikasi terbaru jika diperlukan di UI:
-        // ->with('verifikasiTerakhir.verifier')  (opsional, jika kamu tambahkan relasi itu di model)
-        $order = PemesananDarah::where('kode', $kode)->firstOrFail();
-
+        $order = PemesananDarah::findOrFail($id);
         return view('public.pemesanan.konfirmasi', compact('order'));
     }
+
 
     /**
      * Generator kode unik: PMI-yymmdd-ABCDE, retry jika bentrok.
      */
-    private function generateKodeUnik(): string
-    {
-        do {
-            $kode = 'PMI-' . now()->format('ymd') . '-' . strtoupper(Str::random(5));
-        } while (PemesananDarah::where('kode', $kode)->exists());
+    // private function generateKodeUnik(): string
+    // {
+    //     do {
+    //         $kode = 'PMI-' . now()->format('ymd') . '-' . strtoupper(Str::random(5));
+    //     } while (PemesananDarah::where('kode', $kode)->exists());
 
-        return $kode;
-    }
+    //     return $kode;
+    // }
 }

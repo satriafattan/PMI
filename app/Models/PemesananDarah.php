@@ -6,18 +6,13 @@ use Illuminate\Database\Eloquent\Model;
 
 class PemesananDarah extends Model
 {
-    // Tetap mengikuti nama tabel yang ada di DB kamu (singular)
     protected $table = 'pemesanan_darah';
 
     protected $fillable = [
-        'kode',
-        'status',                // pending | approved | rejected
+        'status',
         'tanggal_pemesanan',
         'rs_pemesan',
         'nama_pasien',
-        'nama_dokter',
-        'jenis_kelamin',
-        'no_regis_rs',
         'nama_suami_istri',
         'diagnosa_klinik',
         'pernah_serologi',
@@ -25,6 +20,7 @@ class PemesananDarah extends Model
         'tanggal_transfusi',
         'hasil_serologi',
         'alasan_transfusi',
+        'gejala_transfusi',
         'produk',
         'jumlah_kantong',
         'gol_darah',
@@ -32,36 +28,42 @@ class PemesananDarah extends Model
         'nomor_telepon',
         'email',
         'cek_transfusi',
-        // tambahkan field lain yang memang ada di skema kamu
+        'no_rekap_rs',
+        'no_regis_rs',
+        'nama_dokter',
+        'jenis_kelamin',
+        'tanggal_permintaan',
     ];
 
     protected $casts = [
         'tanggal_pemesanan' => 'date',
         'tanggal_transfusi' => 'date',
+        'tanggal_permintaan' => 'date',
         'cek_transfusi'     => 'boolean',
+        'jumlah_kantong'    => 'integer',
     ];
 
-    /** -----------------------
-     *  Relasi ke verifikasi
-     *  ----------------------*/
-    // Riwayat verifikasi (banyak)
     public function verifikasis()
     {
         return $this->hasMany(VerifikasiPemesanan::class, 'pemesanan_id');
     }
 
-    // Verifikasi terakhir (untuk ringkas di UI)
-    // Jika tabel verifikasi PUNYA kolom timestamps, ini akan pakai created_at.
-    // Kalau kamu ingin berdasarkan tanggal_permintaan, pakai latestOfMany('tanggal_permintaan').
     public function verifikasiTerakhir()
     {
-        return $this->hasOne(VerifikasiPemesanan::class, 'pemesanan_id')->latestOfMany('tanggal_permintaan');
+        return $this->hasOne(VerifikasiPemesanan::class, 'pemesanan_id')
+            ->latestOfMany('tanggal_permintaan');
     }
 
-    /** -----------------------
-     *  Scopes status
-     *  ----------------------*/
-    public function scopePending($q)  { return $q->where('status', 'pending'); }
-    public function scopeApproved($q) { return $q->where('status', 'approved'); }
-    public function scopeRejected($q) { return $q->where('status', 'rejected'); }
+    public function scopePending($q)
+    {
+        return $q->where('status', 'pending');
+    }
+    public function scopeApproved($q)
+    {
+        return $q->where('status', 'approved');
+    }
+    public function scopeRejected($q)
+    {
+        return $q->where('status', 'rejected');
+    }
 }

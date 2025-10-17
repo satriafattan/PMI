@@ -21,26 +21,26 @@ class VerifikasiPemesananController extends Controller
         return view('admin.verifikasi.index', compact('pemesanan'));
 
         $per = (int) $r->input('per_page', 10);
-    $q   = $r->input('q');
-    $st  = $r->input('status');
-    $gol = $r->input('gol');
+        $q   = $r->input('q');
+        $st  = $r->input('status');
+        $gol = $r->input('gol');
 
-    $query = \App\Models\PemesananDarah::query()
-        ->with('verifikasiTerakhir')
-        ->latest();
+        $query = \App\Models\PemesananDarah::query()
+            ->with('verifikasiTerakhir')
+            ->latest();
 
-    if ($q) {
-        $query->where(function($w) use ($q) {
-            $w->where('nama_pasien','like',"%{$q}%")
-              ->orWhere('rs_pemesan','like',"%{$q}%");
-        });
-    }
-    if ($st)  $query->where('status', $st);
-    if ($gol) $query->where('gol_darah', $gol);
+        if ($q) {
+            $query->where(function ($w) use ($q) {
+                $w->where('nama_pasien', 'like', "%{$q}%")
+                    ->orWhere('rs_pemesan', 'like', "%{$q}%");
+            });
+        }
+        if ($st)  $query->where('status', $st);
+        if ($gol) $query->where('gol_darah', $gol);
 
-    $pemesanan = $query->paginate($per)->appends($r->query());
+        $pemesanan = $query->paginate($per)->appends($r->query());
 
-    return view('admin.verifikasi.index', compact('pemesanan'));
+        return view('admin.verifikasi.index', compact('pemesanan'));
     }
 
     /**
@@ -94,7 +94,6 @@ class VerifikasiPemesananController extends Controller
                 'produk'         => $pemesanan->produk,
                 'aksi'           => 'verifikasi: ' . $data['status'],
             ]);
-
         });
 
         return back()->with('success', 'Status verifikasi disimpan & status pemesanan disinkronkan.');
