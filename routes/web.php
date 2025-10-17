@@ -84,6 +84,8 @@ Route::middleware('auth:admin')->prefix('admin')->name('admin.')->group(function
 
     // Stok Darah
     Route::resource('stok-darah', StokDarahController::class)->except(['show']);
+    Route::get('/stok',    [StokController::class, 'index'])->name('stok.index');
+    Route::post('/stok',   [StokDarahController::class, 'store'])->name('stok.store');
 
     // Verifikasi Pemesanan
     Route::get('verifikasi',                         [VerifikasiPemesananController::class, 'index'])->name('verifikasi.index');

@@ -1,6 +1,7 @@
+{{-- resources/views/admin/riwayat/index.blade.php --}}
 @extends('layouts.admin')
-@section('content')
 
+@section('content')
 <div class="space-y-6">
   {{-- Header --}}
   <h1 class="text-2xl md:text-3xl font-semibold">Riwayat Pemesanan</h1>
@@ -93,24 +94,9 @@
 
 {{-- ===== Vanilla JS ===== --}}
 <script>
-  // ---------- Data dummy ----------
-  const rows = [
-    {nama:'Lorem Ipsum Dolor Sit Amet', tgl:'12-02-2025', gol:'A', rhesus:'Rh+', produk:'PRC', kantong:1, status:'Approved'},
-    {nama:'Lorem Ipsum Dolor Sit Amet', tgl:'12-02-2025', gol:'A', rhesus:'Rh+', produk:'WB',  kantong:1, status:'Pending'},
-    {nama:'Lorem Ipsum Dolor Sit Amet', tgl:'12-02-2025', gol:'A', rhesus:'Rh+', produk:'TRC', kantong:1, status:'Approved'},
-    {nama:'Lorem Ipsum Dolor Sit Amet', tgl:'12-02-2025', gol:'A', rhesus:'Rh+', produk:'FFP', kantong:1, status:'Approved'},
-    {nama:'Lorem Ipsum Dolor Sit Amet', tgl:'12-02-2025', gol:'A', rhesus:'Rh+', produk:'PRC', kantong:1, status:'Pending'},
-    {nama:'Lorem Ipsum Dolor Sit Amet', tgl:'12-02-2025', gol:'A', rhesus:'Rh+', produk:'TC',  kantong:1, status:'Approved'},
-    {nama:'Lorem Ipsum Dolor Sit Amet', tgl:'12-02-2025', gol:'A', rhesus:'Rh+', produk:'WB',  kantong:1, status:'Approved'},
-    {nama:'Lorem Ipsum Dolor Sit Amet', tgl:'12-02-2025', gol:'A', rhesus:'Rh+', produk:'FFP', kantong:1, status:'Pending'},
-    {nama:'Lorem Ipsum Dolor Sit Amet', tgl:'12-02-2025', gol:'A', rhesus:'Rh+', produk:'PRC', kantong:1, status:'Rejected'},
-    {nama:'Lorem Ipsum Dolor Sit Amet', tgl:'12-02-2025', gol:'A', rhesus:'Rh+', produk:'PRC', kantong:1, status:'Approved'},
-    // tambahkan lebih banyak jika ingin melihat pagination bekerja
-    {nama:'John Doe', tgl:'13-02-2025', gol:'B', rhesus:'Rh-', produk:'PRC', kantong:2, status:'Approved'},
-    {nama:'Jane Roe', tgl:'14-02-2025', gol:'O', rhesus:'Rh+', produk:'WB',  kantong:3, status:'Pending'},
-    {nama:'Ahmad',    tgl:'10-02-2025', gol:'AB',rhesus:'Rh+', produk:'FFP', kantong:2, status:'Approved'},
-    {nama:'Siti',     tgl:'11-02-2025', gol:'A', rhesus:'Rh-', produk:'TC',  kantong:1, status:'Rejected'},
-  ];
+  // ---------- Data dari Controller ----------
+  // Controller mengirim $rowsJson (atau fallback ke array kosong)
+  const rows = {!! $rowsJson ?? '[]' !!};
 
   // ---------- State ----------
   let sortKey = '';   // 'nama' | 'tgl' | 'rhesus' | ...
@@ -125,7 +111,7 @@
     return 'bg-rose-50 text-rose-700 border border-rose-200';
   }
   function bloodPill(g){
-    return `<span class="inline-flex items-center justify-center size-6 rounded-full bg-rose-50 text-rose-600 text-xs font-semibold border border-rose-100">${g}</span>`;
+    return `<span class="inline-flex items-center justify-center size-6 rounded-full bg-rose-50 text-rose-600 text-xs font-semibold border border-rose-100">${g ?? '-'}</span>`;
   }
   const icons = {
     eye:`<svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12zm10-3.5A3.5 3.5 0 1 1 8.5 12 3.5 3.5 0 0 1 12 8.5z"/></svg>`,
@@ -139,8 +125,9 @@
     const q = (document.getElementById('searchInput').value || '').toLowerCase().trim();
     const s = document.getElementById('statusSelect')?.value || '';
     return rows.filter(o => {
-      const matchQ = !q || o.nama.toLowerCase().includes(q);
-      const matchS = !s || o.status === s;
+      const name = String(o.nama ?? '').toLowerCase();
+      const matchQ = !q || name.includes(q);
+      const matchS = !s || (o.status === s);
       return matchQ && matchS;
     });
   }
@@ -155,14 +142,14 @@
       if (isNum) return sortDir === 'asc' ? va - vb : vb - va;
       // tanggal dd-mm-yyyy → yyyy-mm-dd untuk compare
       if (sortKey === 'tgl') {
-        const ta = va.split('-').reverse().join('-');
-        const tb = vb.split('-').reverse().join('-');
+        const ta = String(va || '').split('-').reverse().join('-');
+        const tb = String(vb || '').split('-').reverse().join('-');
         if (ta < tb) return sortDir === 'asc' ? -1 : 1;
         if (ta > tb) return sortDir === 'asc' ? 1 : -1;
         return 0;
       }
       // string umum
-      va = String(va).toLowerCase(); vb = String(vb).toLowerCase();
+      va = String(va ?? '').toLowerCase(); vb = String(vb ?? '').toLowerCase();
       if (va < vb) return sortDir === 'asc' ? -1 : 1;
       if (va > vb) return sortDir === 'asc' ? 1 : -1;
       return 0;
@@ -188,19 +175,19 @@
     }
     tbody.innerHTML = data.map(o => `
       <tr class="border-t border-neutral-100 hover:bg-neutral-50/60">
-        <td class="px-4 py-3">${o.nama}</td>
-        <td class="px-4 py-3">${o.tgl}</td>
+        <td class="px-4 py-3">${o.nama ?? '-'}</td>
+        <td class="px-4 py-3">${o.tgl ?? '-'}</td>
         <td class="px-4 py-3">${bloodPill(o.gol)}</td>
-        <td class="px-4 py-3">${o.rhesus}</td>
-        <td class="px-4 py-3"><a href="#" class="text-blue-600 hover:underline">${o.produk}</a></td>
-        <td class="px-4 py-3">${o.kantong}</td>
-        <td class="px-4 py-3"><span class="inline-flex items-center rounded-full px-2.5 py-1 text-xs font-medium ${badgeClass(o.status)}">${o.status}</span></td>
+        <td class="px-4 py-3">${o.rhesus ?? '-'}</td>
+        <td class="px-4 py-3"><span class="text-blue-600">${o.produk ?? '-'}</span></td>
+        <td class="px-4 py-3">${o.kantong ?? 0}</td>
+        <td class="px-4 py-3"><span class="inline-flex items-center rounded-full px-2.5 py-1 text-xs font-medium ${badgeClass(o.status ?? '')}">${o.status ?? '-'}</span></td>
         <td class="px-4 py-3">
           <div class="flex items-center gap-3 text-neutral-600">
-            <button class="hover:text-neutral-900" title="Lihat">${icons.eye}</button>
-            <button class="hover:text-neutral-900" title="Edit">${icons.edit}</button>
-            <button class="hover:text-neutral-900" title="Duplikasi">${icons.dup}</button>
-            <button class="hover:text-rose-700" title="Hapus">${icons.del}</button>
+            <button class="hover:text-neutral-900" title="Lihat"    data-id="${o.id ?? ''}">${icons.eye}</button>
+            <button class="hover:text-neutral-900" title="Edit"     data-id="${o.id ?? ''}">${icons.edit}</button>
+            <button class="hover:text-neutral-900" title="Duplikasi"data-id="${o.id ?? ''}">${icons.dup}</button>
+            <button class="hover:text-rose-700"   title="Hapus"    data-id="${o.id ?? ''}">${icons.del}</button>
           </div>
         </td>
       </tr>
@@ -209,25 +196,28 @@
 
   function renderCards(data) {
     const wrap = document.getElementById('cardsContainer');
-    if (data.length === 0) { wrap.innerHTML = `<div class="text-center text-neutral-500">Tidak ada data.</div>`; return; }
+    if (data.length === 0) {
+      wrap.innerHTML = `<div class="text-center text-neutral-500">Tidak ada data.</div>`;
+      return;
+    }
     wrap.innerHTML = data.map(o => `
       <div class="rounded-2xl border border-neutral-200 bg-white p-4">
         <div class="flex items-start justify-between">
-          <p class="font-medium">${o.nama}</p>
-          <span class="inline-flex items-center rounded-full px-2.5 py-1 text-xs font-medium ${badgeClass(o.status)}">${o.status}</span>
+          <p class="font-medium">${o.nama ?? '-'}</p>
+          <span class="inline-flex items-center rounded-full px-2.5 py-1 text-xs font-medium ${badgeClass(o.status ?? '')}">${o.status ?? '-'}</span>
         </div>
         <div class="mt-3 grid grid-cols-2 gap-2 text-sm">
-          <div class="text-neutral-500">Tanggal</div><div>${o.tgl}</div>
+          <div class="text-neutral-500">Tanggal</div><div>${o.tgl ?? '-'}</div>
           <div class="text-neutral-500">Golongan</div><div>${bloodPill(o.gol)}</div>
-          <div class="text-neutral-500">Rhesus</div><div>${o.rhesus}</div>
-          <div class="text-neutral-500">Produk</div><div>${o.produk}</div>
-          <div class="text-neutral-500">Kantong</div><div>${o.kantong}</div>
+          <div class="text-neutral-500">Rhesus</div><div>${o.rhesus ?? '-'}</div>
+          <div class="text-neutral-500">Produk</div><div>${o.produk ?? '-'}</div>
+          <div class="text-neutral-500">Kantong</div><div>${o.kantong ?? 0}</div>
         </div>
         <div class="mt-3 flex items-center gap-4 text-neutral-600">
-          <button class="hover:text-neutral-900" title="Lihat">${icons.eye}</button>
-          <button class="hover:text-neutral-900" title="Edit">${icons.edit}</button>
-          <button class="hover:text-neutral-900" title="Duplikasi">${icons.dup}</button>
-          <button class="hover:text-rose-700" title="Hapus">${icons.del}</button>
+          <button class="hover:text-neutral-900" title="Lihat"    data-id="${o.id ?? ''}">${icons.eye}</button>
+          <button class="hover:text-neutral-900" title="Edit"     data-id="${o.id ?? ''}">${icons.edit}</button>
+          <button class="hover:text-neutral-900" title="Duplikasi"data-id="${o.id ?? ''}">${icons.dup}</button>
+          <button class="hover:text-rose-700"   title="Hapus"    data-id="${o.id ?? ''}">${icons.del}</button>
         </div>
       </div>
     `).join('');
@@ -272,7 +262,6 @@
   }
 
   function getPageRange(totalPages, current, max=5) {
-    // menghasilkan array nomor halaman dengan elipsis jika perlu
     const pages = [];
     const half = Math.floor(max/2);
     let start = Math.max(1, current - half);
@@ -349,5 +338,4 @@
 <style>
   th.sortable:hover { background-color: rgba(0,0,0,0.02); }
 </style>
-
 @endsection
