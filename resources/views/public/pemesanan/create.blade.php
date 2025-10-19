@@ -620,7 +620,7 @@
           <button type="button"
                   class="rounded-lg border border-slate-300 px-6 py-3 text-slate-700 transition hover:bg-slate-50"
                   onclick="hideSuccessModal()">Tutup</button>
-          <a href="{{ route('public.event.create') }}"
+          <a href="{{ route('pemesanan.create') }}"
              class="rounded-lg bg-red-600 px-6 py-3 text-white transition hover:bg-red-700">Ajukan Lagi</a>
         </div>
       </div>

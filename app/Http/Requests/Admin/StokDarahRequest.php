@@ -18,11 +18,20 @@ class StokDarahRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'produk'         => ['required','string','max:150'],
-            'gol'            => ['required','in:A,AB,B,O'],
-            'tgl_masuk'      => ['required','date'],
-            'tgl_kadaluarsa' => ['required','date','after:tgl_masuk'],
-            'jumlah'         => ['required','integer','min:1','max:100000'],
+            'produk'         => ['required', 'string', 'max:255'],
+            'gol_darah'      => ['required', 'in:A,AB,B,O'],
+            'jumlah'         => ['required', 'integer', 'min:1'],
+            'tgl_masuk'      => ['required', 'date'],
+            'tgl_kadaluarsa' => ['required', 'date', 'after_or_equal:tgl_masuk'],
+        ];
+    }
+
+    public function attributes(): array
+    {
+        return [
+            'gol_darah'      => 'Golongan darah',
+            'tgl_masuk'      => 'Tanggal masuk',
+            'tgl_kadaluarsa' => 'Tanggal kadaluwarsa',
         ];
     }
 }

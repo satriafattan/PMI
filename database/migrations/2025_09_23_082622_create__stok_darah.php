@@ -7,23 +7,27 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration {
     public function up(): void
     {
-       Schema::create('stok_darah', function (Blueprint $table) {
+        Schema::create('stok_darah', function (Blueprint $table) {
             $table->id();
-            $table->string('code', 16)->nullable()->unique();
+
+            // Produk (misalnya: WB, PRC, TC, dll)
             $table->string('produk', 191);
 
-            $table->unsignedInteger('a_stock')->default(0);
-            $table->unsignedInteger('ab_stock')->default(0);
-            $table->unsignedInteger('b_stock')->default(0);
-            $table->unsignedInteger('o_stock')->default(0);
+            // Golongan darah (A, B, AB, O)
+            $table->enum('gol_darah', ['A', 'B', 'AB', 'O']);
 
-            $table->unsignedInteger('low_threshold')->default(25);
-            $table->unsignedInteger('critical_threshold')->default(10);
+            // Jumlah unit kantong
+            $table->unsignedInteger('jumlah')->default(0);
+
+            // Tanggal masuk & kadaluarsa
+            $table->date('tgl_masuk');
+            $table->date('tgl_kadaluarsa');
 
             $table->timestamps();
-            $table->index('produk');
-        });
 
+            // Index untuk pencarian cepat
+            $table->index(['produk', 'gol_darah']);
+        });
     }
 
     public function down(): void

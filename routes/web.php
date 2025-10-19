@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\Route;
 // === Public Controllers ===
 use App\Http\Controllers\Public\PublicPemesananController;
 use App\Http\Controllers\Public\EventScheduleController;
-use App\Http\Controllers\Public\StokController;
+// use App\Http\Controllers\Public\StokController;
 
 // === Admin Controllers ===
 use App\Http\Controllers\Admin\AuthController;
@@ -46,7 +46,7 @@ Route::get('/pemesanan/konfirmasi/{kode}', [PublicPemesananController::class, 'k
 Route::get('/jadwal-event',  [EventScheduleController::class, 'create'])->name('public.event.create');
 Route::post('/jadwal-event', [EventScheduleController::class, 'store'])->name('public.event.store');
 
-Route::get('/stok', StokController::class)->name('stok');
+// Route::get('/stok', StokController::class)->name('stok');
 
 /*
 |--------------------------------------------------------------------------
@@ -84,7 +84,7 @@ Route::middleware('auth:admin')->prefix('admin')->name('admin.')->group(function
 
     // Stok Darah
     Route::resource('stok-darah', StokDarahController::class)->except(['show']);
-    Route::get('/stok',    [StokController::class, 'index'])->name('stok.index');
+    Route::get('/stok',    [StokDarahController::class, 'index'])->name('stok.index');
     Route::post('/stok',   [StokDarahController::class, 'store'])->name('stok.store');
 
     // Verifikasi Pemesanan
