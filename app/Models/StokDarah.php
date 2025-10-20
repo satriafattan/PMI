@@ -10,14 +10,13 @@ class StokDarah extends Model
 
     protected $fillable = [
         'produk',
-        'gol_darah',          // 'A','AB','B','O'
-        'jumlah',             // int
-        'tgl_masuk',          // date
-        'tgl_kadaluarsa',     // date
+        'gol_darah',
+        'jumlah',
+        'tgl_masuk',
+        'tgl_kadaluarsa',
     ];
 
     protected $casts = [
-        'jumlah'         => 'integer',
         'tgl_masuk'      => 'date',
         'tgl_kadaluarsa' => 'date',
     ];

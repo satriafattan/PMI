@@ -12,35 +12,30 @@ class StokDarahController extends Controller
 {
     public function index(Request $r)
     {
-        // Ambil semua stok (opsional: filter kadaluwarsa)
         $stok = StokDarah::query()
             // ->whereDate('tgl_kadaluarsa', '>=', now()->toDateString())
             ->get();
-            // Bentuk agregasi per produk
-            $rows = $this->aggregateRows($stok);
-        // dd($rows);
+
+        $rows = $this->aggregateRows($stok);
 
         return view('admin.stok.index', [
-            'rows' => $rows, // Collection atau array
+            'rows' => $rows, // dipakai JS di view admin
         ]);
     }
 
     public function store(StokDarahRequest $request)
     {
-        // Simpan satu entri stok
         StokDarah::create($request->validated());
 
-        // Monolith: redirect balik ke index + flash success
         return redirect()
             ->route('admin.stok.index')
             ->with('success', 'Stok berhasil disimpan.');
     }
 
-    /** @return \Illuminate\Support\Collection<int,array> */
-    private function aggregateRows(Collection $stok)
+    /** Agregasi per produk */
+    private function aggregateRows(Collection $stok): Collection
     {
-        // groupBy produk, lalu sum per golongan
-        $grouped = $stok->groupBy('produk')->map(function ($items, $produk) {
+        return $stok->groupBy('produk')->map(function ($items, $produk) {
             $sumA  = (int)$items->where('gol_darah', 'A')->sum('jumlah');
             $sumAB = (int)$items->where('gol_darah', 'AB')->sum('jumlah');
             $sumB  = (int)$items->where('gol_darah', 'B')->sum('jumlah');
@@ -54,9 +49,6 @@ class StokDarahController extends Controller
                 'O'      => $sumO,
                 'total'  => $sumA + $sumAB + $sumB + $sumO,
             ];
-        });
-
-        return $grouped->values();
+        })->values();
     }
 }
-

@@ -2,105 +2,105 @@
 
 @section('content')
 <div class="space-y-6">
-  {{-- Header --}}
-  <div class="space-y-1">
-    <h1 class="text-2xl md:text-3xl font-semibold">Verifikasi Pemesanan</h1>
-    <p class="text-sm text-neutral-500">Kelola dan verifikasi permintaan darah dari rumah sakit</p>
-  </div>
+      {{-- Header --}}
+      <div class="space-y-1">
+        <h1 class="text-2xl md:text-3xl font-semibold">Verifikasi Pemesanan</h1>
+        <p class="text-sm text-neutral-500">Kelola dan verifikasi permintaan darah dari rumah sakit</p>
+      </div>
 
-  @php
-    $q       = request('q', '');
-    $statusQ = request('status', '');
-    $golQ    = request('gol', '');
-    $perPage = (int) request('per_page', 10);
-    $statusMap = [
-      'approved' => 'bg-emerald-50 text-emerald-700 border border-emerald-200',
-      'pending'  => 'bg-amber-50 text-amber-700 border border-amber-200',
-      'rejected' => 'bg-rose-50 text-rose-700 border border-rose-200',
-    ];
-    function blood_pill($g) {
-      $isRed = in_array($g, ['A+','A-','AB+','AB-']);
-      $cls = $isRed
-        ? 'bg-rose-50 text-rose-600 border-rose-100'
-        : 'bg-sky-50 text-sky-700 border-sky-100';
-      return '<span class="inline-flex items-center justify-center h-6 px-2 rounded-full text-xs font-semibold border '.$cls.'">'.$g.'</span>';
-    }
-    function product_pill($p) {
-      return '<span class="inline-flex items-center rounded-full border border-sky-200 bg-sky-50 px-2.5 py-0.5 text-xs text-sky-700">'.$p.'</span>';
-    }
-  @endphp
+      @php
+        $q       = request('q', '');
+        $statusQ = request('status', '');
+        $golQ    = request('gol', '');
+        $perPage = (int) request('per_page', 10);
+        $statusMap = [
+          'approved' => 'bg-emerald-50 text-emerald-700 border border-emerald-200',
+          'pending'  => 'bg-amber-50 text-amber-700 border border-amber-200',
+          'rejected' => 'bg-rose-50 text-rose-700 border border-rose-200',
+        ];
+        function blood_pill($g) {
+          $isRed = in_array($g, ['A+','A-','AB+','AB-']);
+          $cls = $isRed
+            ? 'bg-rose-50 text-rose-600 border-rose-100'
+            : 'bg-sky-50 text-sky-700 border-sky-100';
+          return '<span class="inline-flex items-center justify-center h-6 px-2 rounded-full text-xs font-semibold border '.$cls.'">'.$g.'</span>';
+        }
+        function product_pill($p) {
+          return '<span class="inline-flex items-center rounded-full border border-sky-200 bg-sky-50 px-2.5 py-0.5 text-xs text-sky-700">'.$p.'</span>';
+        }
+      @endphp
 
-  {{-- Toolbar (form GET) --}}
-  <form id="filterForm" method="GET" class="flex flex-col sm:flex-row gap-3 items-stretch sm:items-center">
-    <div class="relative flex-1">
-      <span class="pointer-events-none absolute inset-y-0 left-3 flex items-center">
-        <svg class="size-5 text-neutral-400" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6"
-                d="m21 21-4.3-4.3M10 18a8 8 0 1 1 0-16 8 8 0 0 1 0 16z"/>
-        </svg>
-      </span>
-      <input name="q" value="{{ $q }}" type="text"
-        class="w-full rounded-xl border border-neutral-200 bg-white pl-11 pr-3 py-2.5 text-sm placeholder-neutral-400 focus:outline-none focus:ring-2 focus:ring-neutral-900/10 focus:border-neutral-300"
-        placeholder="Cari nama pasien atau rumah sakit..." />
-    </div>
+      {{-- Toolbar (form GET) --}}
+      <form id="filterForm" method="GET" class="flex flex-col sm:flex-row gap-3 items-stretch sm:items-center">
+        <div class="relative flex-1">
+          <span class="pointer-events-none absolute inset-y-0 left-3 flex items-center">
+            <svg class="size-5 text-neutral-400" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6"
+                    d="m21 21-4.3-4.3M10 18a8 8 0 1 1 0-16 8 8 0 0 1 0 16z"/>
+            </svg>
+          </span>
+          <input name="q" value="{{ $q }}" type="text"
+            class="w-full rounded-xl border border-neutral-200 bg-white pl-11 pr-3 py-2.5 text-sm placeholder-neutral-400 focus:outline-none focus:ring-2 focus:ring-neutral-900/10 focus:border-neutral-300"
+            placeholder="Cari nama pasien atau rumah sakit..." />
+        </div>
 
-    {{-- Filter dropdown --}}
-    <div class="relative">
-      <button type="button" id="filterBtn"
-        class="inline-flex items-center justify-center rounded-xl border border-neutral-200 bg-white px-3 py-2 text-sm shadow-sm hover:bg-neutral-50">
-        <svg class="size-5 text-neutral-600" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6" d="M3 6h18M6 12h12M10 18h4"/>
-        </svg>
-      </button>
-      <div id="filterMenu"
-           class="hidden absolute right-0 z-20 mt-2 w-64 rounded-xl border border-neutral-200 bg-white p-3 shadow-lg">
-        <div class="space-y-3">
-          <div>
-            <label class="text-xs font-medium text-neutral-500">Status</label>
-            <select id="statusSelect"
-                    class="mt-1 w-full rounded-lg border border-neutral-200 bg-white px-3 py-2 text-sm">
-              <option value=""  {{ $statusQ==='' ? 'selected' : '' }}>Semua</option>
-              <option value="approved" {{ $statusQ==='approved' ? 'selected' : '' }}>Approved</option>
-              <option value="pending"  {{ $statusQ==='pending'  ? 'selected' : '' }}>Pending</option>
-              <option value="rejected" {{ $statusQ==='rejected' ? 'selected' : '' }}>Rejected</option>
-            </select>
-          </div>
-          <div>
-            <label class="text-xs font-medium text-neutral-500">Golongan Darah</label>
-            <select id="golSelect"
-                    class="mt-1 w-full rounded-lg border border-neutral-200 bg-white px-3 py-2 text-sm">
-              @php $gOpts = [''=>'Semua','A+'=>'A+','A-'=>'A-','B+'=>'B+','B-'=>'B-','AB+'=>'AB+','AB-'=>'AB-','O+'=>'O+','O-'=>'O-']; @endphp
-              @foreach($gOpts as $val=>$lab)
-                <option value="{{ $val }}" {{ $golQ===$val ? 'selected' : '' }}>{{ $lab }}</option>
-              @endforeach
-            </select>
-          </div>
-          <div class="flex items-center justify-between">
-            <button type="button" id="resetBtn" class="text-sm text-neutral-600 hover:underline">Reset</button>
-            <button type="button" id="applyBtn" class="rounded-lg bg-neutral-900 text-white text-sm px-3 py-1.5 hover:bg-neutral-800">Terapkan</button>
+        {{-- Filter dropdown --}}
+        <div class="relative">
+          <button type="button" id="filterBtn"
+            class="inline-flex items-center justify-center rounded-xl border border-neutral-200 bg-white px-3 py-2 text-sm shadow-sm hover:bg-neutral-50">
+            <svg class="size-5 text-neutral-600" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6" d="M3 6h18M6 12h12M10 18h4"/>
+            </svg>
+          </button>
+          <div id="filterMenu"
+              class="hidden absolute right-0 z-20 mt-2 w-64 rounded-xl border border-neutral-200 bg-white p-3 shadow-lg">
+            <div class="space-y-3">
+              <div>
+                <label class="text-xs font-medium text-neutral-500">Status</label>
+                <select id="statusSelect"
+                        class="mt-1 w-full rounded-lg border border-neutral-200 bg-white px-3 py-2 text-sm">
+                  <option value=""  {{ $statusQ==='' ? 'selected' : '' }}>Semua</option>
+                  <option value="approved" {{ $statusQ==='approved' ? 'selected' : '' }}>Approved</option>
+                  <option value="pending"  {{ $statusQ==='pending'  ? 'selected' : '' }}>Pending</option>
+                  <option value="rejected" {{ $statusQ==='rejected' ? 'selected' : '' }}>Rejected</option>
+                </select>
+              </div>
+              <div>
+                <label class="text-xs font-medium text-neutral-500">Golongan Darah</label>
+                <select id="golSelect"
+                        class="mt-1 w-full rounded-lg border border-neutral-200 bg-white px-3 py-2 text-sm">
+                  @php $gOpts = [''=>'Semua','A+'=>'A+','A-'=>'A-','B+'=>'B+','B-'=>'B-','AB+'=>'AB+','AB-'=>'AB-','O+'=>'O+','O-'=>'O-']; @endphp
+                  @foreach($gOpts as $val=>$lab)
+                    <option value="{{ $val }}" {{ $golQ===$val ? 'selected' : '' }}>{{ $lab }}</option>
+                  @endforeach
+                </select>
+              </div>
+              <div class="flex items-center justify-between">
+                <button type="button" id="resetBtn" class="text-sm text-neutral-600 hover:underline">Reset</button>
+                <button type="button" id="applyBtn" class="rounded-lg bg-neutral-900 text-white text-sm px-3 py-1.5 hover:bg-neutral-800">Terapkan</button>
+              </div>
+            </div>
           </div>
         </div>
-      </div>
-    </div>
 
-    {{-- Hidden inputs untuk filter --}}
-    <input type="hidden" name="status" id="statusInput" value="{{ $statusQ }}">
-    <input type="hidden" name="gol"    id="golInput"    value="{{ $golQ }}">
-    <input type="hidden" name="per_page" id="perPageInput" value="{{ $perPage }}">
+        {{-- Hidden inputs untuk filter --}}
+        <input type="hidden" name="status" id="statusInput" value="{{ $statusQ }}">
+        <input type="hidden" name="gol"    id="golInput"    value="{{ $golQ }}">
+        <input type="hidden" name="per_page" id="perPageInput" value="{{ $perPage }}">
 
-    {{-- Page size --}}
-    <div class="flex items-center gap-2 sm:ml-auto">
-      <label for="pageSize" class="text-sm text-neutral-600">Baris:</label>
-      <select id="pageSize" class="rounded-xl border border-neutral-200 bg-white px-2 py-2 text-sm">
-        @foreach([5,10,20] as $opt)
-          <option value="{{ $opt }}" {{ $perPage===$opt ? 'selected' : '' }}>{{ $opt }}</option>
-        @endforeach
-      </select>
-      <button class="rounded-xl border border-neutral-200 bg-white px-3 py-2 text-sm shadow-sm hover:bg-neutral-50">
-        Terapkan
-      </button>
-    </div>
-  </form>
+        {{-- Page size --}}
+        <div class="flex items-center gap-2 sm:ml-auto">
+          <label for="pageSize" class="text-sm text-neutral-600">Baris:</label>
+          <select id="pageSize" class="rounded-xl border border-neutral-200 bg-white px-2 py-2 text-sm">
+            @foreach([5,10,20] as $opt)
+              <option value="{{ $opt }}" {{ $perPage===$opt ? 'selected' : '' }}>{{ $opt }}</option>
+            @endforeach
+          </select>
+          <button class="rounded-xl border border-neutral-200 bg-white px-3 py-2 text-sm shadow-sm hover:bg-neutral-50">
+            Terapkan
+          </button>
+        </div>
+      </form>
 
   {{-- TABLE (≥ md) --}}
   <div class="hidden md:block rounded-2xl border border-neutral-200 bg-white overflow-hidden">
