@@ -96,9 +96,7 @@
               <option value="{{ $opt }}" {{ $perPage===$opt ? 'selected' : '' }}>{{ $opt }}</option>
             @endforeach
           </select>
-          <button class="rounded-xl border border-neutral-200 bg-white px-3 py-2 text-sm shadow-sm hover:bg-neutral-50">
-            Terapkan
-          </button>
+         
         </div>
       </form>
 
