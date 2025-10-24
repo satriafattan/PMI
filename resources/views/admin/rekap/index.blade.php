@@ -1,74 +1,14 @@
-{{-- resources/views/admin/rekap/index.blade.php --}}
 @extends('layouts.admin')
 @section('title', 'Rekapitulasi Stok Darah')
 
 @section('content')
-@php
-  // Nilai default filter agar tidak undefined
-  $q        = request('q', '');
-  $golQ     = request('gol', '');
-  $rhQ      = request('rhesus', '');
-  $kompQ    = request('komponen', '');
-  $statusQ  = request('status', ''); // ''|aktif|keluar
-  $fromIn   = request('masuk_from', '');
-  $toIn     = request('masuk_to', '');
-  $fromOut  = request('keluar_from', '');
-  $toOut    = request('keluar_to', '');
-  $perPage  = (int) request('per_page', 10);
+<div class="space-y-6">
+  {{-- Title --}}
+  <h1 class="text-2xl md:text-3xl font-semibold">Histori Darah Keluar &amp; Kadaluwarsa</h1>
 
-  $kompOpts = [
-    'WB: Whole Blood','PRC: Packed Red Cell','TC: Trombocyte Concentrate',
-    'FFP: Fresh Frozen Plasma','AHF: Cryoprecipitated AHF','LP: Liquid Plasma',
-    'TC Afereris','Plasma Konvalesen'
-  ];
-@endphp
-
-<div class="px-6 pb-10 pt-6 space-y-8">
-  {{-- Header --}}
-  <div class="space-y-1">
-    <h1 class="text-2xl md:text-3xl font-semibold">Rekapitulasi Stok Darah</h1>
-    <p class="text-sm text-neutral-500">Daftar semua unit darah beserta statusnya</p>
-  </div>
-
-  {{-- Flash --}}
-  @if (session('success'))
-    <div class="rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-emerald-800">
-      {{ session('success') }}
-    </div>
-  @endif
-
-  {{-- Ringkasan --}}
-  <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-    <div class="rounded-xl border border-emerald-200 bg-emerald-50 p-5">
-      <div class="text-sm text-emerald-700">Unit Aktif (belum keluar)</div>
-      <div class="mt-2 text-2xl font-bold text-emerald-800">
-        {{ $activeUnits ?? 0 }} <span class="text-base font-medium">unit</span>
-      </div>
-    </div>
-    <div class="rounded-xl border border-slate-200 bg-slate-50 p-5">
-      <div class="text-sm text-slate-600">Total Unit</div>
-      <div class="mt-2 text-2xl font-bold text-slate-800">
-        {{ $totalUnits ?? 0 }} <span class="text-base font-medium">unit</span>
-      </div>
-    </div>
-    <div class="rounded-xl border border-amber-200 bg-amber-50 p-5">
-      <div class="text-sm text-amber-700">Keluar (bulan ini)</div>
-      <div class="mt-2 text-2xl font-bold text-amber-800">
-        {{ $outThisMonth ?? 0 }} <span class="text-base font-medium">unit</span>
-      </div>
-    </div>
-    <div class="rounded-xl border border-rose-200 bg-rose-50 p-5">
-      <div class="text-sm text-rose-700">Golongan Terdata</div>
-      <div class="mt-2 text-2xl font-bold text-rose-800">
-        {{ $bloodGroupsCount ?? 0 }} <span class="text-base font-medium">tipe</span>
-      </div>
-    </div>
-  </div>
-
-  {{-- Toolbar: Search full-width + Filter + Page size --}}
-  <form method="GET" action="{{ route('admin.rekap-stok.index') }}"
-        class="flex w-full items-center gap-2">
-    {{-- Search FULL WIDTH --}}
+  {{-- Toolbar --}}
+  <div class="flex flex-col sm:flex-row gap-3 items-stretch sm:items-center">
+    {{-- Search --}}
     <div class="relative flex-1">
       <span class="pointer-events-none absolute inset-y-0 left-3 flex items-center">
         <svg class="size-5 text-neutral-400" viewBox="0 0 24 24" fill="none" stroke="currentColor">
@@ -76,229 +16,282 @@
                 d="m21 21-4.3-4.3M10 18a8 8 0 1 1 0-16 8 8 0 0 1 0 16z"/>
         </svg>
       </span>
-      <input id="searchInput" name="q" value="{{ $q }}" type="text"
-             class="w-full rounded-xl border border-neutral-200 bg-white py-2.5 pl-11 pr-3 text-sm placeholder-neutral-400 focus:border-neutral-300 focus:outline-none focus:ring-2 focus:ring-neutral-900/10"
-             placeholder="Cari ID darah, komponen, atau keterangan…"/>
+      <input id="searchInput" type="text"
+             class="w-full rounded-xl border border-neutral-200 bg-white pl-11 pr-3 py-2.5 text-sm placeholder-neutral-400 focus:outline-none focus:ring-2 focus:ring-neutral-900/10 focus:border-neutral-300"
+             placeholder="Cari nama pemesan atau rumah sakit..." />
     </div>
 
-    {{-- Filter button + menu --}}
+    {{-- Filter dropdown --}}
     <div class="relative">
-      <button type="button" id="filterBtn"
+      <button id="filterBtn"
               class="inline-flex items-center justify-center rounded-xl border border-neutral-200 bg-white px-3 py-2 text-sm shadow-sm hover:bg-neutral-50">
         <svg class="size-5 text-neutral-600" viewBox="0 0 24 24" fill="none" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6" d="M3 6h18M6 12h12M10 18h4"/>
         </svg>
       </button>
-
       <div id="filterMenu"
-           class="absolute right-0 z-20 mt-2 hidden w-[24rem] rounded-xl border border-neutral-200 bg-white p-3 shadow-lg">
-        <div class="grid gap-3 sm:grid-cols-2">
-          <div>
-            <label class="text-xs font-medium text-neutral-500">Golongan</label>
-            <select id="golSelect" class="mt-1 w-full rounded-lg border border-neutral-200 bg-white px-3 py-2 text-sm">
-              <option value="">Semua</option>
-              @foreach (['A','B','AB','O'] as $g)
-                <option value="{{ $g }}" {{ $golQ===$g ? 'selected':'' }}>{{ $g }}</option>
-              @endforeach
-            </select>
-          </div>
-
-          <div>
-            <label class="text-xs font-medium text-neutral-500">Rhesus</label>
-            <select id="rhesusSelect" class="mt-1 w-full rounded-lg border border-neutral-200 bg-white px-3 py-2 text-sm">
-              <option value="">Semua</option>
-              <option value="+" {{ $rhQ==='+'?'selected':'' }}>+</option>
-              <option value="-" {{ $rhQ==='-'?'selected':'' }}>-</option>
-            </select>
-          </div>
-
-          <div class="sm:col-span-2">
-            <label class="text-xs font-medium text-neutral-500">Komponen</label>
-            <select id="kompSelect" class="mt-1 w-full rounded-lg border border-neutral-200 bg-white px-3 py-2 text-sm">
-              <option value="">Semua</option>
-              @foreach ($kompOpts as $opt)
-                <option value="{{ $opt }}" {{ $kompQ===$opt ? 'selected':'' }}>{{ $opt }}</option>
-              @endforeach
-            </select>
-          </div>
-
+           class="hidden absolute right-0 z-20 mt-2 w-64 rounded-xl border border-neutral-200 bg-white p-3 shadow-lg">
+        <div class="space-y-3">
           <div>
             <label class="text-xs font-medium text-neutral-500">Status</label>
-            <select id="statusSelect" class="mt-1 w-full rounded-lg border border-neutral-200 bg-white px-3 py-2 text-sm">
-              <option value="" {{ $statusQ===''?'selected':'' }}>Semua</option>
-              <option value="aktif"  {{ $statusQ==='aktif' ?'selected':'' }}>Aktif</option>
-              <option value="keluar" {{ $statusQ==='keluar'?'selected':'' }}>Keluar</option>
+            <select id="statusSelect"
+                    class="mt-1 w-full rounded-lg border border-neutral-200 bg-white px-3 py-2 text-sm">
+              <option value="">Semua</option>
+              <option>Approved</option>
+              <option>Pending</option>
+              <option>Rejected</option>
             </select>
           </div>
-
-          <div>
-            <label class="text-xs font-medium text-neutral-500">Masuk (dari)</label>
-            <input type="date" id="masukFrom" value="{{ $fromIn }}"
-                   class="mt-1 w-full rounded-lg border border-neutral-200 bg-white px-3 py-2 text-sm">
-          </div>
-          <div>
-            <label class="text-xs font-medium text-neutral-500">Masuk (hingga)</label>
-            <input type="date" id="masukTo" value="{{ $toIn }}"
-                   class="mt-1 w-full rounded-lg border border-neutral-200 bg-white px-3 py-2 text-sm">
-          </div>
-
-          <div>
-            <label class="text-xs font-medium text-neutral-500">Keluar (dari)</label>
-            <input type="date" id="keluarFrom" value="{{ $fromOut }}"
-                   class="mt-1 w-full rounded-lg border border-neutral-200 bg-white px-3 py-2 text-sm">
-          </div>
-          <div>
-            <label class="text-xs font-medium text-neutral-500">Keluar (hingga)</label>
-            <input type="date" id="keluarTo" value="{{ $toOut }}"
-                   class="mt-1 w-full rounded-lg border border-neutral-200 bg-white px-3 py-2 text-sm">
-          </div>
-
-          <div class="sm:col-span-2 flex items-center justify-between">
-            <button type="button" id="resetBtn" class="text-sm text-neutral-600 hover:underline">Reset</button>
-            <button type="submit" id="applyBtn"
-                    class="rounded-lg bg-neutral-900 px-3 py-1.5 text-sm text-white hover:bg-neutral-800">
-              Terapkan
-            </button>
+          <div class="flex items-center justify-between">
+            <button id="resetBtn" class="text-sm text-neutral-600 hover:underline">Reset</button>
+            <button id="applyBtn" class="rounded-lg bg-neutral-900 text-white text-sm px-3 py-1.5 hover:bg-neutral-800">Terapkan</button>
           </div>
         </div>
-
-        {{-- Hidden inputs untuk request GET --}}
-        <input type="hidden" name="gol"         id="golInput"         value="{{ $golQ }}">
-        <input type="hidden" name="rhesus"      id="rhesusInput"      value="{{ $rhQ }}">
-        <input type="hidden" name="komponen"    id="kompInput"        value="{{ $kompQ }}">
-        <input type="hidden" name="status"      id="statusInput"      value="{{ $statusQ }}">
-        <input type="hidden" name="masuk_from"  id="masukFromInput"   value="{{ $fromIn }}">
-        <input type="hidden" name="masuk_to"    id="masukToInput"     value="{{ $toIn }}">
-        <input type="hidden" name="keluar_from" id="keluarFromInput"  value="{{ $fromOut }}">
-        <input type="hidden" name="keluar_to"   id="keluarToInput"    value="{{ $toOut }}">
-        <input type="hidden" name="per_page"    id="perPageInput"     value="{{ $perPage }}">
       </div>
     </div>
 
-    {{-- Page size (kecil di kanan, tidak mengurangi lebar search) --}}
-    <div class="flex items-center gap-2">
+    {{-- Page size --}}
+    <div class="flex items-center gap-2 sm:ml-auto">
       <label for="pageSize" class="text-sm text-neutral-600">Baris:</label>
       <select id="pageSize" class="rounded-xl border border-neutral-200 bg-white px-2 py-2 text-sm">
-        @foreach([5,10,20] as $opt)
-          <option value="{{ $opt }}" {{ $perPage===$opt ? 'selected' : '' }}>{{ $opt }}</option>
-        @endforeach
+        <option>5</option>
+        <option selected>10</option>
+        <option>20</option>
       </select>
     </div>
-  </form>
-
-  {{-- Info jumlah --}}
-  <div class="text-sm text-slate-500">
-    Menampilkan {{ $rekap->firstItem() ?? 0 }}–{{ $rekap->lastItem() ?? 0 }} dari {{ $rekap->total() }} data
   </div>
 
-  {{-- Tabel --}}
-  <div class="overflow-hidden rounded-2xl border border-neutral-200 bg-white">
+  {{-- Table (≥ md) --}}
+  <div class="hidden md:block rounded-2xl border border-neutral-200 bg-white overflow-hidden">
     <div class="overflow-x-auto">
-      <table class="min-w-full divide-y divide-neutral-200 text-sm">
+      <table class="min-w-full text-sm">
         <thead class="bg-neutral-50 text-neutral-600">
           <tr class="text-left">
-            <th class="px-4 py-3 font-semibold">ID Darah</th>
-            <th class="px-4 py-3 font-semibold">Komponen</th>
-            <th class="px-4 py-3 text-center font-semibold">Gol.</th>
-            <th class="px-4 py-3 text-center font-semibold">Rhesus</th>
-            <th class="px-4 py-3 text-center font-semibold">Tgl Masuk</th>
-            <th class="px-4 py-3 text-center font-semibold">Tgl Keluar</th>
-            <th class="px-4 py-3 font-semibold">Keterangan</th>
-            <th class="px-4 py-3 text-center font-semibold">Aksi</th>
+            <th data-key="id"        class="sortable px-4 py-3 font-medium cursor-pointer select-none">ID Darah</th>
+            <th data-key="gol"       class="sortable px-4 py-3 font-medium cursor-pointer select-none">Golongan Darah</th>
+            <th data-key="rhesus"    class="sortable px-4 py-3 font-medium cursor-pointer select-none">Rhesus</th>
+            <th data-key="produk"    class="sortable px-4 py-3 font-medium cursor-pointer select-none">Produk Darah</th>
+            <th data-key="tglMasuk"  class="sortable px-4 py-3 font-medium cursor-pointer select-none">Tanggal Masuk</th>
+            <th data-key="tglExp"    class="sortable px-4 py-3 font-medium cursor-pointer select-none">Tanggal Kadaluwarsa</th>
+            <th data-key="penerima"  class="sortable px-4 py-3 font-medium cursor-pointer select-none">Penerima</th>
+            <th data-key="status"    class="sortable px-4 py-3 font-medium cursor-pointer select-none">Status</th>
           </tr>
         </thead>
-        <tbody class="divide-y divide-neutral-100">
-          @forelse ($rekap as $row)
-            <tr class="odd:bg-white even:bg-neutral-50/50">
-              <td class="px-4 py-3 font-medium text-neutral-800">{{ $row->id_darah }}</td>
-              <td class="px-4 py-3 text-neutral-800">{{ $row->komponen }}</td>
-              <td class="px-4 py-3 text-center">{{ $row->gol_darah }}</td>
-              <td class="px-4 py-3 text-center">{{ $row->rhesus }}</td>
-              <td class="px-4 py-3 text-center">
-                @if($row->tanggal_masuk)
-                  {{ \Illuminate\Support\Carbon::parse($row->tanggal_masuk)->format('d M Y') }}
-                @else - @endif
-              </td>
-              <td class="px-4 py-3 text-center">
-                @if($row->tanggal_keluar)
-                  {{ \Illuminate\Support\Carbon::parse($row->tanggal_keluar)->format('d M Y') }}
-                @else
-                  <span class="rounded bg-emerald-50 px-2 py-1 text-xs text-emerald-700">Aktif</span>
-                @endif
-              </td>
-              <td class="px-4 py-3">{{ $row->keterangan ?? '-' }}</td>
-              <td class="px-4 py-3">
-                <div class="flex items-center justify-center gap-2">
-                  <a href="{{ route('admin.rekap-stok.edit', $row->id) }}"
-                     class="rounded border border-neutral-300 px-2 py-1 text-neutral-700 hover:bg-neutral-100"
-                     title="Edit">✏️</a>
-                  <form method="POST" action="{{ route('admin.rekap-stok.destroy', $row->id) }}"
-                        onsubmit="return confirm('Hapus data ini?')">
-                    @csrf @method('DELETE')
-                    <button class="rounded border border-neutral-300 px-2 py-1 text-rose-600 hover:bg-rose-50"
-                            title="Hapus">🗑️</button>
-                  </form>
-                </div>
-              </td>
-            </tr>
-          @empty
-            <tr>
-              <td colspan="8" class="px-4 py-6 text-center text-neutral-500">Belum ada data stok darah.</td>
-            </tr>
-          @endforelse
-        </tbody>
+        <tbody id="tableBody"></tbody>
       </table>
     </div>
   </div>
 
-  {{-- Pagination --}}
-  <div>
-    {{ $rekap->withQueryString()->links() }}
+  {{-- Cards (mobile) --}}
+  <div id="cardsContainer" class="md:hidden space-y-3"></div>
+
+  {{-- Pagination footer --}}
+  <div class="flex flex-col sm:flex-row gap-3 sm:items-center justify-between">
+    <div id="pageInfo" class="text-sm text-neutral-600"></div>
+    <div id="pagination" class="flex items-center gap-2"></div>
   </div>
 </div>
 
-{{-- JS Filter --}}
+{{-- ===== Dummy data + sort + pagination (Vanilla JS) ===== --}}
 <script>
-  document.addEventListener('DOMContentLoaded', () => {
-    const filterBtn  = document.getElementById('filterBtn');
-    const filterMenu = document.getElementById('filterMenu');
-    const applyBtn   = document.getElementById('applyBtn');
-    const resetBtn   = document.getElementById('resetBtn');
+  // Dummy data
+  const rows = [
+    {id:'BD001', gol:'A',  rhesus:'Rh+', produk:'PRC', tglMasuk:'12-02-2025', tglExp:'12-02-2025', penerima:'RS Umum Jakarta', status:'Approved'},
+    {id:'BD002', gol:'A',  rhesus:'Rh+', produk:'WB',  tglMasuk:'08-02-2025', tglExp:'15-02-2025', penerima:'RS Umum Jakarta', status:'Pending'},
+    {id:'BD003', gol:'B',  rhesus:'Rh-', produk:'TRC', tglMasuk:'05-02-2025', tglExp:'20-02-2025', penerima:'RS Pelita Sehat', status:'Approved'},
+    {id:'BD004', gol:'O',  rhesus:'Rh+', produk:'FFP', tglMasuk:'03-02-2025', tglExp:'18-02-2025', penerima:'RS Sinar Abadi', status:'Approved'},
+    {id:'BD005', gol:'AB', rhesus:'Rh+', produk:'PRC', tglMasuk:'09-02-2025', tglExp:'17-02-2025', penerima:'RS Umum Jakarta', status:'Pending'},
+    {id:'BD006', gol:'A',  rhesus:'Rh-', produk:'TC',  tglMasuk:'04-02-2025', tglExp:'25-02-2025', penerima:'RS Persada', status:'Approved'},
+    {id:'BD007', gol:'O',  rhesus:'Rh+', produk:'WB',  tglMasuk:'10-02-2025', tglExp:'20-02-2025', penerima:'RS Persada', status:'Approved'},
+    {id:'BD008', gol:'B',  rhesus:'Rh+', produk:'FFP', tglMasuk:'06-02-2025', tglExp:'15-02-2025', penerima:'RS Maju Jaya', status:'Pending'},
+    {id:'BD009', gol:'A',  rhesus:'Rh+', produk:'PRC', tglMasuk:'02-02-2025', tglExp:'12-02-2025', penerima:'RS Umum Jakarta', status:'Rejected'},
+    {id:'BD010', gol:'AB', rhesus:'Rh-', produk:'PRC', tglMasuk:'11-02-2025', tglExp:'28-02-2025', penerima:'RS Kasih Ibu',   status:'Approved'},
+    {id:'BD011', gol:'O',  rhesus:'Rh-', produk:'TRC', tglMasuk:'12-02-2025', tglExp:'27-02-2025', penerima:'RS Kasih Ibu',   status:'Pending'},
+    {id:'BD012', gol:'B',  rhesus:'Rh+', produk:'FFP', tglMasuk:'07-02-2025', tglExp:'19-02-2025', penerima:'RS Kasih Karunia',status:'Approved'},
+    {id:'BD013', gol:'A',  rhesus:'Rh+', produk:'WB',  tglMasuk:'01-02-2025', tglExp:'14-02-2025', penerima:'RS Harapan',     status:'Approved'},
+    {id:'BD014', gol:'AB', rhesus:'Rh+', produk:'TRC', tglMasuk:'05-02-2025', tglExp:'26-02-2025', penerima:'RS Harapan',     status:'Pending'},
+  ];
 
-    filterBtn?.addEventListener('click', (e) => {
-      e.stopPropagation();
-      filterMenu?.classList.toggle('hidden');
+  // State
+  let sortKey = '';
+  let sortDir = 'asc';
+  let currentPage = 1;
+  let pageSize = 10;
+
+  // Helpers
+  function badgeClass(s){
+    if (s === 'Approved') return 'bg-emerald-50 text-emerald-700 border border-emerald-200';
+    if (s === 'Pending')  return 'bg-amber-50 text-amber-700 border border-amber-200';
+    return 'bg-rose-50 text-rose-700 border border-rose-200';
+  }
+  const bloodPill = g => `<span class="inline-flex items-center justify-center size-6 rounded-full bg-rose-50 text-rose-600 text-xs font-semibold border border-rose-100">${g}</span>`;
+  const productPill = p => `<span class="inline-flex items-center rounded-full border border-sky-200 bg-sky-50 px-2.5 py-0.5 text-xs text-sky-700">${p}</span>`;
+  const toIso = d => d.split('-').reverse().join('-'); // dd-mm-yyyy -> yyyy-mm-dd
+
+  // Filter, sort, paginate
+  function getFiltered(){
+    const q = (document.getElementById('searchInput').value || '').toLowerCase().trim();
+    const s = document.getElementById('statusSelect')?.value || '';
+    return rows.filter(o=>{
+      const text = (o.id+' '+o.penerima).toLowerCase();
+      const matchQ = !q || text.includes(q);
+      const matchS = !s || o.status === s;
+      return matchQ && matchS;
     });
-    document.addEventListener('click', (e) => {
-      if (filterMenu && filterBtn &&
-          !filterMenu.contains(e.target) && !filterBtn.contains(e.target)) {
-        filterMenu.classList.add('hidden');
+  }
+  function getSorted(data){
+    if (!sortKey) return data;
+    const cp = [...data];
+    cp.sort((a,b)=>{
+      let va=a[sortKey], vb=b[sortKey];
+      if (sortKey==='tglMasuk' || sortKey==='tglExp'){ va=toIso(va); vb=toIso(vb); }
+      va = (typeof va==='string') ? va.toLowerCase() : va;
+      vb = (typeof vb==='string') ? vb.toLowerCase() : vb;
+      if (va < vb) return sortDir==='asc' ? -1 : 1;
+      if (va > vb) return sortDir==='asc' ?  1 : -1;
+      return 0;
+    });
+    return cp;
+  }
+  function getPaged(data){
+    const total = data.length;
+    const pages = Math.max(1, Math.ceil(total / pageSize));
+    currentPage = Math.min(currentPage, pages);
+    const start = (currentPage-1)*pageSize;
+    return { slice: data.slice(start, start+pageSize), total, pages };
+  }
+
+  // Renderers
+  function renderTable(data){
+    const tb = document.getElementById('tableBody');
+    if (data.length===0){ tb.innerHTML = `<tr><td colspan="8" class="px-4 py-8 text-center text-neutral-500">Tidak ada data.</td></tr>`; return; }
+    tb.innerHTML = data.map(o=>`
+      <tr class="border-t border-neutral-100 hover:bg-neutral-50/60">
+        <td class="px-4 py-3">${o.id}</td>
+        <td class="px-4 py-3">${bloodPill(o.gol)}</td>
+        <td class="px-4 py-3">${o.rhesus}</td>
+        <td class="px-4 py-3">${productPill(o.produk)}</td>
+        <td class="px-4 py-3">${o.tglMasuk}</td>
+        <td class="px-4 py-3">${o.tglExp}</td>
+        <td class="px-4 py-3">${o.penerima}</td>
+        <td class="px-4 py-3"><span class="inline-flex items-center rounded-full px-2.5 py-1 text-xs font-medium ${badgeClass(o.status)}">${o.status}</span></td>
+      </tr>
+    `).join('');
+  }
+  function renderCards(data){
+    const wrap = document.getElementById('cardsContainer');
+    if (data.length===0){ wrap.innerHTML = `<div class="text-center text-neutral-500">Tidak ada data.</div>`; return; }
+    wrap.innerHTML = data.map(o=>`
+      <div class="rounded-2xl border border-neutral-200 bg-white p-4">
+        <div class="flex items-start justify-between gap-3">
+          <div>
+            <p class="font-medium">${o.id}</p>
+            <p class="text-xs text-neutral-500">${o.penerima}</p>
+          </div>
+          <span class="inline-flex items-center rounded-full px-2.5 py-1 text-xs font-medium ${badgeClass(o.status)}">${o.status}</span>
+        </div>
+        <div class="mt-3 grid grid-cols-2 gap-2 text-sm">
+          <div class="text-neutral-500">Golongan</div><div>${bloodPill(o.gol)}</div>
+          <div class="text-neutral-500">Rhesus</div><div>${o.rhesus}</div>
+          <div class="text-neutral-500">Produk</div><div>${productPill(o.produk)}</div>
+          <div class="text-neutral-500">Masuk</div><div>${o.tglMasuk}</div>
+          <div class="text-neutral-500">Kadaluwarsa</div><div>${o.tglExp}</div>
+        </div>
+      </div>
+    `).join('');
+  }
+  function getPageRange(totalPages, current, max=5){
+    const pages=[]; const half=Math.floor(max/2);
+    let start=Math.max(1,current-half), end=Math.min(totalPages,start+max-1);
+    if (end-start+1<max) start=Math.max(1,end-max+1);
+    if (start>1){ pages.push(1); if(start>2) pages.push('…'); }
+    for(let i=start;i<=end;i++) pages.push(i);
+    if (end<totalPages){ if(end<totalPages-1) pages.push('…'); pages.push(totalPages); }
+    return pages;
+  }
+  function renderPagination(total, pages){
+    const cont=document.getElementById('pagination');
+    const info=document.getElementById('pageInfo');
+    const start = total===0?0:(currentPage-1)*pageSize+1;
+    const end   = Math.min(currentPage*pageSize,total);
+    info.textContent = `Menampilkan ${start}-${end} dari ${total} data`;
+
+    if (pages<=1){ cont.innerHTML=''; return; }
+    const btn=(label, p, disabled=false, active=false)=>`
+      <button class="min-w-9 h-9 px-3 rounded-lg border text-sm
+                     ${active?'bg-neutral-900 text-white border-neutral-900':'bg-white border-neutral-200 text-neutral-700 hover:bg-neutral-50'}
+                     ${disabled?'opacity-50 cursor-not-allowed':''}"
+              ${disabled?'disabled':''} data-page="${p}">
+        ${label}
+      </button>`;
+    let html = btn('«', currentPage-1, currentPage===1);
+    getPageRange(pages,currentPage,5).forEach(p=>{
+      html += (p==='…') ? `<span class="px-2 text-neutral-400">…</span>` : btn(p,p,false,p===currentPage);
+    });
+    html += btn('»', currentPage+1, currentPage===pages);
+    cont.innerHTML = html;
+    cont.querySelectorAll('button[data-page]').forEach(b=>{
+      b.addEventListener('click', ()=>{ currentPage = Number(b.dataset.page); renderAll(); });
+    });
+  }
+  function markSortHeaders(){
+    document.querySelectorAll('th.sortable').forEach(th=>{
+      th.querySelector('.sort-ind')?.remove();
+      if (th.dataset.key===sortKey){
+        const s=document.createElement('span');
+        s.className='sort-ind inline-block ml-1 text-neutral-400';
+        s.innerHTML = sortDir==='asc' ? '▲' : '▼';
+        th.appendChild(s);
       }
     });
+  }
 
-    applyBtn?.addEventListener('click', () => {
-      const setVal = (src, dst) => { const s=document.getElementById(src), d=document.getElementById(dst); if(s&&d) d.value=s.value||''; };
-      setVal('golSelect', 'golInput');
-      setVal('rhesusSelect', 'rhesusInput');
-      setVal('kompSelect', 'kompInput');
-      setVal('statusSelect', 'statusInput');
-      setVal('masukFrom', 'masukFromInput');
-      setVal('masukTo', 'masukToInput');
-      setVal('keluarFrom', 'keluarFromInput');
-      setVal('keluarTo', 'keluarToInput');
+  // Master render
+  function renderAll(){
+    const filtered = getFiltered();
+    const sorted   = getSorted(filtered);
+    const {slice, total, pages} = getPaged(sorted);
+    renderTable(slice);
+    renderCards(slice);
+    renderPagination(total, pages);
+    markSortHeaders();
+  }
+
+  // Events & init
+  document.addEventListener('DOMContentLoaded', ()=>{
+    // search live
+    document.getElementById('searchInput').addEventListener('input', ()=>{ currentPage=1; renderAll(); });
+
+    // filter dropdown
+    const btn=document.getElementById('filterBtn');
+    const menu=document.getElementById('filterMenu');
+    const apply=document.getElementById('applyBtn');
+    const reset=document.getElementById('resetBtn');
+    const statusSelect=document.getElementById('statusSelect');
+
+    btn.addEventListener('click',(e)=>{ e.stopPropagation(); menu.classList.toggle('hidden'); });
+    document.addEventListener('click',(e)=>{ if(!menu.contains(e.target) && !btn.contains(e.target)) menu.classList.add('hidden'); });
+    apply.addEventListener('click',()=>{ menu.classList.add('hidden'); currentPage=1; renderAll(); });
+    reset.addEventListener('click',()=>{ statusSelect.value=''; currentPage=1; renderAll(); });
+
+    // page size
+    document.getElementById('pageSize').addEventListener('change',(e)=>{ pageSize=Number(e.target.value)||10; currentPage=1; renderAll(); });
+
+    // sort header
+    document.querySelectorAll('th.sortable').forEach(th=>{
+      th.addEventListener('click', ()=>{
+        const key = th.dataset.key;
+        if (sortKey===key) sortDir = (sortDir==='asc'?'desc':'asc');
+        else { sortKey=key; sortDir='asc'; }
+        currentPage=1; renderAll();
+      });
     });
 
-    resetBtn?.addEventListener('click', () => {
-      ['golSelect','rhesusSelect','kompSelect','statusSelect','masukFrom','masukTo','keluarFrom','keluarTo']
-        .forEach(id => { const el = document.getElementById(id); if (el) el.value = ''; });
-    });
-
-    const pageSizeSel = document.getElementById('pageSize');
-    const perPageInput = document.getElementById('perPageInput');
-    pageSizeSel?.addEventListener('change', () => {
-      if (perPageInput) perPageInput.value = pageSizeSel.value;
-      pageSizeSel.closest('form')?.submit();
-    });
+    renderAll();
   });
 </script>
+
+<style>
+  th.sortable:hover { background-color: rgba(0,0,0,0.02); }
+</style>
 @endsection
