@@ -17,8 +17,8 @@ return new class extends Migration
         $t->string('nama_pemesan');                 // redundan utk snapshot verifikasi
         $t->string('rs_pemesan')->nullable();
         $t->enum('golongan_darah',['A','B','AB','O']);
-        $t->enum('rhesus',['+','-']);
-        $t->string('produk_darah');
+        $t->enum('rhesus',['Rh+','Rh-']);
+        $t->string('produk');
         $t->date('tanggal_permintaan');
         $t->enum('status',['pending','approved','rejected'])->default('pending');
         $t->timestamps();

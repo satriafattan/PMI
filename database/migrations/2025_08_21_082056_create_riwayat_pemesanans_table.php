@@ -17,7 +17,7 @@ return new class extends Migration
             $t->string('nama');                         // nama pasien / pemesan, sesuai kebutuhan laporan
             $t->date('tanggal');
             $t->enum('gol_darah',['A','B','AB','O']);
-            $t->enum('rhesus',['+','-']);
+            $t->enum('rhesus',['Rh+','Rh-']);
             $t->unsignedInteger('jumlah_kantong');
             $t->string('produk');
             $t->string('aksi');                         // dibuat, diubah, diverifikasi, ditolak, dll.
