@@ -12,20 +12,17 @@ use Illuminate\Support\Facades\DB;
 class VerifikasiPemesananController extends Controller
 {
     /**
-     * Daftar pemesanan dengan verifikasi terakhir (untuk ringkas di tabel).
+     * Daftar pemesanan dengan verifikasi terakhir (ringkas di tabel) + filter.
+     * Route: GET /admin/verifikasi
      */
-    public function index()
+    public function index(Request $r)
     {
-        // Gunakan relasi verifikasiTerakhir dari model PemesananDarah
-        $pemesanan = PemesananDarah::with('verifikasiTerakhir')->latest()->paginate(12);
-        return view('admin.verifikasi.index', compact('pemesanan'));
-
-        $per = (int) $r->input('per_page', 10);
+        $per = (int) $r->input('per_page', 12);
         $q   = $r->input('q');
         $st  = $r->input('status');
         $gol = $r->input('gol');
 
-        $query = \App\Models\PemesananDarah::query()
+        $query = PemesananDarah::query()
             ->with('verifikasiTerakhir')
             ->latest();
 
@@ -50,45 +47,45 @@ class VerifikasiPemesananController extends Controller
     public function store(Request $r, PemesananDarah $pemesanan)
     {
         $data = $r->validate([
-            'status'              => ['required', 'in:pending,approved,rejected'],
-            'tanggal_permintaan'  => ['nullable', 'date'],
-            'note'                => ['nullable', 'string', 'max:1000'], // kalau mau simpan catatan (opsional)
+            'status'             => ['required', 'in:pending,approved,rejected'],
+            'tanggal_permintaan' => ['nullable', 'date'],
+            'note'               => ['nullable', 'string', 'max:1000'],
         ]);
 
         DB::transaction(function () use ($pemesanan, $data) {
-            // tanggal permintaan fallback ke tanggal pemesanan jika tidak diisi
-            $tanggalPermintaan = $data['tanggal_permintaan'] ?? ($pemesanan->tanggal_pemesanan ?? now()->toDateString());
+            $tanggalPermintaan = $data['tanggal_permintaan']
+                ?? ($pemesanan->tanggal_pemesanan ?? now()->toDateString());
 
-            // 1) Upsert verifikasi (satu baris per pemesanan — sesuai pola kodenya)
-            $verif = VerifikasiPemesanan::updateOrCreate(
+            // Upsert verifikasi berdasarkan pemesanan_id
+            VerifikasiPemesanan::updateOrCreate(
                 ['pemesanan_id' => $pemesanan->id],
                 [
-                    'nama_pemesan'       => $pemesanan->nama_pasien,  // perbaikan: ambil dari field yg ada
+                    'nama_pemesan'       => $pemesanan->nama_pasien,
                     'rs_pemesan'         => $pemesanan->rs_pemesan,
-                    'golongan_darah'     => $pemesanan->gol_darah,
+                    'gol_darah'          => $pemesanan->gol_darah,
                     'rhesus'             => $pemesanan->rhesus,
-                    'produk_darah'       => $pemesanan->produk,
+                    'produk'             => $pemesanan->produk,     // <- sudah 'produk'
                     'tanggal_permintaan' => $tanggalPermintaan,
                     'status'             => $data['status'],
-                    // 'note'            => $data['note'] ?? null, // aktifkan bila kolom ada
+                    // 'note'            => $data['note'] ?? null, // aktifkan jika kolom ada
                 ]
             );
 
-            // 2) Sinkronkan status utama di pemesanan
+            // Sinkronkan status di tabel pemesanan
             $pemesanan->update(['status' => $data['status']]);
 
-            // 3) (Opsional) sesuaikan stok jika status approved
+            // (Opsional) Sesuaikan stok jika approved
             // if ($data['status'] === 'approved') {
             //     app(\App\Services\StokDarahService::class)
             //         ->kurangi($pemesanan->produk, $pemesanan->gol_darah, (int) $pemesanan->jumlah_kantong);
             // }
 
-            // 4) Catat ke riwayat
+            // Catat ke riwayat
             RiwayatPemesanan::create([
                 'pemesanan_id'   => $pemesanan->id,
                 'nama'           => $pemesanan->nama_pasien,
                 'tanggal'        => now()->toDateString(),
-                'gol_darah'      => $pemesanan->gol_darah ?? $pemesanan->gol_darah ?? null,
+                'gol_darah'      => $pemesanan->gol_darah ?? null,
                 'rhesus'         => $pemesanan->rhesus,
                 'jumlah_kantong' => $pemesanan->jumlah_kantong,
                 'produk'         => $pemesanan->produk,
@@ -111,24 +108,24 @@ class VerifikasiPemesananController extends Controller
         ]);
 
         DB::transaction(function () use ($verifikasi, $payload) {
-            // 1) Update entri verifikasi
+            // Update entri verifikasi
             $verifikasi->update([
                 'status' => $payload['status'],
                 // 'note' => $payload['note'] ?? $verifikasi->note, // aktifkan bila kolom ada
             ]);
 
-            // 2) Sinkronkan status pemesanan utamanya
+            // Sinkronkan status pemesanan
             $verifikasi->pemesanan->update(['status' => $payload['status']]);
 
-            // 3) Catat riwayat koreksi
+            // Catat riwayat koreksi
             RiwayatPemesanan::create([
                 'pemesanan_id'   => $verifikasi->pemesanan_id,
                 'nama'           => $verifikasi->pemesanan->nama_pasien,
                 'tanggal'        => now()->toDateString(),
-                'gol_darah'      => $verifikasi->golongan_darah,
+                'gol_darah'      => $verifikasi->gol_darah,
                 'rhesus'         => $verifikasi->rhesus,
                 'jumlah_kantong' => $verifikasi->pemesanan->jumlah_kantong,
-                'produk'         => $verifikasi->produk_darah,
+                'produk'         => $verifikasi->produk,
                 'aksi'           => 'ubah status: ' . $payload['status'],
             ]);
         });
