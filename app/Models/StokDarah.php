@@ -11,6 +11,7 @@ class StokDarah extends Model
     protected $fillable = [
         'produk',
         'gol_darah',
+        'rhesus', 
         'jumlah',
         'tgl_masuk',
         'tgl_kadaluarsa',

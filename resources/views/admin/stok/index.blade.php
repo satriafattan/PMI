@@ -47,9 +47,14 @@
           {{-- Search bar: full width --}}
           <div class="relative flex-1">
             <span class="pointer-events-none absolute inset-y-0 left-3 flex items-center">
-              <svg class="size-5 text-neutral-400" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6"
-                      d="m21 21-4.3-4.3M10 18a8 8 0 1 1 0-16 8 8 0 0 1 0 16z"/>
+              <svg class="size-5 text-neutral-400"
+                   viewBox="0 0 24 24"
+                   fill="none"
+                   stroke="currentColor">
+                <path stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="1.6"
+                      d="m21 21-4.3-4.3M10 18a8 8 0 1 1 0-16 8 8 0 0 1 0 16z" />
               </svg>
             </span>
             <input id="searchInput"
@@ -60,10 +65,17 @@
 
           {{-- Filter dropdown trigger --}}
           <div class="relative">
-            <button id="filterBtn" type="button"
+            <button id="filterBtn"
+                    type="button"
                     class="inline-flex items-center justify-center rounded-xl border border-neutral-200 bg-white px-3 py-2 text-sm shadow-sm hover:bg-neutral-50">
-              <svg class="size-5 text-neutral-600" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6" d="M3 6h18M6 12h12M10 18h4"/>
+              <svg class="size-5 text-neutral-600"
+                   viewBox="0 0 24 24"
+                   fill="none"
+                   stroke="currentColor">
+                <path stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="1.6"
+                      d="M3 6h18M6 12h12M10 18h4" />
               </svg>
             </button>
             {{-- Dropdown --}}
@@ -80,8 +92,11 @@
                   </select>
                 </div>
                 <div class="flex items-center justify-between">
-                  <button id="resetBtn" type="button" class="text-sm text-neutral-600 hover:underline">Reset</button>
-                  <button id="applyBtn" type="button"
+                  <button id="resetBtn"
+                          type="button"
+                          class="text-sm text-neutral-600 hover:underline">Reset</button>
+                  <button id="applyBtn"
+                          type="button"
                           class="rounded-lg bg-neutral-900 px-3 py-1.5 text-sm text-white hover:bg-neutral-800">
                     Terapkan
                   </button>
@@ -105,12 +120,18 @@
         <table class="min-w-full text-sm">
           <thead class="bg-neutral-50 text-neutral-600">
             <tr class="text-left">
-              <th data-key="produk" class="sortable cursor-pointer select-none px-4 py-3 font-medium">Produk</th>
-              <th data-key="A"      class="sortable cursor-pointer select-none px-4 py-3 font-medium">A</th>
-              <th data-key="AB"     class="sortable cursor-pointer select-none px-4 py-3 font-medium">AB</th>
-              <th data-key="B"      class="sortable cursor-pointer select-none px-4 py-3 font-medium">B</th>
-              <th data-key="O"      class="sortable cursor-pointer select-none px-4 py-3 font-medium">O</th>
-              <th data-key="total"  class="sortable cursor-pointer select-none px-4 py-3 font-medium">Total</th>
+              <th data-key="produk"
+                  class="sortable cursor-pointer select-none px-4 py-3 font-medium">Produk</th>
+              <th data-key="A"
+                  class="sortable cursor-pointer select-none px-4 py-3 font-medium">A</th>
+              <th data-key="AB"
+                  class="sortable cursor-pointer select-none px-4 py-3 font-medium">AB</th>
+              <th data-key="B"
+                  class="sortable cursor-pointer select-none px-4 py-3 font-medium">B</th>
+              <th data-key="O"
+                  class="sortable cursor-pointer select-none px-4 py-3 font-medium">O</th>
+              <th data-key="total"
+                  class="sortable cursor-pointer select-none px-4 py-3 font-medium">Total</th>
               <th class="px-4 py-3 font-medium">Aksi</th>
             </tr>
           </thead>
@@ -120,83 +141,147 @@
     </div>
 
     {{-- ===== CARDS (mobile) ===== --}}
-    <div id="cardsContainer" class="space-y-3 md:hidden"></div>
+    <div id="cardsContainer"
+         class="space-y-3 md:hidden"></div>
   </div>
 
   {{-- ===== MODAL: Tambah Stok ===== --}}
-  <div id="addModal" class="fixed inset-0 z-[10000] hidden items-center justify-center">
-    <div class="absolute inset-0 bg-black/40" id="addModalBackdrop"></div>
+  <div id="addModal"
+       class="fixed inset-0 z-[10000] hidden items-center justify-center">
+    <div class="absolute inset-0 bg-black/40"
+         id="addModalBackdrop"></div>
 
     <div class="relative z-10 w-[92%] max-w-lg rounded-2xl bg-white shadow-xl">
       <div class="flex items-center justify-between border-b border-neutral-200 p-4">
         <h3 class="text-lg font-semibold text-neutral-800">Tambah Stok Darah</h3>
-        <button id="closeAddModalBtn" class="text-neutral-400 hover:text-neutral-600">✕</button>
+        <button id="closeAddModalBtn"
+                class="text-neutral-400 hover:text-neutral-600">✕</button>
       </div>
 
-      <form id="addStockForm" class="p-4 sm:p-6" action="{{ route('admin.stok.store') }}" method="POST">
+      <form id="addStockForm"
+            class="p-4 sm:p-6"
+            action="{{ route('admin.stok.store') }}"
+            method="POST">
         @csrf
         <div class="grid gap-4">
           {{-- Produk --}}
           <div>
             <label class="text-sm font-medium text-neutral-700">Produk <span class="text-rose-600">*</span></label>
-            <select name="produk" id="produk"
+            <select name="produk"
+                    id="produk"
                     class="@error('produk') border-rose-300 @enderror mt-1 w-full rounded-xl border bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20"
                     required>
-              <option value="" disabled {{ old('produk') ? '' : 'selected' }}>Pilih Produk</option>
+              <option value=""
+                      disabled
+                      {{ old('produk') ? '' : 'selected' }}>Pilih Produk</option>
               @foreach (['WB: Whole Blood', 'PRC: Packed Red Cell', 'TC: Trombocyte Concentrate', 'FFP: Fresh Frozen Plasma', 'AHF: Cryoprecipitated AHF', 'LP: Liquid Plasma', 'TC Aferesis', 'Plasma Konvalesen'] as $opt)
-                <option value="{{ $opt }}" {{ old('produk') === $opt ? 'selected' : '' }}>{{ $opt }}</option>
+                <option value="{{ $opt }}"
+                        {{ old('produk') === $opt ? 'selected' : '' }}>{{ $opt }}</option>
               @endforeach
             </select>
-            @error('produk') <p class="mt-1 text-xs text-rose-600">{{ $message }}</p> @enderror
+            @error('produk')
+              <p class="mt-1 text-xs text-rose-600">{{ $message }}</p>
+            @enderror
           </div>
 
           {{-- Golongan --}}
           <div>
             <label class="text-sm font-medium text-neutral-700">Golongan <span class="text-rose-600">*</span></label>
-            <select name="gol_darah" id="gol_darah"
+            <select name="gol_darah"
+                    id="gol_darah"
                     class="@error('gol_darah') border-rose-300 @enderror mt-1 w-full rounded-xl border bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20"
                     required>
-              <option value="" disabled {{ old('gol_darah') ? '' : 'selected' }}>Pilih Golongan</option>
+              <option value=""
+                      disabled
+                      {{ old('gol_darah') ? '' : 'selected' }}>Pilih Golongan</option>
               @foreach (['A', 'AB', 'B', 'O'] as $gol)
-                <option value="{{ $gol }}" {{ old('gol_darah') === $gol ? 'selected' : '' }}>{{ $gol }}</option>
+                <option value="{{ $gol }}"
+                        {{ old('gol_darah') === $gol ? 'selected' : '' }}>{{ $gol }}</option>
               @endforeach
             </select>
-            @error('gol_darah') <p class="mt-1 text-xs text-rose-600">{{ $message }}</p> @enderror
+            @error('gol_darah')
+              <p class="mt-1 text-xs text-rose-600">{{ $message }}</p>
+            @enderror
+          </div>
+
+          <!-- Rhesus -->
+          <div>
+            <label class="text-sm font-medium text-neutral-700">
+              Rhesus <span class="text-rose-600">*</span>
+            </label>
+            <select name="rhesus"
+                    id="rhesus"
+                    class="@error('rhesus') border-rose-300 @enderror mt-1 w-full rounded-xl border bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                    required>
+              <option value=""
+                      disabled
+                      {{ old('rhesus') ? '' : 'selected' }}>Pilih Rhesus</option>
+              <option value="+"
+                      {{ old('rhesus') === '+' ? 'selected' : '' }}>Positif (+)</option>
+              <option value="-"
+                      {{ old('rhesus') === '-' ? 'selected' : '' }}>Negatif (-)</option>
+            </select>
+            @error('rhesus')
+              <p class="mt-1 text-xs text-rose-600">{{ $message }}</p>
+            @enderror
           </div>
 
           {{-- Tanggal --}}
           <div class="grid gap-4 sm:grid-cols-2">
             <div>
-              <label class="text-sm font-medium text-neutral-700">Tanggal Masuk <span class="text-rose-600">*</span></label>
-              <input type="date" id="tgl_masuk" name="tgl_masuk" value="{{ old('tgl_masuk') }}"
+              <label class="text-sm font-medium text-neutral-700">Tanggal Masuk <span
+                      class="text-rose-600">*</span></label>
+              <input type="date"
+                     id="tgl_masuk"
+                     name="tgl_masuk"
+                     value="{{ old('tgl_masuk') }}"
                      class="@error('tgl_masuk') border-rose-300 @enderror mt-1 w-full rounded-xl border bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20"
                      required>
-              @error('tgl_masuk') <p class="mt-1 text-xs text-rose-600">{{ $message }}</p> @enderror
+              @error('tgl_masuk')
+                <p class="mt-1 text-xs text-rose-600">{{ $message }}</p>
+              @enderror
             </div>
             <div>
-              <label class="text-sm font-medium text-neutral-700">Tanggal Kadaluwarsa <span class="text-rose-600">*</span></label>
-              <input type="date" id="tgl_kadaluarsa" name="tgl_kadaluarsa" value="{{ old('tgl_kadaluarsa') }}"
+              <label class="text-sm font-medium text-neutral-700">Tanggal Kadaluwarsa <span
+                      class="text-rose-600">*</span></label>
+              <input type="date"
+                     id="tgl_kadaluarsa"
+                     name="tgl_kadaluarsa"
+                     value="{{ old('tgl_kadaluarsa') }}"
                      class="@error('tgl_kadaluarsa') border-rose-300 @enderror mt-1 w-full rounded-xl border bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20"
                      required>
-              @error('tgl_kadaluarsa') <p class="mt-1 text-xs text-rose-600">{{ $message }}</p> @enderror
+              @error('tgl_kadaluarsa')
+                <p class="mt-1 text-xs text-rose-600">{{ $message }}</p>
+              @enderror
             </div>
           </div>
 
           {{-- Jumlah --}}
           <div>
-            <label class="text-sm font-medium text-neutral-700">Jumlah (unit) <span class="text-rose-600">*</span></label>
-            <input type="number" id="jumlah" name="jumlah" min="1" step="1" value="{{ old('jumlah', 1) }}"
+            <label class="text-sm font-medium text-neutral-700">Jumlah (unit) <span
+                    class="text-rose-600">*</span></label>
+            <input type="number"
+                   id="jumlah"
+                   name="jumlah"
+                   min="1"
+                   step="1"
+                   value="{{ old('jumlah', 1) }}"
                    class="@error('jumlah') border-rose-300 @enderror mt-1 w-full rounded-xl border bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20"
                    required>
-            @error('jumlah') <p class="mt-1 text-xs text-rose-600">{{ $message }}</p> @enderror
+            @error('jumlah')
+              <p class="mt-1 text-xs text-rose-600">{{ $message }}</p>
+            @enderror
           </div>
         </div>
 
         <div class="mt-6 flex justify-end gap-2 border-t border-neutral-200 pt-4">
-          <button type="button" id="cancelAddBtn" class="rounded-lg border border-neutral-300 px-4 py-2 text-neutral-700 hover:bg-neutral-50">
+          <button type="button"
+                  id="cancelAddBtn"
+                  class="rounded-lg border border-neutral-300 px-4 py-2 text-neutral-700 hover:bg-neutral-50">
             Batal
           </button>
-          <button type="submit" class="rounded-lg bg-blue-600 px-4 py-2 text-white hover:bg-blue-700">
+          <button type="submit"
+                  class="rounded-lg bg-blue-600 px-4 py-2 text-white hover:bg-blue-700">
             Simpan
           </button>
         </div>
@@ -206,24 +291,32 @@
 
   {{-- ===== Data awal dari controller ===== --}}
   <script>
-    const LOW_TH = 50, CRIT_TH = 20;
+    const LOW_TH = 50,
+      CRIT_TH = 20;
     // Ambil dari controller: $rows = koleksi agregasi produk
     let products = @json($rows);
-    let sortKey = '', sortDir = 'asc';
+    let sortKey = '',
+      sortDir = 'asc';
 
-    const iconEdit = () => `<svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 20h9M16.5 3.5l4 4L7 21H3v-4L16.5 3.5z"/></svg>`;
-    const iconTrash = () => `<svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M4 7h16M9 7V5h6v2m-8 0 1 12h8l1-12"/></svg>`;
+    const iconEdit = () =>
+      `<svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 20h9M16.5 3.5l4 4L7 21H3v-4L16.5 3.5z"/></svg>`;
+    const iconTrash = () =>
+      `<svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M4 7h16M9 7V5h6v2m-8 0 1 12h8l1-12"/></svg>`;
 
     const rowTotal = (r) => (r.A || 0) + (r.AB || 0) + (r.B || 0) + (r.O || 0);
 
     function pillFor(v) {
-      if (v < CRIT_TH) return `<span class="inline-flex min-w-10 items-center justify-center rounded-full border border-rose-200 bg-rose-50 px-2 py-0.5 text-xs font-semibold text-rose-700">${v}</span>`;
-      if (v < LOW_TH)  return `<span class="inline-flex min-w-10 items-center justify-center rounded-full border border-amber-200 bg-amber-50 px-2 py-0.5 text-xs font-semibold text-amber-700">${v}</span>`;
+      if (v < CRIT_TH)
+      return `<span class="inline-flex min-w-10 items-center justify-center rounded-full border border-rose-200 bg-rose-50 px-2 py-0.5 text-xs font-semibold text-rose-700">${v}</span>`;
+      if (v < LOW_TH)
+      return `<span class="inline-flex min-w-10 items-center justify-center rounded-full border border-amber-200 bg-amber-50 px-2 py-0.5 text-xs font-semibold text-amber-700">${v}</span>`;
       return `<span class="inline-flex min-w-10 items-center justify-center rounded-full border border-emerald-200 bg-emerald-50 px-2 py-0.5 text-xs font-semibold text-emerald-700">${v}</span>`;
     }
 
     function renderSummary() {
-      let total = 0, low = 0, critical = 0;
+      let total = 0,
+        low = 0,
+        critical = 0;
       products.forEach(r => {
         total += rowTotal(r);
         ['A', 'AB', 'B', 'O'].forEach(k => {
@@ -272,7 +365,8 @@
       const tb = document.getElementById('tableBody');
       if (!tb) return;
       if (data.length === 0) {
-        tb.innerHTML = `<tr><td colspan="7" class="px-4 py-8 text-center text-neutral-500">Belum ada data. Tambahkan stok terlebih dahulu.</td></tr>`;
+        tb.innerHTML =
+          `<tr><td colspan="7" class="px-4 py-8 text-center text-neutral-500">Belum ada data. Tambahkan stok terlebih dahulu.</td></tr>`;
         return;
       }
       tb.innerHTML = data.map(r => `
@@ -347,10 +441,19 @@
     const produkSel = document.getElementById('produk');
     const golSel = document.getElementById('gol_darah');
 
-    function openAddModal() { addModal?.classList.remove('hidden'); addModal?.classList.add('flex'); }
+    function openAddModal() {
+      addModal?.classList.remove('hidden');
+      addModal?.classList.add('flex');
+    }
+
     function closeAddModal() {
-      addModal?.classList.add('hidden'); addModal?.classList.remove('flex');
-      if (addForm) { addForm.reset(); if (produkSel) produkSel.value = ''; if (golSel) golSel.value = ''; }
+      addModal?.classList.add('hidden');
+      addModal?.classList.remove('flex');
+      if (addForm) {
+        addForm.reset();
+        if (produkSel) produkSel.value = '';
+        if (golSel) golSel.value = '';
+      }
     }
 
     document.addEventListener('DOMContentLoaded', () => {
@@ -365,19 +468,31 @@
       const reset = document.getElementById('resetBtn');
       const statusSelect = document.getElementById('statusSelect');
 
-      btn && btn.addEventListener('click', (e) => { e.stopPropagation(); menu?.classList.toggle('hidden'); });
+      btn && btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        menu?.classList.toggle('hidden');
+      });
       document.addEventListener('click', (e) => {
         if (menu && btn && !menu.contains(e.target) && !btn.contains(e.target)) menu.classList.add('hidden');
       });
-      apply && apply.addEventListener('click', () => { menu?.classList.add('hidden'); renderAll(); });
-      reset && reset.addEventListener('click', () => { if (statusSelect) statusSelect.value = 'all'; renderAll(); });
+      apply && apply.addEventListener('click', () => {
+        menu?.classList.add('hidden');
+        renderAll();
+      });
+      reset && reset.addEventListener('click', () => {
+        if (statusSelect) statusSelect.value = 'all';
+        renderAll();
+      });
 
       // sort header
       document.querySelectorAll('th.sortable').forEach(th => {
         th.addEventListener('click', () => {
           const key = th.dataset.key;
           if (sortKey === key) sortDir = (sortDir === 'asc' ? 'desc' : 'asc');
-          else { sortKey = key; sortDir = 'asc'; }
+          else {
+            sortKey = key;
+            sortDir = 'asc';
+          }
           renderAll();
         });
       });
@@ -387,7 +502,9 @@
       document.getElementById('closeAddModalBtn')?.addEventListener('click', closeAddModal);
       document.getElementById('cancelAddBtn')?.addEventListener('click', closeAddModal);
       document.getElementById('addModalBackdrop')?.addEventListener('click', closeAddModal);
-      document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeAddModal(); });
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') closeAddModal();
+      });
 
       // render pertama
       renderAll();
@@ -395,6 +512,8 @@
   </script>
 
   <style>
-    th.sortable:hover { background-color: rgba(0, 0, 0, 0.02); }
+    th.sortable:hover {
+      background-color: rgba(0, 0, 0, 0.02);
+    }
   </style>
 @endsection
