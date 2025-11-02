@@ -16,7 +16,7 @@ class StokDarahRequest extends FormRequest
         return [
             'produk'         => ['required', 'string', 'max:191'],
             'gol_darah'      => ['required', 'in:A,AB,B,O'],
-            'rhesus'         => ['required', 'in:+,-'],         
+            'rhesus'        => ['required', 'in:Rh+,Rh-'],
             'jumlah'         => ['required', 'integer', 'min:1'],
             'tgl_masuk'      => ['required', 'date'],
             'tgl_kadaluarsa' => ['required', 'date', 'after_or_equal:tgl_masuk'],

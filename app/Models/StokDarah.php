@@ -21,4 +21,9 @@ class StokDarah extends Model
         'tgl_masuk'      => 'date',
         'tgl_kadaluarsa' => 'date',
     ];
+
+    public function verifikasi()
+    {
+        return $this->hasMany(VerifikasiPemesanan::class, 'stok_id');
+    }
 }

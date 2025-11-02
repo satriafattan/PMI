@@ -6,9 +6,12 @@ use App\Http\Controllers\Controller;
 use App\Models\PemesananDarah;
 use App\Models\VerifikasiPemesanan;
 use App\Models\RiwayatPemesanan;
+use App\Models\StokDarah;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-
+use Illuminate\Validation\ValidationException;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\VerifikasiPemesananMail;
 class VerifikasiPemesananController extends Controller
 {
     /**
@@ -44,56 +47,141 @@ class VerifikasiPemesananController extends Controller
      * Buat/catat verifikasi untuk 1 pemesanan + sinkronkan status pemesanan.
      * Route: POST /admin/verifikasi/{pemesanan}
      */
-    public function store(Request $r, PemesananDarah $pemesanan)
+    public function store(Request $request, PemesananDarah $pemesanan)
     {
-        $data = $r->validate([
+        $data = $request->validate([
             'status'             => ['required', 'in:pending,approved,rejected'],
             'tanggal_permintaan' => ['nullable', 'date'],
             'note'               => ['nullable', 'string', 'max:1000'],
         ]);
 
-        DB::transaction(function () use ($pemesanan, $data) {
-            $tanggalPermintaan = $data['tanggal_permintaan']
-                ?? ($pemesanan->tanggal_pemesanan ?? now()->toDateString());
+        $isApproved = $data['status'] === 'approved';
 
-            // Upsert verifikasi berdasarkan pemesanan_id
-            VerifikasiPemesanan::updateOrCreate(
-                ['pemesanan_id' => $pemesanan->id],
-                [
-                    'nama_pemesan'       => $pemesanan->nama_pasien,
-                    'rs_pemesan'         => $pemesanan->rs_pemesan,
-                    'gol_darah'          => $pemesanan->gol_darah,
-                    'rhesus'             => $pemesanan->rhesus,
-                    'produk'             => $pemesanan->produk,     // <- sudah 'produk'
-                    'tanggal_permintaan' => $tanggalPermintaan,
-                    'status'             => $data['status'],
-                    // 'note'            => $data['note'] ?? null, // aktifkan jika kolom ada
-                ]
-            );
+        DB::transaction(function () use ($data, $pemesanan, $isApproved) {
+            if ($isApproved) {
+                $this->approveAndReduceStock($pemesanan);
+            }
 
-            // Sinkronkan status di tabel pemesanan
+            $this->saveVerification($pemesanan, $data);
+            $this->saveHistory($pemesanan, $data['status']);
+
             $pemesanan->update(['status' => $data['status']]);
-
-            // (Opsional) Sesuaikan stok jika approved
-            // if ($data['status'] === 'approved') {
-            //     app(\App\Services\StokDarahService::class)
-            //         ->kurangi($pemesanan->produk, $pemesanan->gol_darah, (int) $pemesanan->jumlah_kantong);
-            // }
-
-            // Catat ke riwayat
-            RiwayatPemesanan::create([
-                'pemesanan_id'   => $pemesanan->id,
-                'nama'           => $pemesanan->nama_pasien,
-                'tanggal'        => now()->toDateString(),
-                'gol_darah'      => $pemesanan->gol_darah ?? null,
-                'rhesus'         => $pemesanan->rhesus,
-                'jumlah_kantong' => $pemesanan->jumlah_kantong,
-                'produk'         => $pemesanan->produk,
-                'aksi'           => 'verifikasi: ' . $data['status'],
-            ]);
         });
 
-        return back()->with('success', 'Status verifikasi disimpan & status pemesanan disinkronkan.');
+        if ($pemesanan->email) {
+            Mail::to($pemesanan->email)->send(new VerifikasiPemesananMail($pemesanan, $data['status']));
+        }
+
+        try {
+            if (!empty($pemesanan->email)) {
+                Mail::to($pemesanan->email)
+                    ->send(new VerifikasiPemesananMail($pemesanan, $data['status']));
+            }
+        } catch (\Throwable $e) {
+            // Email gagal tidak boleh batalkan verifikasi, cukup beri info
+            return back()->with('success', 'Verifikasi disimpan, namun email gagal dikirim.');
+        }
+
+        return back()->with('success', 'Verifikasi berhasil disimpan.');
+    }
+
+    /**
+     * Kurangi stok jika disetujui
+     */
+    private function approveAndReduceStock(PemesananDarah $pemesanan): void
+    {
+        try {
+            $criteria = [
+                'produk'    => $pemesanan->produk,
+                'gol_darah' => $pemesanan->gol_darah,
+            ];
+
+            if ($pemesanan->rhesus) {
+                $criteria['rhesus'] = $pemesanan->rhesus;
+            }
+
+            // Lock stok berdasarkan kriterianya (FEFO)
+            $batchList = StokDarah::where($criteria)
+                ->orderBy('tgl_kadaluarsa')
+                ->lockForUpdate()
+                ->get();
+
+            $needed = (int) $pemesanan->jumlah_kantong;
+            $total  = $batchList->sum('jumlah');
+
+            // Stok tidak cukup
+            if ($total < $needed) {
+                throw ValidationException::withMessages([
+                    'status' => "Stok kurang. Dibutuhkan {$needed}, tersedia {$total}.",
+                ]);
+            }
+
+            // Kurangi stok per batch
+            foreach ($batchList as $batch) {
+                if ($needed <= 0) break;
+
+                $take = min($batch->jumlah, $needed);
+                $batch->decrement('jumlah', $take);
+                $needed -= $take;
+            }
+
+            // Jika masih ada sisa (harusnya tidak terjadi)
+            if ($needed > 0) {
+                throw ValidationException::withMessages([
+                    'status' => 'Terjadi konflik stok saat pengurangan. Silakan coba ulang.',
+                ]);
+            }
+            
+        } catch (\Throwable $e) {
+
+            // Jika error bawaan ValidationException → lempar lagi agar tampil ke user
+            if ($e instanceof ValidationException) {
+                throw $e;
+            }
+
+            // Untuk error tak terduga, bungkus dengan pesan lebih ramah
+            throw ValidationException::withMessages([
+                'status' => 'Terjadi kesalahan sistem saat mengurangi stok. Silakan coba kembali.',
+            ]);
+        }
+    }
+
+
+    /**
+     * Simpan data verifikasi
+     */
+    private function saveVerification(PemesananDarah $pemesanan, array $data): void
+    {
+        VerifikasiPemesanan::updateOrCreate(
+            ['pemesanan_id' => $pemesanan->id],
+            [
+                'nama_pemesan'       => $pemesanan->nama_pasien,
+                'rs_pemesan'         => $pemesanan->rs_pemesan,
+                'gol_darah'          => $pemesanan->gol_darah,
+                'rhesus'             => $pemesanan->rhesus,
+                'produk'             => $pemesanan->produk,
+                'tanggal_permintaan' => $data['tanggal_permintaan'] ?? now()->toDateString(),
+                'status'             => $data['status'],
+                'note'               => $data['note'] ?? null,
+            ]
+        );
+    }
+
+    /**
+     * Simpan riwayat verifikasi
+     */
+    private function saveHistory(PemesananDarah $pemesanan, string $status): void
+    {
+        RiwayatPemesanan::create([
+            'pemesanan_id'   => $pemesanan->id,
+            'nama'           => $pemesanan->nama_pasien,
+            'tanggal'        => now()->toDateString(),
+            'gol_darah'      => $pemesanan->gol_darah,
+            'rhesus'         => $pemesanan->rhesus,
+            'jumlah_kantong' => $pemesanan->jumlah_kantong,
+            'produk'         => $pemesanan->produk,
+            'aksi'           => "verifikasi: {$status}",
+        ]);
     }
 
     /**

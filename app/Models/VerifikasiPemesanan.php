@@ -11,6 +11,7 @@ class VerifikasiPemesanan extends Model
 
     protected $fillable = [
         'pemesanan_id',
+        'stok_id',
         'nama_pemesan',
         'rs_pemesan',
         'gol_darah',          // <- sudah diganti dari golongan_darah
@@ -26,6 +27,11 @@ class VerifikasiPemesanan extends Model
     ];
 
     /** Relasi ke PemesananDarah */
+    public function stok()
+    {
+        return $this->belongsTo(StokDarah::class, 'stok_id');
+    }
+
     public function pemesanan()
     {
         return $this->belongsTo(PemesananDarah::class, 'pemesanan_id');

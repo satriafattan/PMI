@@ -10,23 +10,17 @@ return new class extends Migration {
         Schema::create('stok_darah', function (Blueprint $table) {
             $table->id();
 
-            // Produk (misalnya: WB, PRC, TC, dll)
             $table->string('produk', 191);
-
-            // Golongan darah (A, B, AB, O)
             $table->enum('gol_darah', ['A', 'B', 'AB', 'O']);
-
-            // Jumlah unit kantong
+            $table->enum('rhesus', ['Rh+', 'Rh-']);   // <-- Tambahan baru
             $table->unsignedInteger('jumlah')->default(0);
 
-            // Tanggal masuk & kadaluarsa
             $table->date('tgl_masuk');
             $table->date('tgl_kadaluarsa');
 
             $table->timestamps();
 
-            // Index untuk pencarian cepat
-            $table->index(['produk', 'gol_darah']);
+            $table->index(['produk', 'gol_darah', 'rhesus']); // update index
         });
     }
 

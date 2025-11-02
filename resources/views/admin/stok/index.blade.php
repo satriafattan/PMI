@@ -174,10 +174,22 @@
               <option value=""
                       disabled
                       {{ old('produk') ? '' : 'selected' }}>Pilih Produk</option>
-              @foreach (['WB: Whole Blood', 'PRC: Packed Red Cell', 'TC: Trombocyte Concentrate', 'FFP: Fresh Frozen Plasma', 'AHF: Cryoprecipitated AHF', 'LP: Liquid Plasma', 'TC Aferesis', 'Plasma Konvalesen'] as $opt)
-                <option value="{{ $opt }}"
-                        {{ old('produk') === $opt ? 'selected' : '' }}>{{ $opt }}</option>
-              @endforeach
+              {{-- @foreach (['FFP: Fresh Frozen Plasma', 'AHF: Cryoprecipitated AHF', 'LP: Liquid Plasma', 'TC Aferesis', 'PK'] as $opt) --}}
+                <option value="WB"
+                        {{ old('produk') ? 'selected' : '' }}>Whole Blood</option>
+                <option value="PRC"
+                        {{ old('produk') ? 'selected' : '' }}>Packed Red Cell</option>
+                <option value="FFP"
+                        {{ old('produk') ? 'selected' : '' }}>Fresh Frozen Plasma</option>
+                <option value="AHF"
+                        {{ old('produk') ? 'selected' : '' }}>Cryoprecipitated AHF</option>
+                <option value="LP"
+                        {{ old('produk') ? 'selected' : '' }}>Liquid Plasma</option>
+                <option value="TC"
+                        {{ old('produk') ? 'selected' : '' }}>Trombocyte Concentrate</option>
+                <option value="PK"
+                        {{ old('produk') ? 'selected' : '' }}>Plasma Konvalesen</option>
+              {{-- @endforeach --}}
             </select>
             @error('produk')
               <p class="mt-1 text-xs text-rose-600">{{ $message }}</p>
@@ -216,10 +228,11 @@
               <option value=""
                       disabled
                       {{ old('rhesus') ? '' : 'selected' }}>Pilih Rhesus</option>
-              <option value="+"
-                      {{ old('rhesus') === '+' ? 'selected' : '' }}>Positif (+)</option>
-              <option value="-"
-                      {{ old('rhesus') === '-' ? 'selected' : '' }}>Negatif (-)</option>
+              <option value="Rh+"
+                      {{ old('rhesus') === 'Rh+' ? 'selected' : '' }}>Positif (+)</option>
+              <option value="Rh-"
+                      {{ old('rhesus') === 'Rh-' ? 'selected' : '' }}>Negatif (-)</option>
+
             </select>
             @error('rhesus')
               <p class="mt-1 text-xs text-rose-600">{{ $message }}</p>
@@ -307,9 +320,9 @@
 
     function pillFor(v) {
       if (v < CRIT_TH)
-      return `<span class="inline-flex min-w-10 items-center justify-center rounded-full border border-rose-200 bg-rose-50 px-2 py-0.5 text-xs font-semibold text-rose-700">${v}</span>`;
+        return `<span class="inline-flex min-w-10 items-center justify-center rounded-full border border-rose-200 bg-rose-50 px-2 py-0.5 text-xs font-semibold text-rose-700">${v}</span>`;
       if (v < LOW_TH)
-      return `<span class="inline-flex min-w-10 items-center justify-center rounded-full border border-amber-200 bg-amber-50 px-2 py-0.5 text-xs font-semibold text-amber-700">${v}</span>`;
+        return `<span class="inline-flex min-w-10 items-center justify-center rounded-full border border-amber-200 bg-amber-50 px-2 py-0.5 text-xs font-semibold text-amber-700">${v}</span>`;
       return `<span class="inline-flex min-w-10 items-center justify-center rounded-full border border-emerald-200 bg-emerald-50 px-2 py-0.5 text-xs font-semibold text-emerald-700">${v}</span>`;
     }
 
