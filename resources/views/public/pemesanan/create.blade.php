@@ -5,17 +5,40 @@
     <div class="min-h-screen bg-white text-slate-800">
         <x-navbar />
 
-        <section class="py-10 sm:py-14">
-            <div class="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
+    <section class="py-10 sm:py-14">
+      <div class="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
+        {{-- Hero Section --}}
+        <div class="mb-10 text-center">
+          <div
+               class="mb-4 inline-flex items-center justify-center rounded-full bg-red-100/80 px-4 py-1.5 text-sm font-medium text-red-600">
+            <svg class="mr-1.5 h-4 w-4"
+                 fill="none"
+                 stroke="currentColor"
+                 viewBox="0 0 24 24">
+              <path stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10">
+              </path>
+            </svg>
+            Form Pemesanan Darah
+          </div>
+          <h1 class="mt-3 text-4xl font-bold tracking-tight text-slate-900 sm:text-5xl">
+            Formulir Pemesanan Darah
+          </h1>
+          <p class="mx-auto mt-4 max-w-2xl text-lg text-slate-600">
+            Lengkapi formulir berikut untuk melakukan pemesanan darah. Data akan diproses sesuai ketersediaan stok.
+          </p>
+        </div>
 
-                @php
-                    $field =
-                        'w-full h-11 md:h-12 rounded-xl bg-slate-50/70 border border-slate-200 px-4 text-[15px] placeholder-slate-400 shadow-inner focus:outline-none focus:ring-2 focus:ring-red-500/30 focus:border-red-500 transition';
-                    $select = $field . ' pr-10 appearance-none';
-                    $textarea =
-                        'w-full min-h-[120px] rounded-xl bg-slate-50/70 border border-slate-200 p-4 text-[15px] placeholder-slate-400 shadow-inner focus:outline-none focus:ring-2 focus:ring-red-500/30 focus:border-red-500 transition';
-                    $check = 'rounded text-red-600 border-slate-300 focus:ring-red-500 focus:ring-2';
-                @endphp
+        @php
+          $field =
+              'w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-[15px] shadow-sm transition-all duration-200 placeholder:text-slate-400 hover:border-slate-300 focus:border-red-500 focus:shadow-md focus:outline-none focus:ring-2 focus:ring-red-500/20';
+          $select = $field . ' pr-10 appearance-none';
+          $textarea =
+              'w-full min-h-[120px] rounded-xl border border-slate-200 bg-white p-4 text-[15px] shadow-sm transition-all duration-200 placeholder:text-slate-400 hover:border-slate-300 focus:border-red-500 focus:shadow-md focus:outline-none focus:ring-2 focus:ring-red-500/20';
+          $check = 'rounded text-red-600 border-slate-300 focus:ring-red-500 focus:ring-2';
+        @endphp
 
                 {{-- Errors --}}
                 @if ($errors->any())
@@ -37,38 +60,73 @@
                 @endif
 
                 <form id="multiStepForm" method="POST" action="{{ route('pemesanan.store') }}"
-                    class="rounded-3xl border border-slate-200 bg-white shadow-[0_10px_40px_-10px_rgba(0,0,0,0.12)]">
+                    class="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-lg transition-shadow duration-300 hover:shadow-xl">
                     @csrf
 
-                    {{-- Header --}}
-                    <div class="flex items-center justify-between border-b border-slate-100 p-5 sm:p-6">
-                        <div class="flex items-center gap-3">
-                            <div
-                                class="grid h-9 w-9 place-items-center rounded-xl bg-red-600 text-white shadow ring-4 ring-white">
-                                🩸</div>
-                            <h1 id="stepTitle" class="text-lg font-bold sm:text-xl">Data Pasien & Rumah Sakit</h1>
-                        </div>
-                        <div class="hidden items-center gap-3 text-sm text-slate-500 sm:flex">
-                            <span>Page</span>
-                            <span id="pageNumber" class="text-lg font-semibold text-red-500">1</span>
-                        </div>
-                    </div>
+          {{-- Header --}}
+          <div class="border-b border-slate-100 bg-white p-5 sm:p-6">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-3">
+                <div
+                     class="grid h-10 w-10 place-items-center rounded-xl bg-gradient-to-br from-red-600 to-red-500 text-white shadow-lg ring-4 ring-white">
+                  <svg class="h-5 w-5"
+                       fill="none"
+                       stroke="currentColor"
+                       viewBox="0 0 24 24">
+                    <path stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10">
+                    </path>
+                  </svg>
+                </div>
+                <div>
+                  <h1 id="stepTitle"
+                      class="text-xl font-bold text-slate-900">Data Pasien & Rumah Sakit</h1>
+                  <p class="mt-0.5 text-sm text-slate-500">Langkah <span id="pageNumber"
+                          class="font-semibold text-red-500">1</span> dari 4</p>
+                </div>
+              </div>
+              <div
+                   class="hidden items-center gap-2 rounded-full bg-slate-100 px-4 py-2 text-sm font-medium text-slate-600 sm:flex">
+                <svg class="h-4 w-4"
+                     fill="none"
+                     stroke="currentColor"
+                     viewBox="0 0 24 24">
+                  <path stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                <span>Step <span id="currentStep"
+                        class="font-semibold text-red-500">1</span>/4</span>
+              </div>
+            </div>
+          </div>
 
                     {{-- BODY --}}
                     <div class="space-y-6 p-5 sm:p-6">
 
-                        {{-- STEP 1 --}}
-                        <div class="step" id="step-1">
-                            <div class="grid gap-5 sm:grid-cols-2">
-                                <div>
-                                    <label class="block text-sm font-medium text-slate-700">Rumah Sakit <span
-                                            class="text-red-600">*</span></label>
-                                    <input type="text" required name="rs_pemesan" value="{{ old('rs_pemesan') }}"
-                                        class="{{ $field }}" placeholder="Nama rumah sakit">
-                                    @error('rs_pemesan')
-                                        <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
-                                    @enderror
-                                </div>
+            {{-- STEP 1 --}}
+            <div class="step"
+                 id="step-1">
+              <div class="grid gap-5 sm:grid-cols-2">
+                <div>
+                  <label class="block text-sm font-medium text-slate-700">
+                    Rumah Sakit <span class="text-red-600">*</span>
+                  </label>
+                  <input type="text"
+                         required
+                         name="rs_pemesan"
+                         value="{{ old('rs_pemesan') }}"
+                         class="{{ $field }}"
+                         placeholder="Nama rumah sakit">
+                  @error('rs_pemesan')
+                    <p class="mt-1.5 text-sm text-red-600">
+                      {{ $message }}
+                    </p>
+                  @enderror
+                </div>
 
                                 <div class="relative">
                                     <label class="block text-sm font-medium text-slate-700">Jenis Kelamin <span
@@ -121,28 +179,36 @@
                                 </div>
                             </div>
 
-                            <div class="grid gap-5 sm:grid-cols-2">
-                                <div>
-                                    <label class="block text-sm font-medium text-slate-700">Nomor Telepon <span
-                                            class="text-red-600">*</span></label>
-                                    <input type="tel" name="nomor_telepon" value="{{ old('nomor_telepon') }}" required
-                                        pattern="^[0-9+\s()-]{8,20}$" class="{{ $field }}"
-                                        placeholder="08xxxxxxxxxx">
-                                    @error('nomor_telepon')
-                                        <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
-                                    @enderror
-                                </div>
+              <div class="mt-6 grid gap-5 sm:grid-cols-2">
+                <div>
+                  <label class="block text-sm font-medium text-slate-700">Nomor Telepon <span
+                          class="text-red-600">*</span></label>
+                  <input type="tel"
+                         name="nomor_telepon"
+                         value="{{ old('nomor_telepon') }}"
+                         required
+                         pattern="^[0-9+\s()-]{8,20}$"
+                         class="{{ $field }}"
+                         placeholder="08xxxxxxxxxx">
+                  @error('nomor_telepon')
+                    <p class="mt-1.5 text-sm text-red-600">{{ $message }}</p>
+                  @enderror
+                </div>
 
-                                <div>
-                                    <label class="block text-sm font-medium text-slate-700">Email <span
-                                            class="text-red-600">*</span></label>
-                                    <input type="email" name="email" value="{{ old('email') }}" required
-                                        class="{{ $field }}" placeholder="nama@email.com">
-                                    @error('email')
-                                        <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
-                                    @enderror
-                                </div>
-                            </div>
+                <div>
+                  <label class="block text-sm font-medium text-slate-700">Email <span
+                          class="text-red-600">*</span></label>
+                  <input type="email"
+                         name="email"
+                         value="{{ old('email') }}"
+                         required
+                         class="{{ $field }}"
+                         placeholder="nama@email.com">
+                  @error('email')
+                    <p class="mt-1.5 text-sm text-red-600">{{ $message }}</p>
+                  @enderror
+                </div>
+              </div>
 
                             <div class="mt-8 flex justify-end">
                                 <button type="button"
@@ -250,31 +316,51 @@
                                         <span class="pointer-events-none absolute bottom-3 right-3 text-slate-400">▾</span>
                                     </div>
 
-                                    <div>
-                                        <label class="block text-sm font-medium text-slate-700">Pernah Mengalami
-                                            Abortus</label>
-                                        <div class="mt-2 space-y-2">
-                                            <label class="flex items-center gap-2"><input type="radio" name="abortus"
-                                                    value="Ya" class="{{ $check }}"> Ya</label>
-                                            <label class="flex items-center gap-2"><input type="radio" name="abortus"
-                                                    value="Tidak" class="{{ $check }}"> Tidak</label>
-                                        </div>
-                                    </div>
+                  <div>
+                    <label class="mb-2 block text-sm font-medium text-slate-700">
+                      Pernah Mengalami Abortus
+                    </label>
+                    <div class="space-x-4">
+                      <label class="inline-flex items-center">
+                        <input type="radio"
+                               name="abortus"
+                               value="Ya"
+                               class="{{ $check }}">
+                        <span class="ml-2">Ya</span>
+                      </label>
+                      <label class="inline-flex items-center">
+                        <input type="radio"
+                               name="abortus"
+                               value="Tidak"
+                               class="{{ $check }}">
+                        <span class="ml-2">Tidak</span>
+                      </label>
+                    </div>
+                  </div>
 
-                                    <div>
-                                        <label class="block text-sm font-medium text-slate-700">Riwayat Penyakit Hemolitik
-                                            Pada Bayi Sebelumnya</label>
-                                        <div class="mt-2 space-y-2">
-                                            <label class="flex items-center gap-2"><input type="radio"
-                                                    name="riwayat_hemolitik" value="Ya" class="{{ $check }}">
-                                                Ya</label>
-                                            <label class="flex items-center gap-2"><input type="radio"
-                                                    name="riwayat_hemolitik" value="Tidak" class="{{ $check }}">
-                                                Tidak</label>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                  <div>
+                    <label class="mb-2 block text-sm font-medium text-slate-700">
+                      Riwayat Penyakit Hemolitik Pada Bayi Sebelumnya
+                    </label>
+                    <div class="space-x-4">
+                      <label class="inline-flex items-center">
+                        <input type="radio"
+                               name="riwayat_hemolitik"
+                               value="Ya"
+                               class="{{ $check }}">
+                        <span class="ml-2">Ya</span>
+                      </label>
+                      <label class="inline-flex items-center">
+                        <input type="radio"
+                               name="riwayat_hemolitik"
+                               value="Tidak"
+                               class="{{ $check }}">
+                        <span class="ml-2">Tidak</span>
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              </div>
 
                             <div class="mt-8 flex justify-between">
                                 <button type="button"
@@ -389,51 +475,84 @@
                 <div id="confirmModal" class="fixed inset-0 z-[9999] hidden items-center justify-center">
                     <div class="absolute inset-0 bg-black/40" onclick="closeConfirmModal()"></div>
 
-                    <div class="relative z-10 w-[94%] max-w-3xl rounded-2xl bg-white shadow-xl">
-                        <div class="flex items-center justify-between border-b border-slate-200 p-4">
-                            <h3 class="text-lg font-semibold text-slate-800">Konfirmasi Pemesanan</h3>
-                            <button class="text-slate-400 hover:text-slate-600" onclick="closeConfirmModal()">✕</button>
-                        </div>
+          <div class="relative z-10 w-[94%] max-w-3xl rounded-3xl bg-white p-0 shadow-xl">
+            <div class="flex items-center justify-between border-b border-slate-100 px-6 py-4">
+              <div>
+                <h3 class="text-xl font-bold text-slate-800">Konfirmasi Pemesanan</h3>
+                <p class="mt-1 text-sm text-slate-500">Periksa kembali data pemesanan Anda</p>
+              </div>
+              <button class="rounded-lg p-2 text-slate-400 hover:bg-slate-50 hover:text-slate-600"
+                      onclick="closeConfirmModal()">
+                <svg class="h-5 w-5"
+                     fill="none"
+                     stroke="currentColor"
+                     viewBox="0 0 24 24">
+                  <path stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+              </button>
+            </div>
 
-                        <div class="max-h-[70vh] overflow-y-auto p-4 sm:p-6">
-                            <div class="grid gap-6 sm:grid-cols-2">
-                                <div>
-                                    <h4 class="mb-2 font-semibold text-slate-700">A. Pasien & RS</h4>
-                                    <dl class="space-y-2 text-sm">
-                                        <div class="flex">
-                                            <dt class="w-40 text-slate-500">Rumah Sakit</dt>
-                                            <dd id="cf_rs_pemesan" class="font-medium"></dd>
-                                        </div>
-                                        <div class="flex">
-                                            <dt class="w-40 text-slate-500">Jenis Kelamin</dt>
-                                            <dd id="cf_jenis_kelamin" class="font-medium"></dd>
-                                        </div>
-                                        <div class="flex">
-                                            <dt class="w-40 text-slate-500">No. Registrasi</dt>
-                                            <dd id="cf_no_regis_rs" class="font-medium"></dd>
-                                        </div>
-                                        <div class="flex">
-                                            <dt class="w-40 text-slate-500">Nama Dokter</dt>
-                                            <dd id="cf_nama_dokter" class="font-medium"></dd>
-                                        </div>
-                                        <div class="flex">
-                                            <dt class="w-40 text-slate-500">Nama Pasien</dt>
-                                            <dd id="cf_nama_pasien" class="font-medium"></dd>
-                                        </div>
-                                        <div class="flex">
-                                            <dt class="w-40 text-slate-500">Suami/Istri</dt>
-                                            <dd id="cf_nama_suami_istri" class="font-medium"></dd>
-                                        </div>
-                                        <div class="flex">
-                                            <dt class="w-40 text-slate-500">Telepon</dt>
-                                            <dd id="cf_nomor_telepon" class="font-medium"></dd>
-                                        </div>
-                                        <div class="flex">
-                                            <dt class="w-40 text-slate-500">Email</dt>
-                                            <dd id="cf_email" class="font-medium"></dd>
-                                        </div>
-                                    </dl>
-                                </div>
+            <div class="max-h-[70vh] overflow-y-auto px-6 py-6">
+              <div class="grid gap-8 divide-y divide-slate-100 sm:grid-cols-2 sm:divide-x sm:divide-y-0">
+                <div class="sm:pr-8">
+                  <h4 class="flex items-center gap-2 text-base font-semibold text-slate-800">
+                    <svg class="h-5 w-5 text-slate-400"
+                         fill="none"
+                         stroke="currentColor"
+                         viewBox="0 0 24 24">
+                      <path stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                    </svg>
+                    Data Pasien & RS
+                  </h4>
+                  <dl class="mt-3 space-y-2 text-sm">
+                    <div class="flex">
+                      <dt class="w-40 font-medium text-slate-500">Rumah Sakit</dt>
+                      <dd id="cf_rs_pemesan"
+                          class="text-slate-800"></dd>
+                    </div>
+                    <div class="flex">
+                      <dt class="w-40 text-slate-500">Jenis Kelamin</dt>
+                      <dd id="cf_jenis_kelamin"
+                          class="font-medium"></dd>
+                    </div>
+                    <div class="flex">
+                      <dt class="w-40 text-slate-500">No. Registrasi</dt>
+                      <dd id="cf_no_regis_rs"
+                          class="font-medium"></dd>
+                    </div>
+                    <div class="flex">
+                      <dt class="w-40 text-slate-500">Nama Dokter</dt>
+                      <dd id="cf_nama_dokter"
+                          class="font-medium"></dd>
+                    </div>
+                    <div class="flex">
+                      <dt class="w-40 text-slate-500">Nama Pasien</dt>
+                      <dd id="cf_nama_pasien"
+                          class="font-medium"></dd>
+                    </div>
+                    <div class="flex">
+                      <dt class="w-40 text-slate-500">Suami/Istri</dt>
+                      <dd id="cf_nama_suami_istri"
+                          class="font-medium"></dd>
+                    </div>
+                    <div class="flex">
+                      <dt class="w-40 text-slate-500">Telepon</dt>
+                      <dd id="cf_nomor_telepon"
+                          class="font-medium"></dd>
+                    </div>
+                    <div class="flex">
+                      <dt class="w-40 text-slate-500">Email</dt>
+                      <dd id="cf_email"
+                          class="font-medium"></dd>
+                    </div>
+                  </dl>
+                </div>
 
                                 <div>
                                     <h4 class="mb-2 font-semibold text-slate-700">B. Detail Klinis</h4>
@@ -517,32 +636,57 @@
                     <div id="successModal" class="fixed inset-0 z-[9999] flex items-center justify-center">
                         <div class="absolute inset-0 bg-black/40"></div>
 
-                        <div class="relative z-10 w-[90%] max-w-2xl rounded-3xl bg-white p-10 text-center shadow-2xl">
-                            <button type="button"
-                                class="absolute right-4 top-4 text-2xl text-slate-400 hover:text-slate-600"
-                                onclick="hideSuccessModal()">✕</button>
+            <div class="relative z-10 w-[90%] max-w-lg overflow-hidden rounded-3xl bg-white shadow-2xl">
+              <div class="absolute right-4 top-4">
+                <button type="button"
+                        class="rounded-lg p-2 text-slate-400 hover:bg-slate-50 hover:text-slate-600"
+                        onclick="hideSuccessModal()">
+                  <svg class="h-5 w-5"
+                       fill="none"
+                       stroke="currentColor"
+                       viewBox="0 0 24 24">
+                    <path stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M6 18L18 6M6 6l12 12"></path>
+                  </svg>
+                </button>
+              </div>
 
-                            <div
-                                class="mx-auto mb-4 grid h-16 w-16 place-items-center rounded-full bg-emerald-100 text-3xl text-emerald-700">
-                                ✔
-                            </div>
+              <div class="px-8 pb-10 pt-12 text-center">
+                <div class="mx-auto mb-6 grid h-20 w-20 place-items-center rounded-full bg-emerald-50 text-emerald-500">
+                  <svg class="h-10 w-10"
+                       fill="none"
+                       stroke="currentColor"
+                       viewBox="0 0 24 24">
+                    <path stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                  </svg>
+                </div>
 
-                            <h3 id="successTitle" class="text-2xl font-bold text-slate-800">Pengajuan Berhasil Dikirim!
-                            </h3>
+                <h3 class="text-2xl font-bold text-slate-800">Pemesanan Berhasil!</h3>
+                <p class="mx-auto mt-3 max-w-sm text-slate-600">Kami akan memproses permintaan Anda dan mengirimkan
+                  konfirmasi melalui email.</p>
+              </div>
 
-                            <p id="successMessage" class="mt-3 text-lg text-slate-600">{{ session('success') }}</p>
+              <div class="grid grid-cols-2 divide-x divide-slate-100 border-t border-slate-100">
+                <button type="button"
+                        class="px-6 py-4 text-sm font-medium text-slate-600 transition hover:bg-slate-50"
+                        onclick="hideSuccessModal()">Tutup</button>
+                <a href="{{ route('pemesanan.create') }}"
+                   class="bg-red-600 px-6 py-4 text-center text-sm font-medium text-white transition hover:bg-red-700">Pesan
+                  Lagi</a>
+              </div>
+            </div>
+          </div>
 
-                            <div class="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
-                                <button type="button"
-                                    class="rounded-lg border border-slate-300 px-6 py-3 text-slate-700 transition hover:bg-slate-50"
-                                    onclick="hideSuccessModal()">Tutup</button>
-                                <a href="{{ route('pemesanan.create') }}"
-                                    class="rounded-lg bg-red-600 px-6 py-3 text-white transition hover:bg-red-700">Ajukan
-                                    Lagi</a>
-                            </div>
-                        </div>
-                    </div>
-                @endif
+          @php
+            // Mencegah session flash message muncul sebagai notifikasi terpisah
+            Session::forget('success');
+          @endphp
+        @endif
 
             </div>
         </section>
