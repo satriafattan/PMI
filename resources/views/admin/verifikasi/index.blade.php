@@ -73,30 +73,30 @@
                 <span class="pointer-events-none absolute inset-y-0 left-3 flex items-center">
                     <svg class="size-5 text-neutral-400" viewBox="0 0 24 24" fill="none" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6"
-                              d="m21 21-4.3-4.3M10 18a8 8 0 1 1 0-16 8 8 0 0 1 0 16z"/>
+                            d="m21 21-4.3-4.3M10 18a8 8 0 1 1 0-16 8 8 0 0 1 0 16z" />
                     </svg>
                 </span>
                 <input name="q" value="{{ $q }}" type="text"
-                       class="w-full rounded-xl border border-neutral-200 bg-white py-2.5 pl-11 pr-3 text-sm placeholder-neutral-400 focus:border-neutral-300 focus:outline-none focus:ring-2 focus:ring-neutral-900/10"
-                       placeholder="Cari nama pasien atau rumah sakit..."/>
+                    class="w-full rounded-xl border border-neutral-200 bg-white py-2.5 pl-11 pr-3 text-sm placeholder-neutral-400 focus:border-neutral-300 focus:outline-none focus:ring-2 focus:ring-neutral-900/10"
+                    placeholder="Cari nama pasien atau rumah sakit..." />
             </div>
 
             {{-- Filter dropdown --}}
             <div class="relative">
                 <button type="button" id="filterBtn"
-                        class="inline-flex items-center justify-center rounded-xl border border-neutral-200 bg-white px-3 py-2 text-sm shadow-sm hover:bg-neutral-50">
+                    class="inline-flex items-center justify-center rounded-xl border border-neutral-200 bg-white px-3 py-2 text-sm shadow-sm hover:bg-neutral-50">
                     <svg class="size-5 text-neutral-600" viewBox="0 0 24 24" fill="none" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6"
-                              d="M3 6h18M6 12h12M10 18h4"/>
+                            d="M3 6h18M6 12h12M10 18h4" />
                     </svg>
                 </button>
                 <div id="filterMenu"
-                     class="absolute right-0 z-20 mt-2 hidden w-64 rounded-xl border border-neutral-200 bg-white p-3 shadow-lg">
+                    class="absolute right-0 z-20 mt-2 hidden w-64 rounded-xl border border-neutral-200 bg-white p-3 shadow-lg">
                     <div class="space-y-3">
                         <div>
                             <label class="text-xs font-medium text-neutral-500">Status</label>
                             <select id="statusSelect"
-                                    class="mt-1 w-full rounded-lg border border-neutral-200 bg-white px-3 py-2 text-sm">
+                                class="mt-1 w-full rounded-lg border border-neutral-200 bg-white px-3 py-2 text-sm">
                                 <option value="" {{ $statusQ === '' ? 'selected' : '' }}>Semua</option>
                                 <option value="approved" {{ $statusQ === 'approved' ? 'selected' : '' }}>Approved</option>
                                 <option value="pending" {{ $statusQ === 'pending' ? 'selected' : '' }}>Pending</option>
@@ -106,7 +106,7 @@
                         <div>
                             <label class="text-xs font-medium text-neutral-500">Golongan Darah</label>
                             <select id="golSelect"
-                                    class="mt-1 w-full rounded-lg border border-neutral-200 bg-white px-3 py-2 text-sm">
+                                class="mt-1 w-full rounded-lg border border-neutral-200 bg-white px-3 py-2 text-sm">
                                 @php $gOpts = [''=>'Semua','A+'=>'A+','A-'=>'A-','B+'=>'B+','B-'=>'B-','AB+'=>'AB+','AB-'=>'AB-','O+'=>'O+','O-'=>'O-']; @endphp
                                 @foreach ($gOpts as $val => $lab)
                                     <option value="{{ $val }}" {{ $golQ === $val ? 'selected' : '' }}>
@@ -116,9 +116,9 @@
                         </div>
                         <div class="flex items-center justify-between">
                             <button type="button" id="resetBtn"
-                                    class="text-sm text-neutral-600 hover:underline">Reset</button>
+                                class="text-sm text-neutral-600 hover:underline">Reset</button>
                             <button type="button" id="applyBtn"
-                                    class="rounded-lg bg-neutral-900 px-3 py-1.5 text-sm text-white hover:bg-neutral-800">Terapkan</button>
+                                class="rounded-lg bg-neutral-900 px-3 py-1.5 text-sm text-white hover:bg-neutral-800">Terapkan</button>
                         </div>
                     </div>
                 </div>
@@ -134,7 +134,8 @@
                 <label for="pageSize" class="text-sm text-neutral-600">Baris:</label>
                 <select id="pageSize" class="rounded-xl border border-neutral-200 bg-white px-2 py-2 text-sm">
                     @foreach ([5, 10, 20] as $opt)
-                        <option value="{{ $opt }}" {{ $perPage === $opt ? 'selected' : '' }}>{{ $opt }}</option>
+                        <option value="{{ $opt }}" {{ $perPage === $opt ? 'selected' : '' }}>{{ $opt }}
+                        </option>
                     @endforeach
                 </select>
             </div>
@@ -145,93 +146,105 @@
             <div class="overflow-x-auto">
                 <table class="min-w-full text-sm">
                     <thead class="bg-neutral-50 text-neutral-600">
-                    <tr class="text-left">
-                        <th class="px-4 py-3 font-medium">Nama Pasien</th>
-                        <th class="px-4 py-3 font-medium">RS Pemesan</th>
-                        <th class="px-4 py-3 font-medium">Golongan Darah</th>
-                        <th class="px-4 py-3 font-medium">Rhesus</th>
-                        <th class="px-4 py-3 font-medium">Tanggal Permintaan</th>
-                        <th class="px-4 py-3 font-medium">Produk Darah</th>
-                        <th class="px-4 py-3 font-medium">Status</th>
-                        <th class="px-4 py-3 font-medium">Aksi</th>
-                    </tr>
+                        <tr class="text-left">
+                            <th class="px-4 py-3 font-medium">Nama Pasien</th>
+                            <th class="px-4 py-3 font-medium">RS Pemesan</th>
+                            <th class="px-4 py-3 font-medium">Golongan Darah</th>
+                            <th class="px-4 py-3 font-medium">Rhesus</th>
+                            <th class="px-4 py-3 font-medium">Tanggal Pemesanan</th>
+                            <th class="px-4 py-3 font-medium">Produk Darah</th>
+                            <th class="px-4 py-3 font-medium">Status</th>
+                            <th class="px-4 py-3 font-medium">Aksi</th>
+                        </tr>
                     </thead>
                     <tbody>
-                    @forelse($pemesanan as $o)
-                        @php
-                            $statusClass = $statusMap[$o->status] ?? 'bg-neutral-100 text-neutral-700 border border-neutral-200';
+                        @forelse($pemesanan as $o)
+                            @php
+                                $statusClass =
+                                    $statusMap[$o->status] ??
+                                    'bg-neutral-100 text-neutral-700 border border-neutral-200';
 
-                            $tglBaris = \Illuminate\Support\Carbon::parse(
-                                optional($o->verifikasiTerakhir)->tanggal_permintaan ?? $o->created_at
-                            )->toDateString();
+                                $tglBaris = \Illuminate\Support\Carbon::parse(
+                                    optional($o->verifikasiTerakhir)->tanggal_permintaan ?? $o->created_at,
+                                )->toDateString();
 
-                            // Payload lengkap utk modal
-                            $payload = [
-                                'id' => $o->id,
-                                'status' => $o->status,
-                                'tanggal_pemesanan' => optional($o->tanggal_pemesanan)->toDateString() ?? ($o->tanggal_pemesanan ?? null),
-                                'tanggal_permintaan' => optional($o->tanggal_permintaan)->toDateString() ?? ($o->tanggal_permintaan ?? null),
+                                // Payload lengkap utk modal
+                                $payload = [
+                                    'id' => $o->id,
+                                    'status' => $o->status,
+                                    'tanggal_pemesanan' =>
+                                        optional($o->tanggal_pemesanan)->toDateString() ??
+                                        ($o->tanggal_pemesanan ?? null),
+                                    'tanggal_permintaan' =>
+                                        optional($o->tanggal_permintaan)->toDateString() ??
+                                        ($o->tanggal_permintaan ?? null),
 
-                                // Identitas pasien & RS
-                                'nama_pasien' => $o->nama_pasien,
-                                'rs_pemesan' => $o->rs_pemesan,
-                                'jenis_kelamin' => $o->jenis_kelamin, // L/P
-                                'nama_dokter' => $o->nama_dokter,
-                                'email' => $o->email,
-                                'nomor_telepon' => $o->nomor_telepon,
-                                'no_regis_rs' => $o->no_regis_rs,
-                              
+                                    // Identitas pasien & RS
+                                    'nama_pasien' => $o->nama_pasien,
+                                    'rs_pemesan' => $o->rs_pemesan,
+                                    'jenis_kelamin' => $o->jenis_kelamin, // L/P
+                                    'nama_dokter' => $o->nama_dokter,
+                                    'email' => $o->email,
+                                    'nomor_telepon' => $o->nomor_telepon,
+                                    'no_regis_rs' => $o->no_regis_rs,
 
-                                // Kebutuhan darah
-                                'gol_darah' => $o->gol_darah,
-                                'rhesus' => $o->rhesus,
-                                'produk' => $o->produk,
-                                'jumlah_kantong' => $o->jumlah_kantong,
+                                    // Kebutuhan darah
+                                    'gol_darah' => $o->gol_darah,
+                                    'rhesus' => $o->rhesus,
+                                    'produk' => $o->produk,
+                                    'jumlah_kantong' => $o->jumlah_kantong,
+                                    'alasan_tambahan' => $o->alasan_tambahan,
 
-                                // Alasan & pemeriksaan
-                                'alasan_transfusi' => $o->alasan_transfusi,
-                                'gejala_transfusi' => $o->gejala_transfusi,
-                                'cek_transfusi' => (bool) $o->cek_transfusi,
+                                    // Alasan & pemeriksaan
+                                    'alasan_transfusi' => $o->alasan_transfusi,
+                                    'gejala_transfusi' => $o->gejala_transfusi,
+                                    'cek_transfusi' => (bool) $o->cek_transfusi,
 
-                                // Serologi
-                                'nama_suami_istri' => $o->nama_suami_istri,
-                                'diagnosa_klinik' => $o->diagnosa_klinik,
-                                'pernah_serologi' => $o->pernah_serologi, // 'Ya' / 'Tidak'
-                                'lokasi_serologi' => $o->lokasi_serologi,
-                                'tanggal_serologi' => optional($o->tanggal_serologi)->toDateString() ?? ($o->tanggal_serologi ?? null),
-                                'tanggal_transfusi' => optional($o->tanggal_transfusi)->toDateString() ?? ($o->tanggal_transfusi ?? null),
-                                'hasil_serologi' => $o->hasil_serologi,
+                                    // Serologi
+                                    'nama_suami_istri' => $o->nama_suami_istri,
+                                    'diagnosa_klinik' => $o->diagnosa_klinik,
+                                    'pernah_serologi' => $o->pernah_serologi, // 'Ya' / 'Tidak'
+                                    'lokasi_serologi' => $o->lokasi_serologi,
+                                    'tanggal_serologi' =>
+                                        optional($o->tanggal_serologi)->toDateString() ??
+                                        ($o->tanggal_serologi ?? null),
+                                    'tanggal_transfusi' =>
+                                        optional($o->tanggal_transfusi)->toDateString() ??
+                                        ($o->tanggal_transfusi ?? null),
+                                    'hasil_serologi' => $o->hasil_serologi,
 
-                                'tanggal' => $tglBaris, // fallback tampilan
-                            ];
-                        @endphp
+                                    'tanggal' => $tglBaris, // fallback tampilan
+                                ];
+                            @endphp
 
-                        <tr class="border-t border-neutral-100 hover:bg-neutral-50/60">
-                            <td class="px-4 py-3">{{ $o->nama_pasien }}</td>
-                            <td class="px-4 py-3">{{ $o->rs_pemesan }}</td>
-                            <td class="px-4 py-3">{!! $o->gol_darah ? blood_pill($o->gol_darah) : '-' !!}</td>
-                            <td class="px-4 py-3">{{ $o->rhesus }}</td>
-                            <td class="px-4 py-3">{{ \Illuminate\Support\Carbon::parse($tglBaris)->format('d-m-Y') }}</td>
-                            <td class="px-4 py-3">{!! $o->produk ? product_pill($o->produk) : '-' !!}</td>
-                            <td class="px-4 py-3">
-                                <span class="{{ $statusClass }} inline-flex items-center rounded-full px-2.5 py-1 text-xs font-medium">
-                                    {{ ucfirst($o->status) }}
-                                </span>
-                            </td>
-                            <td class="px-4 py-3">
-                                <button type="button"
+                            <tr class="border-t border-neutral-100 hover:bg-neutral-50/60">
+                                <td class="px-4 py-3">{{ $o->nama_pasien }}</td>
+                                <td class="px-4 py-3">{{ $o->rs_pemesan }}</td>
+                                <td class="px-4 py-3">{!! $o->gol_darah ? blood_pill($o->gol_darah) : '-' !!}</td>
+                                <td class="px-4 py-3">{{ $o->rhesus }}</td>
+                                <td class="px-4 py-3">{{ \Illuminate\Support\Carbon::parse($tglBaris)->format('d-m-Y') }}
+                                </td>
+                                <td class="px-4 py-3">{!! $o->produk ? product_pill($o->produk) : '-' !!}</td>
+                                <td class="px-4 py-3">
+                                    <span
+                                        class="{{ $statusClass }} inline-flex items-center rounded-full px-2.5 py-1 text-xs font-medium">
+                                        {{ ucfirst($o->status) }}
+                                    </span>
+                                </td>
+                                <td class="px-4 py-3">
+                                    <button type="button"
                                         class="lihat-detail-btn w-full rounded-lg border border-neutral-200 bg-white px-3 py-2 text-sm text-neutral-700 hover:bg-neutral-50"
                                         data-action="{{ route('admin.verifikasi.store', $o) }}"
                                         data-payload='@json($payload)'>
-                                    Lihat detail
-                                </button>
-                            </td>
-                        </tr>
-                    @empty
-                        <tr>
-                            <td colspan="8" class="px-4 py-8 text-center text-neutral-500">Tidak ada data.</td>
-                        </tr>
-                    @endforelse
+                                        Lihat Detail
+                                    </button>
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="8" class="px-4 py-8 text-center text-neutral-500">Tidak ada data.</td>
+                            </tr>
+                        @endforelse
                     </tbody>
                 </table>
             </div>
@@ -241,15 +254,18 @@
         <div class="space-y-3 md:hidden">
             @forelse($pemesanan as $o)
                 @php
-                    $statusClass = $statusMap[$o->status] ?? 'bg-neutral-100 text-neutral-700 border border-neutral-200';
+                    $statusClass =
+                        $statusMap[$o->status] ?? 'bg-neutral-100 text-neutral-700 border border-neutral-200';
                     $tgl = optional($o->verifikasiTerakhir)->tanggal_permintaan ?? $o->created_at;
                     $tglBaris = \Illuminate\Support\Carbon::parse($tgl)->toDateString();
                     $payloadMobile = [
                         'id' => $o->id,
                         'status' => $o->status,
                         'tanggal' => $tglBaris,
-                        'tanggal_pemesanan' => optional($o->tanggal_pemesanan)->toDateString() ?? ($o->tanggal_pemesanan ?? null),
-                        'tanggal_permintaan' => optional($o->tanggal_permintaan)->toDateString() ?? ($o->tanggal_permintaan ?? null),
+                        'tanggal_pemesanan' =>
+                            optional($o->tanggal_pemesanan)->toDateString() ?? ($o->tanggal_pemesanan ?? null),
+                        'tanggal_permintaan' =>
+                            optional($o->tanggal_permintaan)->toDateString() ?? ($o->tanggal_permintaan ?? null),
                         'nama_pasien' => $o->nama_pasien,
                         'rs_pemesan' => $o->rs_pemesan,
                         'jenis_kelamin' => $o->jenis_kelamin,
@@ -262,14 +278,17 @@
                         'produk' => $o->produk,
                         'jumlah_kantong' => $o->jumlah_kantong,
                         'alasan_transfusi' => $o->alasan_transfusi,
+                        'alasan_tambahan' => $o->alasan_tambahan,
                         'gejala_transfusi' => $o->gejala_transfusi,
                         'cek_transfusi' => (bool) $o->cek_transfusi,
                         'nama_suami_istri' => $o->nama_suami_istri,
                         'diagnosa_klinik' => $o->diagnosa_klinik,
                         'pernah_serologi' => $o->pernah_serologi,
                         'lokasi_serologi' => $o->lokasi_serologi,
-                        'tanggal_serologi' => optional($o->tanggal_serologi)->toDateString() ?? ($o->tanggal_serologi ?? null),
-                        'tanggal_transfusi' => optional($o->tanggal_transfusi)->toDateString() ?? ($o->tanggal_transfusi ?? null),
+                        'tanggal_serologi' =>
+                            optional($o->tanggal_serologi)->toDateString() ?? ($o->tanggal_serologi ?? null),
+                        'tanggal_transfusi' =>
+                            optional($o->tanggal_transfusi)->toDateString() ?? ($o->tanggal_transfusi ?? null),
                         'hasil_serologi' => $o->hasil_serologi,
                     ];
                 @endphp
@@ -277,7 +296,8 @@
                 <div class="rounded-2xl border border-neutral-200 bg-white p-4">
                     <div class="flex items-start justify-between">
                         <p class="font-medium">{{ $o->nama_pasien }}</p>
-                        <span class="{{ $statusClass }} inline-flex items-center rounded-full px-2.5 py-1 text-xs font-medium">
+                        <span
+                            class="{{ $statusClass }} inline-flex items-center rounded-full px-2.5 py-1 text-xs font-medium">
                             {{ ucfirst($o->status) }}
                         </span>
                     </div>
@@ -295,9 +315,9 @@
 
                     <div class="mt-3">
                         <button type="button"
-                                class="lihat-detail-btn rounded-lg border border-neutral-200 bg-white px-3 py-1.5 text-xs text-neutral-700 hover:bg-neutral-50"
-                                data-action="{{ route('admin.verifikasi.store', $o) }}"
-                                data-payload='@json($payloadMobile)'>
+                            class="lihat-detail-btn rounded-lg border border-neutral-200 bg-white px-3 py-1.5 text-xs text-neutral-700 hover:bg-neutral-50"
+                            data-action="{{ route('admin.verifikasi.store', $o) }}"
+                            data-payload='@json($payloadMobile)'>
                             Lihat detail
                         </button>
                     </div>
@@ -311,7 +331,8 @@
         <div class="flex flex-col justify-between gap-3 sm:flex-row sm:items-center">
             <div class="text-sm text-neutral-600">
                 @if ($pemesanan->total() > 0)
-                    Menampilkan {{ $pemesanan->firstItem() }}–{{ $pemesanan->lastItem() }} dari {{ $pemesanan->total() }} data
+                    Menampilkan {{ $pemesanan->firstItem() }}–{{ $pemesanan->lastItem() }} dari {{ $pemesanan->total() }}
+                    data
                 @else
                     Tidak ada data
                 @endif
@@ -330,7 +351,8 @@
                 <h3 class="text-xl font-semibold">Detail Pemesanan</h3>
                 <button type="button" class="dm-close rounded-lg p-1 text-neutral-500 hover:bg-neutral-100">
                     <svg class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6" d="M6 18 18 6M6 6l12 12"/>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6"
+                            d="M6 18 18 6M6 6l12 12" />
                     </svg>
                 </button>
             </div>
@@ -396,7 +418,7 @@
                             <dd id="dm_rhesus" class="font-medium text-neutral-900">-</dd>
                             <dt class="text-neutral-500">Jumlah Kantong</dt>
                             <dd id="dm_jumlah" class="font-medium text-neutral-900">-</dd>
-                            <dt class="text-neutral-500">Gejala Tambahan</dt>
+                            <dt class="text-neutral-500">Alasan Tambahan</dt>
                             <dd id="dm_gejala" class="font-medium text-neutral-900">—</dd>
                             <dt class="text-neutral-500">Cek Transfusi</dt>
                             <dd id="dm_cek" class="font-medium text-neutral-900">-</dd>
@@ -425,16 +447,16 @@
             {{-- Footer --}}
             <div class="flex items-center justify-between gap-3 border-t border-neutral-100 px-6 py-4">
                 <button type="button"
-                        class="dm-close rounded-lg border border-neutral-200 bg-white px-3 py-2 text-sm text-neutral-700 hover:bg-neutral-50">
+                    class="dm-close rounded-lg border border-neutral-200 bg-white px-3 py-2 text-sm text-neutral-700 hover:bg-neutral-50">
                     Tutup
                 </button>
                 <div id="dm_action_buttons" class="flex items-center gap-2">
                     <button type="button" id="dm_reject"
-                            class="rounded-lg border border-rose-200 bg-rose-50 px-3 py-2 text-sm font-medium text-rose-700 hover:bg-rose-100">
+                        class="rounded-lg border border-rose-200 bg-rose-50 px-3 py-2 text-sm font-medium text-rose-700 hover:bg-rose-100">
                         Tolak
                     </button>
                     <button type="button" id="dm_approve"
-                            class="rounded-lg border border-blue-200 bg-blue-50 px-3 py-2 text-sm font-medium text-blue-700 hover:bg-blue-100">
+                        class="rounded-lg border border-blue-200 bg-blue-50 px-3 py-2 text-sm font-medium text-blue-700 hover:bg-blue-100">
                         Terima
                     </button>
                 </div>
@@ -451,9 +473,10 @@
             </div>
             <div class="flex items-center justify-end gap-2 border-t border-neutral-100 px-5 py-3">
                 <button type="button" id="cm_cancel"
-                        class="rounded-lg border border-neutral-200 bg-white px-3 py-2 text-sm text-neutral-700 hover:bg-neutral-50">Batal</button>
+                    class="rounded-lg border border-neutral-200 bg-white px-3 py-2 text-sm text-neutral-700 hover:bg-neutral-50">Batal</button>
                 <button type="button" id="cm_ok"
-                        class="rounded-lg bg-neutral-900 px-3 py-2 text-sm text-white hover:bg-neutral-800">Ya, lanjutkan</button>
+                    class="rounded-lg bg-neutral-900 px-3 py-2 text-sm text-white hover:bg-neutral-800">Ya,
+                    lanjutkan</button>
             </div>
         </div>
     </div>
@@ -546,6 +569,7 @@
                 if (!v) return '-';
                 return v;
             }
+
             function yaTidak(v) {
                 if (v === true) return 'Ya';
                 if (v === false) return 'Tidak';
@@ -554,10 +578,12 @@
                 if (s === 'tidak') return 'Tidak';
                 return '-';
             }
+
             function labelJK(v) {
                 if (!v) return '-';
                 return v === 'L' ? 'Laki-laki' : (v === 'P' ? 'Perempuan' : v);
             }
+
             function productLabel(code) {
                 const map = {
                     WB: 'WB: Whole Blood',
@@ -571,6 +597,7 @@
                 };
                 return map[code] || code || '-';
             }
+
             function jumlahLabel(v) {
                 const n = Number(v || 0);
                 return n > 0 ? `${n} kantong` : '-';
@@ -579,7 +606,8 @@
             function openDetail(payload, actionUrl) {
                 try {
                     // Status & tanggal
-                    dm.status && (dm.status.textContent = (payload.status ?? '-').toString().replace(/^./, c => c.toUpperCase()));
+                    dm.status && (dm.status.textContent = (payload.status ?? '-').toString().replace(/^./, c => c
+                        .toUpperCase()));
                     dm.tglPesan && (dm.tglPesan.textContent = fmt(payload.tanggal_pemesanan ?? payload.tanggal));
                     dm.tglMinta && (dm.tglMinta.textContent = fmt(payload.tanggal_permintaan ?? payload.tanggal));
 
@@ -601,7 +629,7 @@
 
                     // Alasan & pemeriksaan
                     dm.alasan && (dm.alasan.textContent = payload.alasan_transfusi ?? '-');
-                    dm.gejala && (dm.gejala.textContent = payload.gejala_transfusi ?? '-');
+                    dm.gejala && (dm.gejala.textContent = (payload.alasan_tambahan ?? '').toString().trim() || '—');
                     dm.cek && (dm.cek.textContent = yaTidak(payload.cek_transfusi));
 
                     // Serologi
@@ -615,7 +643,8 @@
 
                     // Set form action & default tanggal_permintaan untuk POST verifikasi
                     dmForm.action = actionUrl || '#';
-                    dmTanggalInput.value = (payload.tanggal_permintaan ?? payload.tanggal ?? new Date().toISOString().slice(0, 10));
+                    dmTanggalInput.value = (payload.tanggal_permintaan ?? payload.tanggal ?? new Date()
+                    .toISOString().slice(0, 10));
 
                     // HIDE tombol Terima/Tolak jika status sudah approved atau rejected
                     const currentStatus = (payload.status || '').toLowerCase();
@@ -665,6 +694,7 @@
                 confirmModal.classList.remove('hidden');
                 confirmModal.classList.add('flex');
             }
+
             function closeConfirm() {
                 confirmModal.classList.add('hidden');
                 confirmModal.classList.remove('flex');
@@ -684,20 +714,28 @@
                 openConfirm(
                     'Setujui Pemesanan',
                     'Anda akan MENYETUJUI pemesanan ini. Lanjutkan?',
-                    () => { dmStatusInput.value = 'approved'; dmForm.submit(); }
+                    () => {
+                        dmStatusInput.value = 'approved';
+                        dmForm.submit();
+                    }
                 );
             });
             dmReject.addEventListener('click', () => {
                 openConfirm(
                     'Tolak Pemesanan',
                     'Anda akan MENOLAK pemesanan ini. Lanjutkan?',
-                    () => { dmStatusInput.value = 'rejected'; dmForm.submit(); }
+                    () => {
+                        dmStatusInput.value = 'rejected';
+                        dmForm.submit();
+                    }
                 );
             });
         });
     </script>
 
     <style>
-        th.sortable:hover { background-color: rgba(0,0,0,0.02); }
+        th.sortable:hover {
+            background-color: rgba(0, 0, 0, 0.02);
+        }
     </style>
 @endsection

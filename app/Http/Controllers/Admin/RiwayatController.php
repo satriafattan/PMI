@@ -11,32 +11,29 @@ class RiwayatController extends Controller
 {
     public function index(Request $r)
     {
-        // Ambil filter dari query string (opsional untuk server-side filter)
+        // Filter opsional
         $q   = trim((string) $r->input('q'));
         $st  = $r->input('status'); // pending/approved/rejected
         $gol = $r->input('gol');    // A/B/AB/O
 
-        // Ambil data + relasi pemesanan
         $query = RiwayatPemesanan::query()
             ->with(['pemesanan'])     // pastikan relasi ada di model
-            ->latest();               // berdasarkan created_at riwayat
+            ->latest();
 
-        // Pencarian bebas: nama (riwayat) & rs_pemesan (pemesanan)
         if ($q !== '') {
             $query->where(function ($w) use ($q) {
                 $w->where('nama', 'like', "%{$q}%")
                   ->orWhereHas('pemesanan', function ($p) use ($q) {
-                      $p->where('rs_pemesan', 'like', "%{$q}%");
+                      $p->where('rs_pemesan', 'like', "%{$q}%")
+                        ->orWhere('nama_pasien','like',"%{$q}%");
                   });
             });
         }
 
-        // Filter status pada tabel pemesanan
         if (!empty($st)) {
             $query->whereHas('pemesanan', fn($p) => $p->where('status', $st));
         }
 
-        // Filter golongan darah: cari di riwayat dulu, fallback ke pemesanan
         if (!empty($gol)) {
             $query->where(function ($w) use ($gol) {
                 $w->where('gol_darah', $gol)
@@ -44,34 +41,71 @@ class RiwayatController extends Controller
             });
         }
 
-        // Ambil banyak data (biarkan frontend yang paginate)
-        // Boleh dibatasi kalau dataset besar, mis. 200–500 baris
         $items = $query->take(500)->get();
 
-        // Bentukkan ke struktur yang diharapkan JS frontend
         $rows = $items->map(function ($it) {
-            $p = $it->pemesanan;
+            $p = $it->pemesanan; // relasi ke PemesananDarah
 
-            // tanggal: pakai kolom 'tanggal' di riwayat jika ada, kalau tidak created_at
-            $tglRaw = $it->tanggal ?? $it->created_at;
-            $tgl    = $tglRaw ? Carbon::parse($tglRaw)->format('d-m-Y') : '-';
+            // tanggal ringkas untuk list
+            $tglRaw = $it->tanggal ?? $it->created_at ?? optional($p)->created_at;
+            $tglList = $tglRaw ? Carbon::parse($tglRaw)->format('d-m-Y') : '-';
+
+            // tanggal ISO untuk modal (biar konsisten)
+            $tglPesanIso  = optional($p->tanggal_pemesanan ?? $p->created_at)->toDateString();
+            $tglMintaIso  = optional($p->tanggal_permintaan)->toDateString();
 
             return [
+                // kolom list (untuk tabel/cards)
                 'id'      => $it->id,
                 'nama'    => $it->nama ?? ($p->nama_pasien ?? '-'),
-                'tgl'     => $tgl,
+                'tgl'     => $tglList,
                 'gol'     => $it->gol_darah ?? ($p->gol_darah ?? '-'),
                 'rhesus'  => $it->rhesus ?? ($p->rhesus ?? '-'),
                 'produk'  => $it->produk ?? ($p->produk ?? '-'),
                 'kantong' => (int)($it->jumlah_kantong ?? ($p->jumlah_kantong ?? 0)),
-                'status'  => $p ? ucfirst($p->status) : '-', // jadi 'Approved/Pending/Rejected'
+                'status'  => $p ? ucfirst($p->status) : '-',
+
+                // ===== PAYLOAD LENGKAP (meniru verifikasi) untuk modal =====
+                'payload' => [
+                    'id' => $p->id ?? $it->id,
+                    'status' => $p->status ?? '-',
+                    'tanggal' => $tglPesanIso ?? null, // fallback
+                    'tanggal_pemesanan' => $tglPesanIso,
+                    'tanggal_permintaan' => $tglMintaIso,
+
+                    // A. Pasien & RS
+                    'nama_pasien'   => $p->nama_pasien ?? $it->nama,
+                    'rs_pemesan'    => $p->rs_pemesan ?? null,
+                    'jenis_kelamin' => $p->jenis_kelamin ?? null, // 'L'/'P'
+                    'nama_dokter'   => $p->nama_dokter ?? null,
+                    'email'         => $p->email ?? null,
+                    'nomor_telepon' => $p->nomor_telepon ?? null,
+                    'no_regis_rs'   => $p->no_regis_rs ?? null,
+                    'nama_suami_istri' => $p->nama_suami_istri ?? null,
+
+                    // B. Klinis
+                    'alasan_transfusi' => $p->alasan_transfusi ?? null,
+                    'alasan_tambahan' => $p->alasan_tambahan ?? null,
+                    'cek_transfusi'    => isset($p->cek_transfusi) ? (bool)$p->cek_transfusi : null,
+
+                    'diagnosa_klinik'  => $p->diagnosa_klinik ?? null,
+                    'pernah_serologi'  => $p->pernah_serologi ?? null, // true/false/'Ya'/'Tidak'
+                    'lokasi_serologi'  => $p->lokasi_serologi ?? null,
+                    'tanggal_serologi' => optional($p->tanggal_serologi)->toDateString(),
+                    'tanggal_transfusi'=> optional($p->tanggal_transfusi)->toDateString(),
+                    'hasil_serologi'   => $p->hasil_serologi ?? null,
+
+                    // C. Permintaan darah
+                    'gol_darah'      => $p->gol_darah ?? $it->gol_darah,
+                    'rhesus'         => $p->rhesus ?? $it->rhesus,
+                    'produk'         => $p->produk ?? $it->produk,
+                    'jumlah_kantong' => (int)($p->jumlah_kantong ?? $it->jumlah_kantong ?? 0),
+                ],
             ];
         });
 
-        // Kirim ke Blade sebagai JSON (biar langsung dipakai JS)
         return view('admin.riwayat.index', [
-            'rows' => $rows,               // jika ingin juga dipakai server-side
-            'rowsJson' => $rows->toJson(), // ini yang dipakai JS di <script>
+            'rowsJson' => $rows->toJson(),
         ]);
     }
 }

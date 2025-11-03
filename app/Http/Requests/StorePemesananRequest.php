@@ -11,14 +11,36 @@ class StorePemesananRequest extends FormRequest
         return true;
     }
 
-    // Normalisasi supaya konsisten saat divalidasi & disimpan
+    /**
+     * Normalisasi input SEBELUM validasi:
+     * - Boolean cek_transfusi
+     * - Uppercase produk/gol_darah
+     * - Mapping tanggal_diperlukan -> tanggal_permintaan
+     * - Normalisasi tanggal ke format Y-m-d (atau null)
+     */
     protected function prepareForValidation(): void
     {
+        $fixDate = function ($v) {
+            if ($v === null || $v === '') return null;
+            $ts = strtotime($v);
+            return $ts ? date('Y-m-d', $ts) : null;
+        };
+
+        // mapping tanggal_diperlukan -> tanggal_permintaan (jika diisi)
+        $tanggal_permintaan = $this->input('tanggal_permintaan') ?: $this->input('tanggal_diperlukan');
+
         $this->merge([
-            'cek_transfusi' => filter_var($this->cek_transfusi, FILTER_VALIDATE_BOOLEAN),
-            'produk'        => $this->produk ? strtoupper(trim($this->produk)) : null,
-            'gol_darah'     => $this->gol_darah ? strtoupper(trim($this->gol_darah)) : null,
-            'rhesus'        => $this->rhesus ? trim($this->rhesus) : null,
+            // booleans / enum casing
+            'cek_transfusi'      => filter_var($this->cek_transfusi, FILTER_VALIDATE_BOOLEAN),
+            'produk'             => $this->produk ? strtoupper(trim($this->produk)) : null,
+            'gol_darah'          => $this->gol_darah ? strtoupper(trim($this->gol_darah)) : null,
+            'rhesus'             => $this->rhesus ? trim($this->rhesus) : null,
+
+            // normalized dates
+            'tanggal_pemesanan'  => $fixDate($this->input('tanggal_pemesanan')),
+            'tanggal_permintaan' => $fixDate($tanggal_permintaan),
+            'tanggal_serologi'   => $fixDate($this->input('tanggal_serologi')),
+            'tanggal_transfusi'  => $fixDate($this->input('tanggal_transfusi')),
         ]);
     }
 
@@ -36,11 +58,13 @@ class StorePemesananRequest extends FormRequest
             'nama_pasien'       => ['required', 'string', 'max:150'],
 
             // STEP 2 – data pemesanan
-            'tanggal_diperlukan'=> ['required', 'date'],
+            // form mengirim 'tanggal_diperlukan' (sudah dipetakan ke tanggal_permintaan di prepareForValidation)
+            'tanggal_diperlukan'=> ['nullable', 'date'],     // tidak disimpan, hanya agar aman bila ikut terkirim
+            'tanggal_permintaan'=> ['required', 'date'],
             'pernah_serologi'   => ['required', 'in:Ya,Tidak'],
             'diagnosa_klinik'   => ['required', 'string', 'max:255'],
             'lokasi_serologi'   => ['nullable', 'string', 'max:120'],
-            'tanggal_serologi'  => ['nullable', 'date'],
+            'tanggal_serologi'  => ['nullable', 'date'],     // <— penting: harus ada di rules
             'hasil_serologi'    => ['required', 'string'],
             'tanggal_transfusi' => ['required', 'date'],
 
@@ -54,13 +78,15 @@ class StorePemesananRequest extends FormRequest
             'jumlah_kantong'    => ['required', 'integer', 'min:1', 'max:99'],
             'alasan_transfusi'  => ['required', 'string'],
 
-            'alasan_multi'      => ['nullable', 'array'],
-            'alasan_multi.*'    => ['in:Plasma Biasa,FFP (Fresh Frozen Plasma)'],
+            'alasan_tambahan'      => ['nullable', 'string', 'max:255'],
 
             'gol_darah'         => ['required', 'in:A,B,AB,O'],
             'rhesus'            => ['required', 'in:Rh+,Rh-'],
 
             'cek_transfusi'     => ['nullable', 'boolean'],
+
+            // tanggal_pemesanan boleh dikirim/nullable (di-set default di controller bila kosong)
+            'tanggal_pemesanan' => ['nullable', 'date'],
         ];
     }
 
@@ -72,6 +98,8 @@ class StorePemesananRequest extends FormRequest
             'rhesus'        => 'Rhesus',
             'no_regis_rs'   => 'Nomor registrasi RS',
             'no_rekap_rs'   => 'Nomor rekam medis RS',
+            'tanggal_permintaan' => 'Tanggal diperlukan',
+            'tanggal_serologi'   => 'Tanggal serologi',
         ];
     }
 }

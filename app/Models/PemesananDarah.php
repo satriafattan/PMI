@@ -18,8 +18,10 @@ class PemesananDarah extends Model
         'pernah_serologi',
         'lokasi_serologi',
         'tanggal_transfusi',
+        'tanggal_serologi',
         'hasil_serologi',
         'alasan_transfusi',
+        'alasan_tambahan',
         'gejala_transfusi',
         'produk',
         'jumlah_kantong',
@@ -36,11 +38,12 @@ class PemesananDarah extends Model
     ];
 
     protected $casts = [
-        'tanggal_pemesanan' => 'date',
-        'tanggal_transfusi' => 'date',
+        'tanggal_pemesanan'  => 'date',
+        'tanggal_transfusi'  => 'date',
         'tanggal_permintaan' => 'date',
-        'cek_transfusi'     => 'boolean',
-        'jumlah_kantong'    => 'integer',
+        'tanggal_serologi'   => 'date',
+        'cek_transfusi'      => 'boolean',
+        'jumlah_kantong'     => 'integer',
     ];
 
     public function verifikasis()
@@ -54,16 +57,7 @@ class PemesananDarah extends Model
             ->latestOfMany('tanggal_permintaan');
     }
 
-    public function scopePending($q)
-    {
-        return $q->where('status', 'pending');
-    }
-    public function scopeApproved($q)
-    {
-        return $q->where('status', 'approved');
-    }
-    public function scopeRejected($q)
-    {
-        return $q->where('status', 'rejected');
-    }
+    public function scopePending($q)   { return $q->where('status', 'pending'); }
+    public function scopeApproved($q)  { return $q->where('status', 'approved'); }
+    public function scopeRejected($q)  { return $q->where('status', 'rejected'); }
 }
