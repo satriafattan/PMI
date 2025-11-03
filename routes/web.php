@@ -11,7 +11,7 @@ use App\Http\Controllers\Public\StokController as PublicStokController;
 
 // === Admin Controllers ===
 use App\Http\Controllers\Admin\AuthController;
-use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Admin\PemesananController;
 use App\Http\Controllers\Admin\RekapStokController;
 use App\Http\Controllers\Admin\StokDarahController;
@@ -23,6 +23,7 @@ use App\Http\Controllers\Admin\RiwayatController;
 | Landing & Static Pages
 |--------------------------------------------------------------------------
 */
+
 Route::view('/', 'welcome')->name('home');
 Route::get('/about', fn() => view('about'))->name('about');
 
@@ -79,7 +80,7 @@ Route::middleware('auth:admin')->prefix('admin')->name('admin.')->group(function
 
     // Pemesanan (CMS)
     Route::resource('pemesanan', PemesananController::class)
-        ->only(['index','create','store','show','edit','update','destroy']);
+        ->only(['index', 'create', 'store', 'show', 'edit', 'update', 'destroy']);
 
     // Rekap Stok
     Route::resource('rekap-stok', RekapStokController::class)->except(['show']);

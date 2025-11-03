@@ -119,20 +119,14 @@
       <div class="overflow-x-auto">
         <table class="min-w-full text-sm">
           <thead class="bg-neutral-50 text-neutral-600">
-            <tr class="text-left">
-              <th data-key="produk"
-                  class="sortable cursor-pointer select-none px-4 py-3 font-medium">Produk</th>
-              <th data-key="A"
-                  class="sortable cursor-pointer select-none px-4 py-3 font-medium">A</th>
-              <th data-key="AB"
-                  class="sortable cursor-pointer select-none px-4 py-3 font-medium">AB</th>
-              <th data-key="B"
-                  class="sortable cursor-pointer select-none px-4 py-3 font-medium">B</th>
-              <th data-key="O"
-                  class="sortable cursor-pointer select-none px-4 py-3 font-medium">O</th>
-              <th data-key="total"
-                  class="sortable cursor-pointer select-none px-4 py-3 font-medium">Total</th>
-              <th class="px-4 py-3 font-medium">Aksi</th>
+            <tr>
+              <th class="w-1/6 px-4 py-3 text-left">Produk</th>
+              <th class="w-1/6 px-4 py-3 text-center">A</th>
+              <th class="w-1/6 px-4 py-3 text-center">AB</th>
+              <th class="w-1/6 px-4 py-3 text-center">B</th>
+              <th class="w-1/6 px-4 py-3 text-center">O</th>
+              <th class="w-1/6 px-4 py-3 text-center">Total</th>
+              <th class="w-20 px-4 py-3 text-center">Aksi</th>
             </tr>
           </thead>
           <tbody id="tableBody"></tbody>
@@ -143,6 +137,46 @@
     {{-- ===== CARDS (mobile) ===== --}}
     <div id="cardsContainer"
          class="space-y-3 md:hidden"></div>
+  </div>
+  {{-- @dd($grouped) --}}
+  {{-- ===== Modal Edit Stok Darah ===== --}}
+  <div id="produkModal"
+       class="fixed inset-0 z-[9999] hidden items-center justify-center">
+    <div class="absolute inset-0 bg-black/40"
+         data-close></div>
+    <div class="relative z-10 w-[96%] max-w-4xl rounded-2xl bg-white shadow-xl">
+      <div class="flex items-center justify-between border-b border-neutral-200 p-4">
+        <div>
+          <h3 id="produkTitle"
+              class="text-lg font-semibold">Detail Stok</h3>
+          <p class="text-xs text-neutral-500">FEFO: kadaluarsa terdekat di atas</p>
+        </div>
+        <button class="text-neutral-400 hover:text-neutral-600"
+                data-close>✕</button>
+      </div>
+      <div class="max-h-[72vh] overflow-y-auto p-4">
+        <div id="produkBody">
+          <div class="px-3">
+            <table class="min-w-full text-sm">
+              <thead class="bg-neutral-50 text-neutral-600">
+                <tr class="text-left">
+                  <th class="px-4 py-3 font-medium">ID</th>
+                  <th class="px-4 py-3 font-medium">Rhesus</th>
+                  <th class="px-4 py-3 font-medium">Jumlah</th>
+                  <th class="px-4 py-3 font-medium">Tgl Masuk</th>
+                  <th class="px-4 py-3 font-medium">Tgl Kadaluarsa</th>
+                  <th class="px-4 py-3 font-medium">Ditambahkan</th>
+                </tr>
+              </thead>
+              <tbody id="riwayatBody"
+                     class="divide-y divide-neutral-100">
+                <!-- Riwayat stok akan ditampilkan di sini -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 
   {{-- ===== MODAL: Tambah Stok ===== --}}
@@ -175,20 +209,20 @@
                       disabled
                       {{ old('produk') ? '' : 'selected' }}>Pilih Produk</option>
               {{-- @foreach (['FFP: Fresh Frozen Plasma', 'AHF: Cryoprecipitated AHF', 'LP: Liquid Plasma', 'TC Aferesis', 'PK'] as $opt) --}}
-                <option value="WB"
-                        {{ old('produk') ? 'selected' : '' }}>Whole Blood</option>
-                <option value="PRC"
-                        {{ old('produk') ? 'selected' : '' }}>Packed Red Cell</option>
-                <option value="FFP"
-                        {{ old('produk') ? 'selected' : '' }}>Fresh Frozen Plasma</option>
-                <option value="AHF"
-                        {{ old('produk') ? 'selected' : '' }}>Cryoprecipitated AHF</option>
-                <option value="LP"
-                        {{ old('produk') ? 'selected' : '' }}>Liquid Plasma</option>
-                <option value="TC"
-                        {{ old('produk') ? 'selected' : '' }}>Trombocyte Concentrate</option>
-                <option value="PK"
-                        {{ old('produk') ? 'selected' : '' }}>Plasma Konvalesen</option>
+              <option value="WB"
+                      {{ old('produk') ? 'selected' : '' }}>Whole Blood</option>
+              <option value="PRC"
+                      {{ old('produk') ? 'selected' : '' }}>Packed Red Cell</option>
+              <option value="FFP"
+                      {{ old('produk') ? 'selected' : '' }}>Fresh Frozen Plasma</option>
+              <option value="AHF"
+                      {{ old('produk') ? 'selected' : '' }}>Cryoprecipitated AHF</option>
+              <option value="LP"
+                      {{ old('produk') ? 'selected' : '' }}>Liquid Plasma</option>
+              <option value="TC"
+                      {{ old('produk') ? 'selected' : '' }}>Trombocyte Concentrate</option>
+              <option value="PK"
+                      {{ old('produk') ? 'selected' : '' }}>Plasma Konvalesen</option>
               {{-- @endforeach --}}
             </select>
             @error('produk')
@@ -306,24 +340,76 @@
   <script>
     const LOW_TH = 50,
       CRIT_TH = 20;
-    // Ambil dari controller: $rows = koleksi agregasi produk
-    let products = @json($rows);
+    // Ambil data dari controller
+    let products = @json($summary);
+    let riwayatStok = @json($riwayat);
     let sortKey = '',
       sortDir = 'asc';
 
-    const iconEdit = () =>
-      `<svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 20h9M16.5 3.5l4 4L7 21H3v-4L16.5 3.5z"/></svg>`;
+    const iconEdit = (produk, golDarah) => `
+      <button data-open="produkModal" data-produk="${produk}" data-goldarah="${golDarah}"
+              class="text-blue-600 hover:text-blue-800 p-1 rounded-md hover:bg-blue-50">
+        <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"
+                d="M12 20h9M16.5 3.5l4 4L7 21H3v-4L16.5 3.5z"/>
+        </svg>
+      </button>
+    `;
+
+
     const iconTrash = () =>
       `<svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M4 7h16M9 7V5h6v2m-8 0 1 12h8l1-12"/></svg>`;
 
+    document.addEventListener('click', function(e) {
+      // ===== OPEN MODAL =====
+      const openTarget = e.target.closest('[data-open]');
+      if (openTarget) {
+        const modalId = openTarget.getAttribute('data-open');
+        const modal = document.getElementById(modalId);
+        if (modal) {
+          modal.classList.remove('hidden');
+          modal.classList.add('flex');
+
+          // Jika ini modal produk, tampilkan riwayat stok
+          if (modalId === 'produkModal') {
+            const produk = openTarget.getAttribute('data-produk');
+            const golDarah = openTarget.getAttribute('data-goldarah');
+            if (produk && golDarah) {
+              showRiwayatStok(produk, golDarah);
+            }
+          }
+        }
+      }
+
+      // ===== CLOSE MODAL =====
+      if (e.target.matches('[data-close]') || e.target.hasAttribute('data-close')) {
+        document.querySelectorAll(`#${e.target.closest('[id]')?.id}`).forEach(m => {
+          m.classList.add('hidden');
+        });
+      }
+    });
+
+
     const rowTotal = (r) => (r.A || 0) + (r.AB || 0) + (r.B || 0) + (r.O || 0);
 
-    function pillFor(v) {
-      if (v < CRIT_TH)
-        return `<span class="inline-flex min-w-10 items-center justify-center rounded-full border border-rose-200 bg-rose-50 px-2 py-0.5 text-xs font-semibold text-rose-700">${v}</span>`;
-      if (v < LOW_TH)
-        return `<span class="inline-flex min-w-10 items-center justify-center rounded-full border border-amber-200 bg-amber-50 px-2 py-0.5 text-xs font-semibold text-amber-700">${v}</span>`;
-      return `<span class="inline-flex min-w-10 items-center justify-center rounded-full border border-emerald-200 bg-emerald-50 px-2 py-0.5 text-xs font-semibold text-emerald-700">${v}</span>`;
+    function pillFor(value) {
+      let bgColor, textColor;
+      if (value >= 50) {
+        bgColor = 'bg-emerald-100';
+        textColor = 'text-emerald-700';
+      } else if (value >= 20) {
+        bgColor = 'bg-amber-100';
+        textColor = 'text-amber-700';
+      } else {
+        bgColor = 'bg-rose-100';
+        textColor = 'text-rose-700';
+      }
+
+      return `
+      <span class="${bgColor} ${textColor} text-sm px-4 py-1.5 rounded-full inline-block min-w-[48px] text-center hover:opacity-75 transition-opacity duration-200 font-medium">
+        ${value}
+      </span>
+    `;
     }
 
     function renderSummary() {
@@ -382,22 +468,32 @@
           `<tr><td colspan="7" class="px-4 py-8 text-center text-neutral-500">Belum ada data. Tambahkan stok terlebih dahulu.</td></tr>`;
         return;
       }
-      tb.innerHTML = data.map(r => `
-      <tr class="border-t border-neutral-100 hover:bg-neutral-50/60">
-        <td class="px-4 py-3">${r.produk}</td>
-        <td class="px-4 py-3">${pillFor(r.A||0)}</td>
-        <td class="px-4 py-3">${pillFor(r.AB||0)}</td>
-        <td class="px-4 py-3">${pillFor(r.B||0)}</td>
-        <td class="px-4 py-3">${pillFor(r.O||0)}</td>
-        <td class="px-4 py-3 font-medium">${rowTotal(r)}</td>
-        <td class="px-4 py-3">
-          <div class="flex items-center gap-4 text-neutral-600">
-            <button class="hover:text-neutral-900" title="Edit">${iconEdit()}</button>
-            <button class="hover:text-rose-700" title="Hapus">${iconTrash()}</button>
-          </div>
-        </td>
-      </tr>
-    `).join('');
+      tb.innerHTML = data.map(r => {
+        const golDarahCells = ['A', 'AB', 'B', 'O'].map(k => {
+          const value = r[k] || 0;
+          return `
+            <td class="w-1/6 px-4 py-3 text-center">
+              <button data-open="produkModal" 
+                      data-produk="${r.produk}" 
+                      data-goldarah="${k}"
+                      class="w-full inline-block">
+                ${pillFor(value)}
+              </button>
+            </td>
+          `;
+        }).join('');
+
+        return `
+          <tr class="border-t border-neutral-100">
+            <td class="w-1/6 px-4 py-3 text-left">${r.produk}</td>
+            ${golDarahCells}
+            <td class="w-1/6 px-4 py-3 font-medium text-center">${rowTotal(r)}</td>
+            <td class="w-20 px-4 py-3 text-center">
+              <button class="hover:text-rose-700 p-1 rounded-md" title="Hapus">${iconTrash()}</button>
+            </td>
+          </tr>
+        `;
+      }).join('');
     }
 
     function renderCards(data) {
@@ -466,6 +562,36 @@
         addForm.reset();
         if (produkSel) produkSel.value = '';
         if (golSel) golSel.value = '';
+      }
+    }
+
+    function showRiwayatStok(produk, golDarah) {
+      const key = `${produk}_${golDarah}`;
+      const riwayat = riwayatStok[key] || [];
+      const tbody = document.getElementById('riwayatBody');
+      const title = document.getElementById('produkTitle');
+
+      if (title) {
+        title.textContent = `Riwayat Stok: ${produk} (Golongan ${golDarah})`;
+      }
+
+      if (tbody) {
+        if (riwayat.length === 0) {
+          tbody.innerHTML =
+            '<tr><td colspan="6" class="px-4 py-8 text-center text-neutral-500">Belum ada riwayat penambahan stok.</td></tr>';
+          return;
+        }
+
+        tbody.innerHTML = riwayat.map(item => `
+          <tr class="hover:bg-neutral-50/60">
+            <td class="px-4 py-3 font-medium">#${item.id}</td>
+            <td class="px-4 py-3">${item.rhesus}</td>
+            <td class="px-4 py-3">${item.jumlah} unit</td>
+            <td class="px-4 py-3">${item.tgl_masuk}</td>
+            <td class="px-4 py-3">${item.tgl_kadaluarsa}</td>
+            <td class="px-4 py-3">${item.created_at}</td>
+          </tr>
+        `).join('');
       }
     }
 

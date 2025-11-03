@@ -9,6 +9,7 @@ class StokDarah extends Model
     protected $table = 'stok_darah';
 
     protected $fillable = [
+        'id',
         'produk',
         'gol_darah',
         'rhesus', 
