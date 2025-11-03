@@ -2,14 +2,26 @@
 <x-navbar />
 @section('content')
 
-  <main class="mx-auto max-w-6xl px-4 py-10 sm:px-6 lg:px-8">
-
-    {{-- Hero --}}
-    <div class="mb-8 text-center">
-      <h1 class="mt-3 text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
+  <main class="relative mx-auto max-w-6xl px-4 py-10 sm:px-6 lg:px-8">
+    {{-- Hero Section --}}
+    <div class="mb-12 text-center">
+      <div
+           class="mb-4 inline-flex items-center justify-center rounded-full bg-red-100/80 px-4 py-1.5 text-sm font-medium text-red-600 backdrop-blur-sm">
+        <svg class="mr-1.5 h-4 w-4"
+             fill="none"
+             stroke="currentColor"
+             viewBox="0 0 24 24">
+          <path stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+        </svg>
+        Jadwalkan Event Donor Darah Anda
+      </div>
+      <h1 class="mt-3 text-4xl font-bold tracking-tight text-slate-900 sm:text-5xl">
         Ajukan Event Donor Darah
       </h1>
-      <p class="mx-auto mt-2 max-w-3xl text-slate-600">
+      <p class="mx-auto mt-4 max-w-2xl text-lg text-slate-600">
         Lengkapi data pemohon dan detail kegiatan. Tim kami akan meninjau & menghubungi Anda melalui email/telepon.
       </p>
     </div>
@@ -41,26 +53,71 @@
       @csrf
 
       {{-- A. Data Pemohon --}}
-      <section class="rounded-2xl border border-slate-200 bg-white/80 p-6 shadow-sm backdrop-blur-sm md:col-span-2">
-        <div class="mb-5 flex items-center justify-between">
+      <section
+               class="rounded-2xl border border-slate-200 bg-white p-6 shadow-lg transition-all duration-300 hover:shadow-xl md:col-span-2">
+
+        <div class="mb-6 flex items-center justify-between">
           <div class="flex items-center gap-3">
-            <div class="grid h-9 w-9 place-items-center rounded-xl bg-red-600 text-white shadow ring-4 ring-white">A</div>
-            <h2 class="text-lg font-semibold text-slate-900 sm:text-xl">Data Pemohon</h2>
+            <div
+                 class="grid h-10 w-10 place-items-center rounded-xl bg-gradient-to-br from-red-600 to-red-500 text-white shadow-lg ring-4 ring-white">
+              <span class="text-lg font-bold">A</span>
+            </div>
+            <div>
+              <h2 class="text-xl font-bold text-slate-900">Data Pemohon</h2>
+              <p class="text-sm text-slate-600">Informasi kontak utama penyelenggara</p>
+            </div>
           </div>
-          <span class="text-xs text-slate-500">Wajib diisi</span>
+          <span class="rounded-full bg-red-100 px-3 py-1 text-xs font-medium text-red-600">Wajib diisi</span>
         </div>
 
         <div class="grid gap-6 md:grid-cols-2">
           {{-- Nama --}}
-          <div>
-            <label class="block text-sm font-medium text-slate-700">Nama</label>
-            <input type="text"
-                   name="nama"
-                   required
-                   value="{{ old('nama') }}"
-                   class="mt-1 w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-[15px] shadow-inner focus:border-red-500 focus:outline-none focus:ring-2 focus:ring-red-500/20">
+          <div class="group">
+            <label class="mb-1.5 flex items-center gap-1 text-sm font-medium text-slate-700">
+              <svg class="h-4 w-4 text-slate-400"
+                   fill="none"
+                   stroke="currentColor"
+                   viewBox="0 0 24 24">
+                <path stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+              </svg>
+              Nama
+            </label>
+            <div class="relative">
+              <input type="text"
+                     name="nama"
+                     required
+                     value="{{ old('nama') }}"
+                     class="peer w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 pl-10 text-[15px] shadow-sm transition-all duration-200 placeholder:text-slate-300 hover:border-slate-300 focus:border-red-500 focus:shadow-md focus:outline-none focus:ring-2 focus:ring-red-500/20">
+              <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+                <span class="text-slate-400 transition-colors duration-200 peer-focus:text-red-500">
+                  <svg class="h-5 w-5"
+                       fill="none"
+                       stroke="currentColor"
+                       viewBox="0 0 24 24">
+                    <path stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="1.5"
+                          d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
+                  </svg>
+                </span>
+              </div>
+            </div>
             @error('nama')
-              <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
+              <p class="mt-1.5 flex items-center gap-1 text-sm text-red-600">
+                <svg class="h-4 w-4"
+                     fill="none"
+                     stroke="currentColor"
+                     viewBox="0 0 24 24">
+                  <path stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                {{ $message }}
+              </p>
             @enderror
           </div>
 
@@ -137,36 +194,136 @@
       </section>
 
       {{-- B. Detail Event --}}
-      <section class="rounded-2xl border border-slate-200 bg-white/80 p-6 shadow-sm backdrop-blur-sm md:col-span-2">
-        <div class="mb-5 flex items-center gap-3">
-          <div class="grid h-9 w-9 place-items-center rounded-xl bg-red-600 text-white shadow ring-4 ring-white">B</div>
-          <h2 class="text-lg font-semibold text-slate-900 sm:text-xl">Detail Event</h2>
+      <section
+               class="rounded-2xl border border-slate-200 bg-white p-6 shadow-lg transition-all duration-300 hover:shadow-xl md:col-span-2">
+
+        <div class="mb-6 flex items-center justify-between">
+          <div class="flex items-center gap-3">
+            <div
+                 class="grid h-10 w-10 place-items-center rounded-xl bg-gradient-to-br from-red-600 to-red-500 text-white shadow-lg ring-4 ring-white">
+              <span class="text-lg font-bold">B</span>
+            </div>
+            <div>
+              <h2 class="text-xl font-bold text-slate-900">Detail Event</h2>
+              <p class="text-sm text-slate-600">Informasi waktu dan lokasi acara</p>
+            </div>
+          </div>
+          <div class="flex items-center gap-2 rounded-full bg-orange-100 px-3 py-1 text-xs font-medium text-orange-600">
+            <svg class="h-4 w-4"
+                 fill="none"
+                 stroke="currentColor"
+                 viewBox="0 0 24 24">
+              <path stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+            </svg>
+            <span>Atur Jadwal</span>
+          </div>
         </div>
 
         <div class="grid gap-6 md:grid-cols-3">
-          <div>
-            <label class="block text-sm font-medium text-slate-700">Tanggal Event</label>
-            <input type="date"
-                   name="tanggal_event"
-                   required
-                   value="{{ old('tanggal_event') }}"
-                   class="mt-1 w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-[15px] shadow-inner focus:border-red-500 focus:outline-none focus:ring-2 focus:ring-red-500/20">
+          <div class="group">
+            <label class="mb-1.5 flex items-center gap-1 text-sm font-medium text-slate-700">
+              <svg class="h-4 w-4 text-slate-400"
+                   fill="none"
+                   stroke="currentColor"
+                   viewBox="0 0 24 24">
+                <path stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+              </svg>
+              Tanggal Event
+            </label>
+            <div class="relative">
+              <input type="date"
+                     name="tanggal_event"
+                     required
+                     value="{{ old('tanggal_event') }}"
+                     class="peer w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 pl-10 text-[15px] shadow-sm transition-all duration-200 hover:border-slate-300 focus:border-red-500 focus:shadow-md focus:outline-none focus:ring-2 focus:ring-red-500/20">
+              <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+                <span class="text-slate-400 transition-colors duration-200 peer-focus:text-red-500">
+                  <svg class="h-5 w-5"
+                       fill="none"
+                       stroke="currentColor"
+                       viewBox="0 0 24 24">
+                    <path stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="1.5"
+                          d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5" />
+                  </svg>
+                </span>
+              </div>
+            </div>
           </div>
 
-          <div>
-            <label class="block text-sm font-medium text-slate-700">Jam Mulai</label>
-            <input type="time"
-                   name="jam_mulai"
-                   value="{{ old('jam_mulai') }}"
-                   class="mt-1 w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-[15px] shadow-inner focus:border-red-500 focus:outline-none focus:ring-2 focus:ring-red-500/20">
+          <div class="group">
+            <label class="mb-1.5 flex items-center gap-1 text-sm font-medium text-slate-700">
+              <svg class="h-4 w-4 text-slate-400"
+                   fill="none"
+                   stroke="currentColor"
+                   viewBox="0 0 24 24">
+                <path stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              Jam Mulai
+            </label>
+            <div class="relative">
+              <input type="time"
+                     name="jam_mulai"
+                     value="{{ old('jam_mulai') }}"
+                     class="peer w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 pl-10 text-[15px] shadow-sm transition-all duration-200 hover:border-slate-300 focus:border-red-500 focus:shadow-md focus:outline-none focus:ring-2 focus:ring-red-500/20">
+              <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+                <span class="text-slate-400 transition-colors duration-200 peer-focus:text-red-500">
+                  <svg class="h-5 w-5"
+                       fill="none"
+                       stroke="currentColor"
+                       viewBox="0 0 24 24">
+                    <path stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="1.5"
+                          d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                </span>
+              </div>
+            </div>
           </div>
 
-          <div>
-            <label class="block text-sm font-medium text-slate-700">Jam Selesai</label>
-            <input type="time"
-                   name="jam_selesai"
-                   value="{{ old('jam_selesai') }}"
-                   class="mt-1 w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-[15px] shadow-inner focus:border-red-500 focus:outline-none focus:ring-2 focus:ring-red-500/20">
+          <div class="group">
+            <label class="mb-1.5 flex items-center gap-1 text-sm font-medium text-slate-700">
+              <svg class="h-4 w-4 text-slate-400"
+                   fill="none"
+                   stroke="currentColor"
+                   viewBox="0 0 24 24">
+                <path stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              Jam Selesai
+            </label>
+            <div class="relative">
+              <input type="time"
+                     name="jam_selesai"
+                     value="{{ old('jam_selesai') }}"
+                     class="peer w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 pl-10 text-[15px] shadow-sm transition-all duration-200 hover:border-slate-300 focus:border-red-500 focus:shadow-md focus:outline-none focus:ring-2 focus:ring-red-500/20">
+              <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+                <span class="text-slate-400 transition-colors duration-200 peer-focus:text-red-500">
+                  <svg class="h-5 w-5"
+                       fill="none"
+                       stroke="currentColor"
+                       viewBox="0 0 24 24">
+                    <path stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="1.5"
+                          d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                </span>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -195,43 +352,133 @@
       </section>
 
       {{-- C. Estimasi & Kebutuhan --}}
-      <section class="rounded-2xl border border-slate-200 bg-white/80 p-6 shadow-sm backdrop-blur-sm md:col-span-2">
-        <div class="mb-5 flex items-center gap-3">
-          <div class="grid h-9 w-9 place-items-center rounded-xl bg-red-600 text-white shadow ring-4 ring-white">C</div>
-          <h2 class="text-lg font-semibold text-slate-900 sm:text-xl">Estimasi & Kebutuhan</h2>
+      <section
+               class="rounded-2xl border border-slate-200 bg-white p-6 shadow-lg transition-all duration-300 hover:shadow-xl md:col-span-2">
+
+        <div class="mb-6 flex items-center justify-between">
+          <div class="flex items-center gap-3">
+            <div
+                 class="grid h-10 w-10 place-items-center rounded-xl bg-gradient-to-br from-red-600 to-red-500 text-white shadow-lg ring-4 ring-white">
+              <span class="text-lg font-bold">C</span>
+            </div>
+            <div>
+              <h2 class="text-xl font-bold text-slate-900">Estimasi & Kebutuhan</h2>
+              <p class="text-sm text-slate-600">Perkiraan jumlah peserta dan fasilitas</p>
+            </div>
+          </div>
+          <div class="flex items-center gap-2 rounded-full bg-blue-100 px-3 py-1 text-xs font-medium text-blue-600">
+            <svg class="h-4 w-4"
+                 fill="none"
+                 stroke="currentColor"
+                 viewBox="0 0 24 24">
+              <path stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+            </svg>
+            <span>Perkiraan</span>
+          </div>
         </div>
 
         <div class="grid gap-6 md:grid-cols-3">
-          <div>
-            <label class="block text-sm font-medium text-slate-700">Jumlah Peserta (perkiraan)</label>
-            <input type="number"
-                   name="jumlah_peserta"
-                   min="1"
-                   value="{{ old('jumlah_peserta') }}"
-                   class="mt-1 w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-[15px] shadow-inner focus:border-red-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20">
+          <div class="group">
+            <label class="mb-1.5 flex items-center gap-1 text-sm font-medium text-slate-700">
+              <svg class="h-4 w-4 text-slate-400"
+                   fill="none"
+                   stroke="currentColor"
+                   viewBox="0 0 24 24">
+                <path stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+              </svg>
+              Jumlah Peserta (perkiraan)
+            </label>
+            <div class="relative">
+              <input type="number"
+                     name="jumlah_peserta"
+                     min="1"
+                     placeholder="Masukkan perkiraan jumlah peserta"
+                     value="{{ old('jumlah_peserta') }}"
+                     class="peer w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 pl-10 text-[15px] shadow-sm transition-all duration-200 hover:border-slate-300 focus:border-blue-500 focus:shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500/20">
+              <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+                <span class="text-slate-400 transition-colors duration-200 peer-focus:text-blue-500">
+                  <svg class="h-5 w-5"
+                       fill="none"
+                       stroke="currentColor"
+                       viewBox="0 0 24 24">
+                    <path stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="1.5"
+                          d="M18 18v-1.5c0-1.5-1.343-2.5-3-2.5h-3c-1.657 0-3 1-3 2.5V18m9-9a3 3 0 11-6 0 3 3 0 016 0z" />
+                  </svg>
+                </span>
+              </div>
+            </div>
           </div>
 
-          <div>
-            <label class="block text-sm font-medium text-slate-700">Target Peserta</label>
-            <select name="target_peserta"
-                    class="mt-1 w-full appearance-none rounded-xl border border-slate-200 bg-white px-3 py-2.5 pr-10 text-[15px] shadow-inner focus:border-red-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20">
-              <option value="">-- Pilih Target --</option>
-              @foreach ($targetOptions as $t)
-                <option value="{{ $t }}"
-                        @selected(old('target_peserta') === $t)>{{ $t }}</option>
-              @endforeach
-            </select>
+          <div class="group">
+            <label class="mb-1.5 flex items-center gap-1 text-sm font-medium text-slate-700">
+              <svg class="h-4 w-4 text-slate-400"
+                   fill="none"
+                   stroke="currentColor"
+                   viewBox="0 0 24 24">
+                <path stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+              </svg>
+              Target Peserta
+            </label>
+            <div class="relative">
+              <select name="target_peserta"
+                      class="peer w-full appearance-none rounded-xl border border-slate-200 bg-white px-3 py-2.5 pl-10 pr-10 text-[15px] shadow-sm transition-all duration-200 hover:border-slate-300 focus:border-blue-500 focus:shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500/20">
+                <option value="">-- Pilih Target --</option>
+                @foreach ($targetOptions as $t)
+                  <option value="{{ $t }}"
+                          @selected(old('target_peserta') === $t)>{{ $t }}</option>
+                @endforeach
+              </select>
+              <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+                <span class="text-slate-400 transition-colors duration-200 peer-focus:text-blue-500">
+                  <svg class="h-5 w-5"
+                       fill="none"
+                       stroke="currentColor"
+                       viewBox="0 0 24 24">
+                    <path stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="1.5"
+                          d="M18 18v-1.5c0-1.5-1.343-2.5-3-2.5h-3c-1.657 0-3 1-3 2.5V18m9-9a3 3 0 11-6 0 3 3 0 016 0z" />
+                  </svg>
+                </span>
+              </div>
+              <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
+                <svg class="h-5 w-5 text-slate-400"
+                     fill="none"
+                     stroke="currentColor"
+                     viewBox="0 0 24 24">
+                  <path stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M19 9l-7 7-7-7" />
+                </svg>
+              </div>
+            </div>
           </div>
 
-          <div class="flex items-center gap-3 md:mt-7">
-            <input id="butuhMU"
-                   type="checkbox"
-                   name="butuh_mobil_unit"
-                   value="1"
-                   @checked(old('butuh_mobil_unit'))
-                   class="h-5 w-5 rounded border border-slate-300 text-red-600 focus:ring-2 focus:ring-red-500">
-            <label for="butuhMU"
-                   class="text-sm text-slate-700">Butuh Mobil Unit</label>
+          <div class="flex items-center gap-4 md:mt-7">
+            <label class="relative inline-flex cursor-pointer items-center">
+              <input id="butuhMU"
+                     type="checkbox"
+                     name="butuh_mobil_unit"
+                     value="1"
+                     @checked(old('butuh_mobil_unit'))
+                     class="peer sr-only">
+              <div
+                   class="peer h-6 w-11 rounded-full bg-gray-200 after:absolute after:start-[2px] after:top-[2px] after:h-5 after:w-5 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:bg-blue-600 peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rtl:peer-checked:after:-translate-x-full">
+              </div>
+              <span class="ml-2 text-sm font-medium text-slate-700">Butuh Mobil Unit</span>
+            </label>
           </div>
         </div>
 
@@ -287,13 +534,27 @@
 
       {{-- Submit --}}
       <div class="md:col-span-2">
-        <div class="flex items-center justify-between">
-          <p class="text-xs text-slate-500"></p>
+        <div class="flex flex-col-reverse items-center justify-between gap-4 sm:flex-row">
+          <p class="text-sm text-slate-500">
+            Dengan mengajukan, Anda menyetujui
+            <a href="#"
+               class="font-medium text-red-600 hover:text-red-700">Syarat & Ketentuan</a> kami
+          </p>
           <button id="submitBtn"
                   type="submit"
-                  class="inline-flex items-center gap-2 rounded-xl bg-red-600 px-6 py-3 text-white shadow hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500/30">
-
-            Ajukan Penjadwalan
+                  class="group relative inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-red-600 to-red-500 px-8 py-3 text-white shadow-lg transition-all duration-200 hover:translate-y-[-1px] hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-red-500/30 disabled:opacity-70">
+            <span
+                  class="absolute inset-0 rounded-xl bg-white/10 opacity-0 transition-opacity duration-200 group-hover:opacity-100"></span>
+            <svg class="h-5 w-5"
+                 fill="none"
+                 stroke="currentColor"
+                 viewBox="0 0 24 24">
+              <path stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M9 5l7 7-7 7" />
+            </svg>
+            <span class="font-medium">Ajukan Penjadwalan</span>
           </button>
         </div>
       </div>

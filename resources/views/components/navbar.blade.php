@@ -26,54 +26,71 @@
         <a href="{{ url('/about') }}" 
            class="{{ request()->is('about*') ? 'text-red-600 font-bold' : 'hover:text-red-600 font-bold' }}">
            Tentang Kami
+        </a>
       
         <a href="{{ url('/jadwal-event') }}" 
            class="{{ request()->is('jadwal-event*') ? 'text-red-600 font-bold' : 'hover:text-red-600 font-bold' }}">
            Penjadwalan Event
-       </a>
+        </a>
         <a href="{{ route('admin.login') }}"
-         class="bg-red-600 text-white px-4 py-2 rounded-lg shadow hover:bg-red-700">
-         Login Admin
+           class="bg-red-600 text-white px-4 py-2 rounded-lg shadow hover:bg-red-700">
+           Login Admin
         </a>
       </nav>
 
       {{-- Toggle mobile --}}
-      <button id="menuBtn" class="md:hidden p-2 rounded-lg border border-slate-300">
-        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
-          <path fill-rule="evenodd" d="M3.75 5.25a.75.75 0 0 1 .75-.75h15a.75.75 0 0 1 0 1.5H4.5a.75.75 0 0 1-.75-.75Zm0 6a.75.75 0 0 1 .75-.75h15a.75.75 0 0 1 0 1.5H4.5a.75.75 0 0 1-.75-.75Zm0 6a.75.75 0 0 1 .75-.75h15a.75.75 0 0 1 0 1.5H4.5a.75.75 0 0 1-.75-.75Z" clip-rule="evenodd"/>
+      <button id="menuBtn" type="button" class="md:hidden p-2 rounded-lg border border-slate-300 hover:bg-slate-50">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-16 6h16"/>
         </svg>
       </button>
     </div>
 
     {{-- Menu mobile --}}
-    <div id="mobileMenu" class="hidden md:hidden pb-4">
-      <nav class="grid gap-2 text-sm">
+    <div id="mobileMenu" class="hidden md:hidden">
+      <nav class="py-4 space-y-2">
         <a href="{{ url('/') }}" 
-           class="px-3 py-2 rounded-lg hover:bg-slate-50 {{ request()->is('/') ? 'bg-red-50 text-red-600' : '' }}">
+           class="block px-4 py-2.5 rounded-lg hover:bg-slate-50 {{ request()->is('/') ? 'bg-red-50 text-red-600 font-medium' : '' }}">
            Beranda
         </a>
         <a href="{{ url('/pemesanan') }}" 
-           class="px-3 py-2 rounded-lg hover:bg-slate-50 {{ request()->is('pemesanan*') ? 'bg-red-50 text-red-600' : '' }}">
+           class="block px-4 py-2.5 rounded-lg hover:bg-slate-50 {{ request()->is('pemesanan*') ? 'bg-red-50 text-red-600 font-medium' : '' }}">
            Pemesanan
         </a>
         <a href="{{ url('/stok') }}" 
-           class="px-3 py-2 rounded-lg hover:bg-slate-50 {{ request()->is('stok*') ? 'bg-red-50 text-red-600' : '' }}">
+           class="block px-4 py-2.5 rounded-lg hover:bg-slate-50 {{ request()->is('stok*') ? 'bg-red-50 text-red-600 font-medium' : '' }}">
            Stok darah
         </a>
         <a href="{{ url('/about') }}" 
-           class="px-3 py-2 rounded-lg hover:bg-slate-50 {{ request()->is('about*') ? 'bg-red-50 text-red-600' : '' }}">
+           class="block px-4 py-2.5 rounded-lg hover:bg-slate-50 {{ request()->is('about*') ? 'bg-red-50 text-red-600 font-medium' : '' }}">
            Tentang Kami
         </a>
-
         <a href="{{ url('/jadwal-event') }}" 
-           class="px-3 py-2 rounded-lg hover:bg-slate-50 {{ request()->is('jadwal-event*') ? 'bg-red-50 text-red-600' : '' }}">
+           class="block px-4 py-2.5 rounded-lg hover:bg-slate-50 {{ request()->is('jadwal-event*') ? 'bg-red-50 text-red-600 font-medium' : '' }}">
            Penjadwalan Event
-         
-          <a href="{{ route('admin.login') }}"
-             class="mt-2 px-3 py-2 rounded-lg bg-red-600 text-white text-center hover:bg-red-700">
-             Login Admin
+        </a>
+        <a href="{{ route('admin.login') }}"
+           class="block px-4 py-2.5 text-center font-medium text-white bg-red-600 rounded-lg hover:bg-red-700">
+           Login Admin
         </a>
       </nav>
     </div>
   </div>
 </header>
+
+<script>
+  // Toggle menu mobile
+  const menuBtn = document.getElementById('menuBtn');
+  const mobileMenu = document.getElementById('mobileMenu');
+  
+  menuBtn.addEventListener('click', () => {
+    mobileMenu.classList.toggle('hidden');
+  });
+
+  // Tutup menu ketika klik di luar
+  document.addEventListener('click', (e) => {
+    if (!menuBtn.contains(e.target) && !mobileMenu.contains(e.target)) {
+      mobileMenu.classList.add('hidden');
+    }
+  });
+</script>

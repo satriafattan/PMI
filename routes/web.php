@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 
 // === Public Controllers ===
+use App\Http\Controllers\WelcomeController;
 use App\Http\Controllers\Public\PublicPemesananController;
 use App\Http\Controllers\Public\EventScheduleController;
 use App\Http\Controllers\Public\StokController;
@@ -24,7 +25,7 @@ use App\Http\Controllers\Admin\RiwayatController;
 |--------------------------------------------------------------------------
 */
 
-Route::view('/', 'welcome')->name('home');
+Route::get('/', [WelcomeController::class, 'index'])->name('home');
 Route::get('/about', fn() => view('about'))->name('about');
 
 /*
@@ -49,7 +50,8 @@ Route::get('/pemesanan/konfirmasi/{kode}', [PublicPemesananController::class, 'k
 Route::get('/jadwal-event',  [EventScheduleController::class, 'create'])->name('public.event.create');
 Route::post('/jadwal-event', [EventScheduleController::class, 'store'])->name('public.event.store');
 
-Route::get('/stok', StokController::class)->name('stok');
+Route::get('/stok', [StokController::class, '__invoke'])->name('stok');
+Route::get('/api/stok-golongan', [StokController::class, 'getStokGolongan'])->name('api.stok-golongan');
 
 /*
 |--------------------------------------------------------------------------
