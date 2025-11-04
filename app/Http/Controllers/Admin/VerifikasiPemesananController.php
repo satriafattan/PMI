@@ -67,10 +67,8 @@ class VerifikasiPemesananController extends Controller
 
             $pemesanan->update(['status' => $data['status']]);
         });
-
-        if ($pemesanan->email) {
-            Mail::to($pemesanan->email)->send(new VerifikasiPemesananMail($pemesanan, $data['status']));
-        }
+        
+            $pemesanan = $pemesanan->fresh();
 
         try {
             if (!empty($pemesanan->email)) {
