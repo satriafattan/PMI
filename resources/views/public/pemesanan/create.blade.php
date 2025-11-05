@@ -512,9 +512,9 @@
                   </h4>
                   <dl class="mt-3 space-y-2 text-sm">
                     <div class="flex">
-                      <dt class="w-40 font-medium text-slate-500">Rumah Sakit</dt>
+                      <dt class="w-40 text-slate-500">Rumah Sakit</dt>
                       <dd id="cf_rs_pemesan"
-                          class="text-slate-800"></dd>
+                          class="font-medium"></dd>
                     </div>
                     <div class="flex">
                       <dt class="w-40 text-slate-500">Jenis Kelamin</dt>

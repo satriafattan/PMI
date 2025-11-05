@@ -12,31 +12,45 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\VerifikasiPemesananMail;
+
 class VerifikasiPemesananController extends Controller
 {
     /**
      * Daftar pemesanan dengan verifikasi terakhir (ringkas di tabel) + filter.
+     * NOTE: Dipaksa hanya menampilkan status 'pending'.
      * Route: GET /admin/verifikasi
      */
     public function index(Request $r)
     {
-        $per = (int) $r->input('per_page', 12);
-        $q   = $r->input('q');
-        $st  = $r->input('status');
-        $gol = $r->input('gol');
+        $per    = (int) $r->input('per_page', 12);
+        $q      = trim((string) $r->input('q'));
+        $gol    = $r->input('gol');
+        $produk = $r->input('produk');      // ⬅️ baca filter produk dari UI
+
+        $allowedGol = ['A','B','AB','O'];
+        if (!in_array($gol, $allowedGol, true)) {
+            $gol = null;
+        }
 
         $query = PemesananDarah::query()
             ->with('verifikasiTerakhir')
+            ->where('status', 'pending')     // ✅ hanya tampilkan yang pending
             ->latest();
 
-        if ($q) {
+        if ($q !== '') {
             $query->where(function ($w) use ($q) {
                 $w->where('nama_pasien', 'like', "%{$q}%")
-                    ->orWhere('rs_pemesan', 'like', "%{$q}%");
+                  ->orWhere('rs_pemesan', 'like', "%{$q}%");
             });
         }
-        if ($st)  $query->where('status', $st);
-        if ($gol) $query->where('gol_darah', $gol);
+
+        if (!empty($gol)) {
+           $query->where('gol_darah', 'like', $gol.'%');
+        }
+
+        if (!empty($produk)) {               // ⬅️ terapkan filter produk jika dipilih
+            $query->where('produk', $produk);
+        }
 
         $pemesanan = $query->paginate($per)->appends($r->query());
 
@@ -67,8 +81,8 @@ class VerifikasiPemesananController extends Controller
 
             $pemesanan->update(['status' => $data['status']]);
         });
-        
-            $pemesanan = $pemesanan->fresh();
+
+        $pemesanan = $pemesanan->fresh();
 
         try {
             if (!empty($pemesanan->email)) {
@@ -76,7 +90,7 @@ class VerifikasiPemesananController extends Controller
                     ->send(new VerifikasiPemesananMail($pemesanan, $data['status']));
             }
         } catch (\Throwable $e) {
-            // Email gagal tidak boleh batalkan verifikasi, cukup beri info
+            // Email gagal tidak membatalkan verifikasi
             return back()->with('success', 'Verifikasi disimpan, namun email gagal dikirim.');
         }
 
@@ -129,7 +143,7 @@ class VerifikasiPemesananController extends Controller
                     'status' => 'Terjadi konflik stok saat pengurangan. Silakan coba ulang.',
                 ]);
             }
-            
+
         } catch (\Throwable $e) {
 
             // Jika error bawaan ValidationException → lempar lagi agar tampil ke user
@@ -144,9 +158,8 @@ class VerifikasiPemesananController extends Controller
         }
     }
 
-
     /**
-     * Simpan data verifikasi
+     * Simpan data verifikasi (upsert by pemesanan_id untuk menghindari duplikasi).
      */
     private function saveVerification(PemesananDarah $pemesanan, array $data): void
     {
@@ -166,7 +179,7 @@ class VerifikasiPemesananController extends Controller
     }
 
     /**
-     * Simpan riwayat verifikasi
+     * Simpan riwayat verifikasi.
      */
     private function saveHistory(PemesananDarah $pemesanan, string $status): void
     {
