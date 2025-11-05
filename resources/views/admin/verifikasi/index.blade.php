@@ -28,297 +28,362 @@
         </div>
 
         @php
+            /* Badges */
             if (!function_exists('blood_pill')) {
-                function blood_pill($g)
-                {
+                function blood_pill($g) {
                     $isRed = in_array($g, ['A+', 'A-', 'AB+', 'AB-']);
-                    $cls = $isRed
-                        ? 'bg-rose-50 text-rose-600 border-rose-100'
-                        : 'bg-sky-50 text-sky-700 border-sky-100';
-                    return '<span class="' .
-                        $cls .
-                        ' inline-flex h-6 items-center justify-center rounded-full border px-2 text-xs font-semibold">' .
-                        $g .
-                        '</span>';
+                    $cls = $isRed ? 'bg-rose-50 text-rose-600 border-rose-100' : 'bg-sky-50 text-sky-700 border-sky-100';
+                    return '<span class="' . $cls . ' inline-flex h-6 items-center justify-center rounded-full border px-2 text-xs font-semibold">' . e($g) . '</span>';
                 }
             }
-
+            if (!function_exists('rhesus_pill')) {
+                function rhesus_pill($r) {
+                    $isPositive = trim((string) $r) === 'Rh+';
+                    $cls = $isPositive ? 'bg-emerald-50 text-emerald-700 border-emerald-100' : 'bg-sky-50 text-sky-700 border-sky-100';
+                    return '<span class="' . $cls . ' inline-flex h-6 items-center justify-center rounded-full border px-2 text-xs font-semibold">' . e($r) . '</span>';
+                }
+            }
             if (!function_exists('product_pill')) {
-                function product_pill($p)
-                {
-                    return '<span class="inline-flex items-center rounded-full border border-sky-200 bg-sky-50 px-2.5 py-0.5 text-xs text-sky-700">' .
-                        $p .
-                        '</span>';
+                function product_pill($p) {
+                    return '<span class="inline-flex items-center rounded-full border border-sky-200 bg-sky-50 px-2.5 py-0.5 text-xs text-sky-700">' . e($p) . '</span>';
                 }
             }
-        @endphp
 
-        @php
-            // --- Filter state & mapping status ---
-            $q = request('q', '');
-            $statusQ = request('status', '');
-            $golQ = request('gol', '');
-            $perPage = (int) request('per_page', 10);
+            // Filter state
+            $q        = request('q', '');
+            $statusQ  = request('status', '');
+            $golQ     = request('gol', '');
+            $produkQ  = request('produk', '');
+            $perPage  = (int) request('per_page', 10);
 
             $statusMap = [
                 'approved' => 'bg-emerald-50 text-emerald-700 border border-emerald-200',
-                'pending' => 'bg-amber-50 text-amber-700 border border-amber-200',
+                'pending'  => 'bg-amber-50 text-amber-700 border border-amber-200',
                 'rejected' => 'bg-rose-50 text-rose-700 border border-rose-200',
             ];
+
+            // Opsi produk (dipakai di chip & dropdown)
+            $produkOpts = [
+                ''     => 'Semua Produk',
+                'WB'   => 'WB: Whole Blood',
+                'PRC'  => 'PRC: Packed Red Cell',
+                'TC'   => 'TC: Thrombocyte Concentrate',
+                'FFP'  => 'FFP: Fresh Frozen Plasma',
+                'CRYO' => 'CRYO: Cryoprecipitated Anti-Hemophilic Factor',
+                'LP'   => 'LP: Liquid Plasma',
+                'TCA'  => 'TCA: Thrombocyte Apheresis',
+                'CP'   => 'CP: Convalescent Plasma',
+            ];
+
+            $hasActiveFilter = $q || $golQ || $produkQ || $statusQ;
         @endphp
 
-        {{-- Toolbar (form GET) --}}
-        <form id="filterForm" method="GET" class="flex flex-col items-stretch gap-3 sm:flex-row sm:items-center">
-            <div class="relative flex-1">
-                <span class="pointer-events-none absolute inset-y-0 left-3 flex items-center">
-                    <svg class="size-5 text-neutral-400" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6"
-                            d="m21 21-4.3-4.3M10 18a8 8 0 1 1 0-16 8 8 0 0 1 0 16z" />
-                    </svg>
-                </span>
-                <input name="q" value="{{ $q }}" type="text"
-                    class="w-full rounded-xl border border-neutral-200 bg-white py-2.5 pl-11 pr-3 text-sm placeholder-neutral-400 focus:border-neutral-300 focus:outline-none focus:ring-2 focus:ring-neutral-900/10"
-                    placeholder="Cari nama pasien atau rumah sakit..." />
-            </div>
+        {{-- =================== Toolbar (Search • Filters • Page Size) =================== --}}
+        <form id="filterForm" method="GET" class="space-y-3">
+            <div class="flex flex-col gap-3 sm:flex-row sm:items-center">
+                {{-- Search --}}
+                <div class="relative flex-1 min-w-0">
+                    <span class="pointer-events-none absolute inset-y-0 left-3 flex items-center">
+                        <svg class="size-5 text-neutral-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6" d="m21 21-4.3-4.3M10 18a8 8 0 1 1 0-16 8 8 0 0 1 0 16z"/>
+                        </svg>
+                    </span>
+                    <input name="q" value="{{ $q }}" type="text"
+                           class="w-full rounded-2xl border border-neutral-200 bg-white py-2.5 pl-11 pr-3 text-sm placeholder-neutral-400 focus:border-navy-300 focus:outline-none focus:ring-2 focus:ring-navy-200"
+                           placeholder="Cari nama pasien atau rumah sakit"/>
+                </div>
 
-            {{-- Filter dropdown --}}
-            <div class="relative">
-                <button type="button" id="filterBtn"
-                    class="inline-flex items-center justify-center rounded-xl border border-neutral-200 bg-white px-3 py-2 text-sm shadow-sm hover:bg-neutral-50">
-                    <svg class="size-5 text-neutral-600" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6"
-                            d="M3 6h18M6 12h12M10 18h4" />
-                    </svg>
-                </button>
-                <div id="filterMenu"
-                    class="absolute right-0 z-20 mt-2 hidden w-64 rounded-xl border border-neutral-200 bg-white p-3 shadow-lg">
-                    <div class="space-y-3">
-                        <div>
-                            <label class="text-xs font-medium text-neutral-500">Status</label>
-                            <select id="statusSelect"
-                                class="mt-1 w-full rounded-lg border border-neutral-200 bg-white px-3 py-2 text-sm">
-                                <option value="" {{ $statusQ === '' ? 'selected' : '' }}>Semua</option>
-                                <option value="approved" {{ $statusQ === 'approved' ? 'selected' : '' }}>Approved</option>
-                                <option value="pending" {{ $statusQ === 'pending' ? 'selected' : '' }}>Pending</option>
-                                <option value="rejected" {{ $statusQ === 'rejected' ? 'selected' : '' }}>Rejected</option>
-                            </select>
+                {{-- Filter dropdown trigger --}}
+                <div class="relative">
+                    <button type="button" id="filterBtn"
+                            class="inline-flex min-h-10 items-center gap-2 rounded-2xl border border-neutral-200 bg-white px-3 py-2 text-sm shadow-sm hover:bg-neutral-50 focus:outline-none focus:ring-2 focus:ring-navy-200"
+                            aria-haspopup="menu" aria-expanded="false">
+                        <svg class="size-5 text-neutral-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6" d="M3 6h18M6 12h12M10 18h4"/>
+                        </svg>
+                        <span>Filter</span>
+                    </button>
+
+                    {{-- Panel filter --}}
+                    <div id="filterMenu" class="absolute right-0 z-20 mt-2 hidden w-[22rem] rounded-2xl border border-neutral-200 bg-white p-3 shadow-xl">
+                        <div class="space-y-3">
+                            {{-- Produk (dropdown lembut kustom) --}}
+                            <div class="relative">
+                                <label class="text-xs font-medium text-neutral-500">Produk Darah</label>
+
+                                {{-- Trigger --}}
+                                <button type="button" id="produkBtn"
+                                        class="mt-1 w-full rounded-xl border border-neutral-200 bg-white px-3 py-2 text-sm text-neutral-800 shadow-sm hover:bg-blue-50/40 focus:outline-none focus:ring-2 focus:ring-blue-200 transition flex items-center justify-between">
+                                    <span id="produkLabel" class="truncate">{{ $produkOpts[$produkQ] ?? 'Semua Produk' }}</span>
+                                    <svg class="size-4 text-neutral-500 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M6 9l6 6 6-6"/>
+                                    </svg>
+                                </button>
+
+                                {{-- Menu items --}}
+                                <div id="produkMenu"
+                                     class="absolute left-0 z-30 mt-1 hidden w-full rounded-2xl border border-neutral-100 bg-white p-1 shadow-2xl ring-1 ring-black/5">
+                                    @foreach ($produkOpts as $val => $label)
+                                        <button
+                                            type="button"
+                                            role="menuitemradio"
+                                            aria-checked="{{ $produkQ === $val ? 'true':'false' }}"
+                                            class="produk-item group w-full text-left rounded-xl px-3 py-2 text-sm transition flex items-center justify-between
+                                                   {{ $produkQ === $val ? 'bg-blue-50 text-blue-800 ring-1 ring-blue-200 cursor-default' : 'text-neutral-800 hover:bg-blue-50/60' }}"
+                                            data-value="{{ $val }}">
+                                            <span class="truncate">{{ $label }}</span>
+                                            <svg class="check-icon size-4 opacity-0 group-[aria-checked=true]:opacity-100"
+                                                 viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                                            </svg>
+                                        </button>
+                                    @endforeach
+                                </div>
+                            </div>
+
+                            {{-- Golongan (dropdown lembut kustom) --}}
+                            <div class="relative">
+                                <label class="text-xs font-medium text-neutral-500">Golongan Darah</label>
+
+                                {{-- Trigger --}}
+                                <button type="button" id="golBtn"
+                                        class="mt-1 w-full rounded-xl border border-neutral-200 bg-white px-3 py-2 text-sm text-neutral-800 shadow-sm
+                                               hover:bg-emerald-50/40 focus:outline-none focus:ring-2 focus:ring-navy-200 transition
+                                               flex items-center justify-between">
+                                    <span id="golLabel" class="truncate">{{ $golQ ?: 'Semua' }}</span>
+                                    <svg class="size-4 text-neutral-500 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M6 9l6 6 6-6"/>
+                                    </svg>
+                                </button>
+
+                                {{-- Menu items --}}
+                                <div id="golMenu"
+                                     class="absolute left-0 z-30 mt-1 hidden w-full rounded-2xl border border-neutral-100 bg-white p-1 shadow-2xl ring-1 ring-black/5">
+                                    @php $gOpts = [''=>'Semua','A'=>'A','B'=>'B','AB'=>'AB','O'=>'O']; @endphp
+                                    @foreach ($gOpts as $val => $lab)
+                                        <button
+                                            type="button"
+                                            role="menuitemradio"
+                                            aria-checked="{{ $golQ === $val ? 'true' : 'false' }}"
+                                            class="gol-item group w-full text-left rounded-xl px-3 py-2 text-sm transition flex items-center justify-between
+                                                   {{ $golQ === $val ? 'bg-emerald-50 text-emerald-800 ring-1 ring-emerald-200 cursor-default' : 'text-neutral-800 hover:bg-emerald-50/60' }}"
+                                            data-value="{{ $val }}">
+                                            <span class="truncate">{{ $lab }}</span>
+                                            <svg class="check-icon size-4 opacity-0 group-[aria-checked=true]:opacity-100"
+                                                 viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                                            </svg>
+                                        </button>
+                                    @endforeach
+                                </div>
+                            </div>
+
+                            {{-- Actions --}}
+                            <div class="flex items-center justify-between pt-1">
+                                <button type="button" id="resetBtn" class="text-sm text-neutral-600 hover:underline">Reset</button>
+                                <button type="button" id="applyBtn" class="px-3 py-1.5 rounded-lg bg-blue-600 text-white text-xs sm:text-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-200">
+                                    Terapkan
+                                </button>
+                            </div>
                         </div>
-                        <div>
-                            <label class="text-xs font-medium text-neutral-500">Golongan Darah</label>
-                            <select id="golSelect"
-                                class="mt-1 w-full rounded-lg border border-neutral-200 bg-white px-3 py-2 text-sm">
-                                @php $gOpts = [''=>'Semua','A+'=>'A+','A-'=>'A-','B+'=>'B+','B-'=>'B-','AB+'=>'AB+','AB-'=>'AB-','O+'=>'O+','O-'=>'O-']; @endphp
-                                @foreach ($gOpts as $val => $lab)
-                                    <option value="{{ $val }}" {{ $golQ === $val ? 'selected' : '' }}>
-                                        {{ $lab }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <div class="flex items-center justify-between">
-                            <button type="button" id="resetBtn"
-                                class="text-sm text-neutral-600 hover:underline">Reset</button>
-                            <button type="button" id="applyBtn"
-                                class="rounded-lg bg-neutral-900 px-3 py-1.5 text-sm text-white hover:bg-neutral-800">Terapkan</button>
-                        </div>
+                    </div>
+                </div>
+
+                {{-- Page size (diluar panel filter) --}}
+                @php $sizes = [5,10,20]; @endphp
+                <div class="relative sm:ml-auto">
+                    <button type="button" id="pageSizeBtn"
+                            class="inline-flex min-h-10 items-center gap-2 rounded-2xl border border-neutral-200 bg-white px-3 py-2 text-sm shadow-sm hover:bg-neutral-50 focus:outline-none focus:ring-2 focus:ring-navy-200"
+                            aria-haspopup="menu" aria-expanded="false">
+                        <svg class="size-5 text-neutral-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6" d="M4 8h16M4 16h10"/>
+                        </svg>
+                        <span>Baris: <strong class="font-semibold text-neutral-800">{{ $perPage }}</strong></span>
+                        <svg class="size-4 text-neutral-500" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                            <path fill-rule="evenodd" d="M10 12a1 1 0 0 1-.7-.29l-4-4a1 1 0 0 1 1.4-1.42L10 9.59l3.3-3.3a1 1 0 1 1 1.4 1.42l-4 4A1 1 0 0 1 10 12Z" clip-rule="evenodd"/>
+                        </svg>
+                    </button>
+                    <div id="pageSizeMenu" class="absolute right-0 z-20 mt-2 hidden w-40 rounded-2xl border border-neutral-100 bg-white p-1 shadow-xl">
+                        @foreach ($sizes as $sz)
+                            <button type="button"
+                                    class="w-full text-left rounded-xl px-3 py-2 text-sm {{ $perPage === $sz ? 'bg-blue-50 text-blue-800 ring-1 ring-blue-200 cursor-default' : 'text-neutral-700' }}"
+                                    data-size="{{ $sz }}">
+                                {{ $sz }} per halaman
+                            </button>
+                        @endforeach
                     </div>
                 </div>
             </div>
 
-            {{-- Hidden inputs --}}
-            <input type="hidden" name="status" id="statusInput" value="{{ $statusQ }}">
+            {{-- Active filter chips --}}
+            @if ($hasActiveFilter)
+                <div class="flex flex-wrap items-center gap-2">
+                    @if ($q)
+                        <span class="inline-flex items-center gap-1 rounded-full border border-neutral-200 bg-neutral-50 px-2.5 py-1 text-xs">
+                            Cari: <strong class="font-medium">{{ $q }}</strong>
+                        </span>
+                    @endif
+                    @if ($produkQ !== '')
+                        <span class="inline-flex items-center gap-1 rounded-full border border-sky-200 bg-sky-50 px-2.5 py-1 text-xs text-sky-800">
+                            Produk: <strong class="font-medium">{{ $produkOpts[$produkQ] ?? $produkQ }}</strong>
+                            <button type="button" class="ml-1 remove-chip" data-target="produk">×</button>
+                        </span>
+                    @endif
+                    @if ($golQ)
+                        <span class="inline-flex items-center gap-1 rounded-full border border-navy-200 bg-navy-50 px-2.5 py-1 text-xs text-navy-800">
+                            Gol: <strong class="font-medium">{{ $golQ }}</strong>
+                            <button type="button" class="ml-1 remove-chip" data-target="gol">×</button>
+                        </span>
+                    @endif
+                    <button type="button" id="clearAllBtn" class="text-xs text-neutral-600 hover:underline">Bersihkan semua</button>
+                </div>
+            @endif
+
+            {{-- Hidden inputs (untuk submit GET) --}}
+            <input type="hidden" name="produk" id="produkInput" value="{{ $produkQ }}">
             <input type="hidden" name="gol" id="golInput" value="{{ $golQ }}">
             <input type="hidden" name="per_page" id="perPageInput" value="{{ $perPage }}">
-
-            {{-- Page size --}}
-            <div class="flex items-center gap-2 sm:ml-auto">
-                <label for="pageSize" class="text-sm text-neutral-600">Baris:</label>
-                <select id="pageSize" class="rounded-xl border border-neutral-200 bg-white px-2 py-2 text-sm">
-                    @foreach ([5, 10, 20] as $opt)
-                        <option value="{{ $opt }}" {{ $perPage === $opt ? 'selected' : '' }}>{{ $opt }}
-                        </option>
-                    @endforeach
-                </select>
-            </div>
         </form>
 
-        {{-- TABLE (≥ md) --}}
+        {{-- =================== TABLE (≥ md) =================== --}}
         <div class="hidden overflow-hidden rounded-2xl border border-neutral-200 bg-white md:block">
             <div class="overflow-x-auto">
                 <table class="min-w-full text-sm">
                     <thead class="bg-neutral-50 text-neutral-600">
-                        <tr class="text-left">
-                            <th class="px-4 py-3 font-medium">Nama Pasien</th>
-                            <th class="px-4 py-3 font-medium">RS Pemesan</th>
-                            <th class="px-4 py-3 font-medium">Golongan Darah</th>
-                            <th class="px-4 py-3 font-medium">Rhesus</th>
-                            <th class="px-4 py-3 font-medium">Tanggal Pemesanan</th>
-                            <th class="px-4 py-3 font-medium">Produk Darah</th>
-                            <th class="px-4 py-3 font-medium">Status</th>
-                            <th class="px-4 py-3 font-medium">Aksi</th>
-                        </tr>
+                    <tr class="text-left">
+                        <th class="px-4 py-3 font-medium">Nama Pasien</th>
+                        <th class="px-4 py-3 font-medium">Rumah Sakit Pemesan</th>
+                        <th class="px-4 py-3 font-medium">Golongan Darah</th>
+                        <th class="px-4 py-3 font-medium">Rhesus</th>
+                        <th class="px-4 py-3 font-medium">Tanggal Pemesanan</th>
+                        <th class="px-4 py-3 font-medium">Produk Darah</th>
+                        <th class="px-4 py-3 font-medium">Status</th>
+                        <th class="px-4 py-3 font-medium">Aksi</th>
+                    </tr>
                     </thead>
                     <tbody>
-                        @forelse($pemesanan as $o)
-                            @php
-                                $statusClass =
-                                    $statusMap[$o->status] ??
-                                    'bg-neutral-100 text-neutral-700 border border-neutral-200';
-
-                                $tglBaris = \Illuminate\Support\Carbon::parse(
-                                    optional($o->verifikasiTerakhir)->tanggal_permintaan ?? $o->created_at,
-                                )->toDateString();
-
-                                // Payload lengkap utk modal
-                                $payload = [
-                                    'id' => $o->id,
-                                    'status' => $o->status,
-                                    'tanggal_pemesanan' =>
-                                        optional($o->tanggal_pemesanan)->toDateString() ??
-                                        ($o->tanggal_pemesanan ?? null),
-                                    'tanggal_permintaan' =>
-                                        optional($o->tanggal_permintaan)->toDateString() ??
-                                        ($o->tanggal_permintaan ?? null),
-
-                                    // Identitas pasien & RS
-                                    'nama_pasien' => $o->nama_pasien,
-                                    'rs_pemesan' => $o->rs_pemesan,
-                                    'jenis_kelamin' => $o->jenis_kelamin, // L/P
-                                    'nama_dokter' => $o->nama_dokter,
-                                    'email' => $o->email,
-                                    'nomor_telepon' => $o->nomor_telepon,
-                                    'no_regis_rs' => $o->no_regis_rs,
-
-                                    // Kebutuhan darah
-                                    'gol_darah' => $o->gol_darah,
-                                    'rhesus' => $o->rhesus,
-                                    'produk' => $o->produk,
-                                    'jumlah_kantong' => $o->jumlah_kantong,
-                                    'alasan_tambahan' => $o->alasan_tambahan,
-
-                                    // Alasan & pemeriksaan
-                                    'alasan_transfusi' => $o->alasan_transfusi,
-                                    'gejala_transfusi' => $o->gejala_transfusi,
-                                    'cek_transfusi' => (bool) $o->cek_transfusi,
-
-                                    // Serologi
-                                    'nama_suami_istri' => $o->nama_suami_istri,
-                                    'diagnosa_klinik' => $o->diagnosa_klinik,
-                                    'pernah_serologi' => $o->pernah_serologi, // 'Ya' / 'Tidak'
-                                    'lokasi_serologi' => $o->lokasi_serologi,
-                                    'tanggal_serologi' =>
-                                        optional($o->tanggal_serologi)->toDateString() ??
-                                        ($o->tanggal_serologi ?? null),
-                                    'tanggal_transfusi' =>
-                                        optional($o->tanggal_transfusi)->toDateString() ??
-                                        ($o->tanggal_transfusi ?? null),
-                                    'hasil_serologi' => $o->hasil_serologi,
-
-                                    'tanggal' => $tglBaris, // fallback tampilan
-                                ];
-                            @endphp
-
-                            <tr class="border-t border-neutral-100 hover:bg-neutral-50/60">
-                                <td class="px-4 py-3">{{ $o->nama_pasien }}</td>
-                                <td class="px-4 py-3">{{ $o->rs_pemesan }}</td>
-                                <td class="px-4 py-3">{!! $o->gol_darah ? blood_pill($o->gol_darah) : '-' !!}</td>
-                                <td class="px-4 py-3">{{ $o->rhesus }}</td>
-                                <td class="px-4 py-3">{{ \Illuminate\Support\Carbon::parse($tglBaris)->format('d-m-Y') }}
-                                </td>
-                                <td class="px-4 py-3">{!! $o->produk ? product_pill($o->produk) : '-' !!}</td>
-                                <td class="px-4 py-3">
-                                    <span
-                                        class="{{ $statusClass }} inline-flex items-center rounded-full px-2.5 py-1 text-xs font-medium">
-                                        {{ ucfirst($o->status) }}
-                                    </span>
-                                </td>
-                                <td class="px-4 py-3">
-                                    <button type="button"
-                                        class="lihat-detail-btn w-full rounded-lg border border-neutral-200 bg-white px-3 py-2 text-sm text-neutral-700 hover:bg-neutral-50"
+                    @forelse($pemesanan as $o)
+                        @php
+                            $statusClass = $statusMap[$o->status] ?? 'bg-neutral-100 text-neutral-700 border border-neutral-200';
+                            $tglBaris = \Illuminate\Support\Carbon::parse(optional($o->verifikasiTerakhir)->tanggal_permintaan ?? $o->created_at)->toDateString();
+                            $payload = [
+                                'id' => $o->id,
+                                'status' => $o->status,
+                                'tanggal_pemesanan' => optional($o->tanggal_pemesanan)->toDateString() ?? ($o->tanggal_pemesanan ?? null),
+                                'tanggal_permintaan' => optional($o->tanggal_permintaan)->toDateString() ?? ($o->tanggal_permintaan ?? null),
+                                'nama_pasien' => $o->nama_pasien,
+                                'rs_pemesan' => $o->rs_pemesan,
+                                'jenis_kelamin' => $o->jenis_kelamin,
+                                'nama_dokter' => $o->nama_dokter,
+                                'email' => $o->email,
+                                'nomor_telepon' => $o->nomor_telepon,
+                                'no_regis_rs' => $o->no_regis_rs,
+                                'gol_darah' => $o->gol_darah,
+                                'rhesus' => $o->rhesus,
+                                'produk' => $o->produk,
+                                'jumlah_kantong' => $o->jumlah_kantong,
+                                'alasan_tambahan' => $o->alasan_tambahan,
+                                'alasan_transfusi' => $o->alasan_transfusi,
+                                'gejala_transfusi' => $o->gejala_transfusi,
+                                'cek_transfusi' => (bool) $o->cek_transfusi,
+                                'nama_suami_istri' => $o->nama_suami_istri,
+                                'diagnosa_klinik' => $o->diagnosa_klinik,
+                                'pernah_serologi' => $o->pernah_serologi,
+                                'lokasi_serologi' => $o->lokasi_serologi,
+                                'tanggal_serologi' => optional($o->tanggal_serologi)->toDateString() ?? ($o->tanggal_serologi ?? null),
+                                'tanggal_transfusi' => optional($o->tanggal_transfusi)->toDateString() ?? ($o->tanggal_transfusi ?? null),
+                                'hasil_serologi' => $o->hasil_serologi,
+                                'tanggal' => $tglBaris,
+                            ];
+                        @endphp
+                        <tr class="border-t border-neutral-100 hover:bg-neutral-50/60">
+                            <td class="px-4 py-3">{{ $o->nama_pasien }}</td>
+                            <td class="px-4 py-3">{{ $o->rs_pemesan }}</td>
+                            <td class="px-4 py-3">{!! $o->gol_darah ? blood_pill($o->gol_darah) : '-' !!}</td>
+                            <td class="px-4 py-3">{!! $o->rhesus ? rhesus_pill($o->rhesus) : '-' !!}</td>
+                            <td class="px-4 py-3">{{ \Illuminate\Support\Carbon::parse($tglBaris)->format('d-m-Y') }}</td>
+                            <td class="px-4 py-3">{!! $o->produk ? product_pill($o->produk) : '-' !!}</td>
+                            <td class="px-4 py-3">
+                                <span class="{{ $statusClass }} inline-flex items-center rounded-full px-2.5 py-1 text-xs font-medium">
+                                    {{ ucfirst($o->status) }}
+                                </span>
+                            </td>
+                            <td class="px-4 py-3">
+                                <button type="button"
+                                        class="lihat-detail-btn inline-flex w-full items-center justify-center gap-2 rounded-xl border border-neutral-200 bg-white px-3 py-2 text-sm font-medium text-neutral-700 shadow-sm transition hover:bg-neutral-50 focus:outline-none focus:ring-2 focus:ring-navy-200"
                                         data-action="{{ route('admin.verifikasi.store', $o) }}"
-                                        data-payload='@json($payload)'>
-                                        Lihat Detail
-                                    </button>
-                                </td>
-                            </tr>
-                        @empty
-                            <tr>
-                                <td colspan="8" class="px-4 py-8 text-center text-neutral-500">Tidak ada data.</td>
-                            </tr>
-                        @endforelse
+                                        data-payload='@json($payload)'
+                                        aria-label="Lihat detail pemesanan {{ $o->nama_pasien }}">
+                                    <svg class="size-4 opacity-75" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M2.5 12s3.5-6.5 9.5-6.5S21.5 12 21.5 12s-3.5 6.5-9.5 6.5S2.5 12 2.5 12z"/>
+                                        <circle cx="12" cy="12" r="2.7" stroke-width="1.8"></circle>
+                                    </svg>
+                                    <span>Lihat Detail</span>
+                                </button>
+                            </td>
+                        </tr>
+                    @empty
+                        <tr><td colspan="8" class="px-4 py-8 text-center text-neutral-500">Tidak ada data.</td></tr>
+                    @endforelse
                     </tbody>
                 </table>
             </div>
         </div>
 
-        {{-- CARDS (mobile) --}}
+        {{-- =================== CARDS (mobile) =================== --}}
         <div class="space-y-3 md:hidden">
             @forelse($pemesanan as $o)
                 @php
-                    $statusClass =
-                        $statusMap[$o->status] ?? 'bg-neutral-100 text-neutral-700 border border-neutral-200';
+                    $statusClass = $statusMap[$o->status] ?? 'bg-neutral-100 text-neutral-700 border border-neutral-200';
                     $tgl = optional($o->verifikasiTerakhir)->tanggal_permintaan ?? $o->created_at;
                     $tglBaris = \Illuminate\Support\Carbon::parse($tgl)->toDateString();
                     $payloadMobile = [
-                        'id' => $o->id,
-                        'status' => $o->status,
-                        'tanggal' => $tglBaris,
-                        'tanggal_pemesanan' =>
-                            optional($o->tanggal_pemesanan)->toDateString() ?? ($o->tanggal_pemesanan ?? null),
-                        'tanggal_permintaan' =>
-                            optional($o->tanggal_permintaan)->toDateString() ?? ($o->tanggal_permintaan ?? null),
-                        'nama_pasien' => $o->nama_pasien,
-                        'rs_pemesan' => $o->rs_pemesan,
-                        'jenis_kelamin' => $o->jenis_kelamin,
-                        'nama_dokter' => $o->nama_dokter,
-                        'email' => $o->email,
-                        'nomor_telepon' => $o->nomor_telepon,
-                        'no_regis_rs' => $o->no_regis_rs,
-                        'gol_darah' => $o->gol_darah,
-                        'rhesus' => $o->rhesus,
-                        'produk' => $o->produk,
-                        'jumlah_kantong' => $o->jumlah_kantong,
-                        'alasan_transfusi' => $o->alasan_transfusi,
-                        'alasan_tambahan' => $o->alasan_tambahan,
-                        'gejala_transfusi' => $o->gejala_transfusi,
-                        'cek_transfusi' => (bool) $o->cek_transfusi,
-                        'nama_suami_istri' => $o->nama_suami_istri,
-                        'diagnosa_klinik' => $o->diagnosa_klinik,
-                        'pernah_serologi' => $o->pernah_serologi,
-                        'lokasi_serologi' => $o->lokasi_serologi,
-                        'tanggal_serologi' =>
-                            optional($o->tanggal_serologi)->toDateString() ?? ($o->tanggal_serologi ?? null),
-                        'tanggal_transfusi' =>
-                            optional($o->tanggal_transfusi)->toDateString() ?? ($o->tanggal_transfusi ?? null),
+                        'id' => $o->id, 'status' => $o->status, 'tanggal' => $tglBaris,
+                        'tanggal_pemesanan' => optional($o->tanggal_pemesanan)->toDateString() ?? ($o->tanggal_pemesanan ?? null),
+                        'tanggal_permintaan' => optional($o->tanggal_permintaan)->toDateString() ?? ($o->tanggal_permintaan ?? null),
+                        'nama_pasien' => $o->nama_pasien, 'rs_pemesan' => $o->rs_pemesan, 'jenis_kelamin' => $o->jenis_kelamin,
+                        'nama_dokter' => $o->nama_dokter, 'email' => $o->email, 'nomor_telepon' => $o->nomor_telepon,
+                        'no_regis_rs' => $o->no_regis_rs, 'gol_darah' => $o->gol_darah, 'rhesus' => $o->rhesus,
+                        'produk' => $o->produk, 'jumlah_kantong' => $o->jumlah_kantong,
+                        'alasan_transfusi' => $o->alasan_transfusi, 'alasan_tambahan' => $o->alasan_tambahan,
+                        'gejala_transfusi' => $o->gejala_transfusi, 'cek_transfusi' => (bool) $o->cek_transfusi,
+                        'nama_suami_istri' => $o->nama_suami_istri, 'diagnosa_klinik' => $o->diagnosa_klinik,
+                        'pernah_serologi' => $o->pernah_serologi, 'lokasi_serologi' => $o->lokasi_serologi,
+                        'tanggal_serologi' => optional($o->tanggal_serologi)->toDateString() ?? ($o->tanggal_serologi ?? null),
+                        'tanggal_transfusi' => optional($o->tanggal_transfusi)->toDateString() ?? ($o->tanggal_transfusi ?? null),
                         'hasil_serologi' => $o->hasil_serologi,
                     ];
                 @endphp
 
                 <div class="rounded-2xl border border-neutral-200 bg-white p-4">
-                    <div class="flex items-start justify-between">
-                        <p class="font-medium">{{ $o->nama_pasien }}</p>
-                        <span
-                            class="{{ $statusClass }} inline-flex items-center rounded-full px-2.5 py-1 text-xs font-medium">
-                            {{ ucfirst($o->status) }}
-                        </span>
+                    <div class="flex items-start justify-between gap-3">
+                        <p class="text-sm font-medium sm:text-base">{{ $o->nama_pasien }}</p>
+                        <span class="{{ $statusClass }} inline-flex items-center rounded-full px-2.5 py-1 text-xs font-medium">{{ ucfirst($o->status) }}</span>
                     </div>
-                    <p class="text-xs text-neutral-500">{{ $o->rs_pemesan }}</p>
+                    <p class="mt-0.5 text-xs text-neutral-500">{{ $o->rs_pemesan }}</p>
+
                     <div class="mt-3 grid grid-cols-2 gap-2 text-sm">
                         <div class="text-neutral-500">Golongan</div>
                         <div>{!! $o->gol_darah ? blood_pill($o->gol_darah) : '-' !!}</div>
-
+                        <div class="text-neutral-500">Rhesus</div>
+                        <div>{!! $o->rhesus ? rhesus_pill($o->rhesus) : '-' !!}</div>
                         <div class="text-neutral-500">Tanggal</div>
                         <div>{{ \Illuminate\Support\Carbon::parse($tgl)->format('d-m-Y') }}</div>
-
                         <div class="text-neutral-500">Produk</div>
                         <div>{!! $o->produk ? product_pill($o->produk) : '-' !!}</div>
                     </div>
 
                     <div class="mt-3">
                         <button type="button"
-                            class="lihat-detail-btn rounded-lg border border-neutral-200 bg-white px-3 py-1.5 text-xs text-neutral-700 hover:bg-neutral-50"
-                            data-action="{{ route('admin.verifikasi.store', $o) }}"
-                            data-payload='@json($payloadMobile)'>
-                            Lihat detail
+                                class="lihat-detail-btn inline-flex items-center gap-2 rounded-xl border border-neutral-200 bg-white px-3 py-2 text-xs sm:text-sm font-medium text-neutral-700 shadow-sm transition hover:bg-neutral-50 focus:outline-none focus:ring-2 focus:ring-emerald-200"
+                                data-action="{{ route('admin.verifikasi.store', $o) }}"
+                                data-payload='@json($payloadMobile)'
+                                aria-label="Lihat detail pemesanan {{ $o->nama_pasien }}">
+                            <svg class="size-4 opacity-75" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M2.5 12s3.5-6.5 9.5-6.5S21.5 12 21.5 12s-3.5 6.5-9.5 6.5S2.5 12 2.5 12z"/>
+                                <circle cx="12" cy="12" r="2.7" stroke-width="1.8"></circle>
+                            </svg>
+                            <span>Lihat Detail</span>
                         </button>
                     </div>
                 </div>
@@ -331,214 +396,317 @@
         <div class="flex flex-col justify-between gap-3 sm:flex-row sm:items-center">
             <div class="text-sm text-neutral-600">
                 @if ($pemesanan->total() > 0)
-                    Menampilkan {{ $pemesanan->firstItem() }}–{{ $pemesanan->lastItem() }} dari {{ $pemesanan->total() }}
-                    data
+                    Menampilkan {{ $pemesanan->firstItem() }}–{{ $pemesanan->lastItem() }} dari {{ $pemesanan->total() }} data
                 @else
                     Tidak ada data
                 @endif
             </div>
-            <div>
-                {{ $pemesanan->withQueryString()->links() }}
-            </div>
+            <div>{{ $pemesanan->withQueryString()->links() }}</div>
         </div>
     </div>
 
-    {{-- ===== Modal: Detail Pemesanan (sesuai mockup) ===== --}}
-    <div id="detailModal" class="fixed inset-0 z-40 hidden items-center justify-center bg-black/20 p-4">
-        <div class="w-full max-w-4xl rounded-3xl border border-neutral-200 bg-white shadow-xl">
+    {{-- =================== Modal: Detail Pemesanan =================== --}}
+    <div id="detailModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/30 backdrop-blur-sm p-3 sm:p-4 transition-opacity duration-200">
+        <div id="detailCard" class="w-full max-w-5xl origin-center scale-95 opacity-0 translate-y-2 rounded-[1.25rem] sm:rounded-[1.5rem] border border-neutral-200/70 bg-white shadow-2xl transition-all duration-200">
             {{-- Header --}}
-            <div class="flex items-center justify-between border-b border-neutral-100 px-6 py-4">
-                <h3 class="text-xl font-semibold">Detail Pemesanan</h3>
-                <button type="button" class="dm-close rounded-lg p-1 text-neutral-500 hover:bg-neutral-100">
-                    <svg class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6"
-                            d="M6 18 18 6M6 6l12 12" />
-                    </svg>
-                </button>
+            <div class="sticky top-0 z-10 flex items-center justify-between gap-4 border-b border-neutral-100/80 px-4 py-3 sm:px-6 sm:py-4 bg-white/80 backdrop-blur">
+                <div class="min-w-0">
+                    <h3 class="truncate text-lg sm:text-xl font-semibold tracking-tight text-neutral-900">Detail Pemesanan</h3>
+                    <p class="mt-0.5 text-xs text-neutral-500">Ringkasan identitas & kebutuhan darah</p>
+                </div>
+                <div class="flex items-center gap-2">
+                    <span id="dm_status" class="inline-flex items-center gap-1 rounded-full border px-2.5 py-1 text-xs font-medium border-neutral-200 bg-neutral-50 text-neutral-700">-</span>
+                    <button type="button" class="dm-close inline-flex items-center justify-center rounded-xl p-2 text-neutral-500 ring-1 ring-transparent transition hover:bg-neutral-100 focus:outline-none focus:ring-navy-300" aria-label="Tutup modal">
+                        <svg class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6" d="M6 18 18 6M6 6l12 12"/>
+                        </svg>
+                    </button>
+                </div>
             </div>
 
             {{-- Body --}}
-            <div class="px-6 py-5">
-                <div class="max-h-[70vh] overflow-auto pr-1 space-y-8">
+            <div class="px-4 py-4 sm:px-6 sm:py-5">
+                <div class="grid max-h-[70vh] grid-cols-1 gap-4 sm:gap-6 overflow-auto pr-1 md:grid-cols-2">
                     {{-- A. Pasien & RS --}}
-                    <section>
-                        <h4 class="mb-3 text-sm font-semibold tracking-wide text-neutral-700">A. Pasien & RS</h4>
-                        <dl class="grid grid-cols-2 gap-x-8 gap-y-2 text-sm">
-                            <dt class="text-neutral-500">Rumah Sakit</dt>
-                            <dd id="dm_rs" class="font-medium text-neutral-900">-</dd>
-                            <dt class="text-neutral-500">Jenis Kelamin</dt>
-                            <dd id="dm_jk" class="font-medium text-neutral-900">-</dd>
-                            <dt class="text-neutral-500">No. Registrasi</dt>
-                            <dd id="dm_no_regis" class="font-medium text-neutral-900">-</dd>
-                            <dt class="text-neutral-500">Nama Dokter</dt>
-                            <dd id="dm_dokter" class="font-medium text-neutral-900">-</dd>
-                            <dt class="text-neutral-500">Nama Pasien</dt>
-                            <dd id="dm_nama" class="font-medium text-neutral-900">-</dd>
-                            <dt class="text-neutral-500">Suami/Istri</dt>
-                            <dd id="dm_suami_istri" class="font-medium text-neutral-900">-</dd>
-                            <dt class="text-neutral-500">Telepon</dt>
-                            <dd id="dm_telp" class="font-medium text-neutral-900">-</dd>
-                            <dt class="text-neutral-500">Email</dt>
-                            <dd id="dm_email" class="font-medium text-neutral-900 break-all">-</dd>
+                    <section class="rounded-2xl border border-neutral-100 bg-neutral-50/60 p-3 sm:p-4">
+                        <div class="mb-3 flex items-center gap-2">
+                            <span class="inline-flex size-6 items-center justify-center rounded-lg border border-neutral-200 bg-white">
+                                <svg class="size-3.5 text-neutral-700" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6" d="M16 7a4 4 0 1 1-8 0 4 4 0 0 1 8 0M12 14c-4.418 0-8 2.239-8 5v1h16v-1c0-2.761-3.582-5-8-5z"/>
+                                </svg>
+                            </span>
+                            <h4 class="text-sm font-semibold tracking-wide text-neutral-800">A. Pasien & RS</h4>
+                        </div>
+                        <dl class="two-col-dl">
+                            <dt>Rumah Sakit</dt> <dd id="dm_rs">-</dd>
+                            <dt>Jenis Kelamin</dt> <dd id="dm_jk">-</dd>
+                            <dt>No. Registrasi</dt> <dd id="dm_no_regis">-</dd>
+                            <dt>Nama Dokter</dt> <dd id="dm_dokter">-</dd>
+                            <dt>Nama Pasien</dt> <dd id="dm_nama">-</dd>
+                            <dt>Suami/Istri</dt> <dd id="dm_suami_istri">-</dd>
+                            <dt>Telepon</dt> <dd id="dm_telp">-</dd>
+                            <dt>Email</dt> <dd id="dm_email" class="break-all">-</dd>
                         </dl>
                     </section>
 
                     {{-- B. Detail Klinis --}}
-                    <section>
-                        <h4 class="mb-3 text-sm font-semibold tracking-wide text-neutral-700">B. Detail Klinis</h4>
-                        <dl class="grid grid-cols-2 gap-x-8 gap-y-2 text-sm">
-                            <dt class="text-neutral-500">Tgl Diperlukan</dt>
-                            <dd id="dm_tgl_minta" class="font-medium text-neutral-900">-</dd>
-                            <dt class="text-neutral-500">Pernah Serologi</dt>
-                            <dd id="dm_pernah_serologi" class="font-medium text-neutral-900">-</dd>
-                            <dt class="text-neutral-500">Diagnosa</dt>
-                            <dd id="dm_diagnosa" class="font-medium text-neutral-900">-</dd>
-                            <dt class="text-neutral-500">Lokasi Serologi</dt>
-                            <dd id="dm_lokasi_serologi" class="font-medium text-neutral-900">-</dd>
-                            <dt class="text-neutral-500">Tgl Serologi</dt>
-                            <dd id="dm_tgl_serologi" class="font-medium text-neutral-900">-</dd>
-                            <dt class="text-neutral-500">Tgl Transfusi</dt>
-                            <dd id="dm_tgl_transfusi" class="font-medium text-neutral-900">-</dd>
-                            <dt class="text-neutral-500">Alasan Transfusi</dt>
-                            <dd id="dm_alasan" class="font-medium text-neutral-900">-</dd>
-                            <dt class="text-neutral-500">Hasil Serologi</dt>
-                            <dd id="dm_hasil_serologi" class="font-medium text-neutral-900">-</dd>
+                    <section class="rounded-2xl border border-neutral-100 bg-neutral-50/60 p-3 sm:p-4">
+                        <div class="mb-3 flex items-center gap-2">
+                            <span class="inline-flex size-6 items-center justify-center rounded-lg border border-neutral-200 bg-white">
+                                <svg class="size-3.5 text-neutral-700" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6" d="M12 8v8M8 12h8M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0z"/>
+                                </svg>
+                            </span>
+                            <h4 class="text-sm font-semibold tracking-wide text-neutral-800">B. Detail Klinis</h4>
+                        </div>
+                        <dl class="two-col-dl">
+                            <dt>Tgl Diperlukan</dt>  <dd id="dm_tgl_minta">-</dd>
+                            <dt>Pernah Serologi</dt> <dd id="dm_pernah_serologi">-</dd>
+                            <dt>Diagnosa</dt>       <dd id="dm_diagnosa">-</dd>
+                            <dt>Lokasi Serologi</dt><dd id="dm_lokasi_serologi">-</dd>
+                            <dt>Tgl Serologi</dt>   <dd id="dm_tgl_serologi">-</dd>
+                            <dt>Tgl Transfusi</dt>  <dd id="dm_tgl_transfusi">-</dd>
+                            <dt>Alasan Transfusi</dt><dd id="dm_alasan">-</dd>
+                            <dt>Hasil Serologi</dt> <dd id="dm_hasil_serologi">-</dd>
                         </dl>
                     </section>
 
                     {{-- C. Permintaan Darah --}}
-                    <section>
-                        <h4 class="mb-3 text-sm font-semibold tracking-wide text-neutral-700">C. Permintaan Darah</h4>
-                        <dl class="grid grid-cols-2 gap-x-8 gap-y-2 text-sm">
-                            <dt class="text-neutral-500">Jenis Darah</dt>
-                            <dd id="dm_produk" class="font-medium text-neutral-900">-</dd>
-                            <dt class="text-neutral-500">Golongan Darah</dt>
-                            <dd id="dm_gol" class="font-medium text-neutral-900">-</dd>
-                            <dt class="text-neutral-500">Rhesus</dt>
-                            <dd id="dm_rhesus" class="font-medium text-neutral-900">-</dd>
-                            <dt class="text-neutral-500">Jumlah Kantong</dt>
-                            <dd id="dm_jumlah" class="font-medium text-neutral-900">-</dd>
-                            <dt class="text-neutral-500">Alasan Tambahan</dt>
-                            <dd id="dm_gejala" class="font-medium text-neutral-900">—</dd>
-                            <dt class="text-neutral-500">Cek Transfusi</dt>
-                            <dd id="dm_cek" class="font-medium text-neutral-900">-</dd>
+                    <section class="rounded-2xl border border-neutral-100 bg-neutral-50/60 p-3 sm:p-4 md:col-span-2">
+                        <div class="mb-3 flex items-center gap-2">
+                            <span class="inline-flex size-6 items-center justify-center rounded-lg border border-neutral-200 bg-white">
+                                <svg class="size-3.5 text-neutral-700" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6" d="M12 21s-6-4.35-6-10a6 6 0 1 1 12 0c0 5.65-6 10-6 10z"/>
+                                </svg>
+                            </span>
+                            <h4 class="text-sm font-semibold tracking-wide text-neutral-800">C. Permintaan Darah</h4>
+                        </div>
+                        <dl class="two-col-dl">
+                            <dt>Jenis Darah</dt>     <dd id="dm_produk">-</dd>
+                            <dt>Golongan Darah</dt>  <dd id="dm_gol">-</dd>
+                            <dt>Rhesus</dt>          <dd id="dm_rhesus">-</dd>
+                            <dt>Jumlah Kantong</dt>  <dd id="dm_jumlah">-</dd>
+                            <dt>Alasan Tambahan</dt> <dd id="dm_gejala">—</dd>
                         </dl>
-                    </section>
 
-                    {{-- Meta ringkas --}}
-                    <section>
-                        <dl class="grid grid-cols-2 gap-x-8 gap-y-2 text-sm">
-                            <dt class="text-neutral-500">Status Saat Ini</dt>
-                            <dd id="dm_status" class="font-semibold text-neutral-900">-</dd>
-                            <dt class="text-neutral-500">Tgl. Pemesanan</dt>
-                            <dd id="dm_tgl_pesan" class="font-medium text-neutral-900">-</dd>
-                        </dl>
+                        <div class="mt-4 grid grid-cols-1 gap-3 rounded-xl border border-neutral-100 bg-white/60 p-3 sm:grid-cols-2">
+                            <div class="flex items-center justify-between rounded-lg border border-neutral-100 bg-white px-3 py-2">
+                                <span class="text-xs text-neutral-500">Tgl. Pemesanan</span>
+                                <span id="dm_tgl_pesan" class="text-sm font-medium text-neutral-900">-</span>
+                            </div>
+                            <div class="flex items-center justify-between rounded-lg border border-neutral-100 bg-white px-3 py-2">
+                                <span class="text-xs text-neutral-500">Status Saat Ini</span>
+                                <span class="text-sm font-semibold text-neutral-900" id="dm_status_clone">-</span>
+                            </div>
+                        </div>
+
+                        {{-- Form POST (hidden) --}}
+                        <form id="dm_form" method="POST" action="#" class="hidden">
+                            @csrf
+                            <input type="hidden" name="status" id="dm_status_input" value="">
+                            <input type="hidden" name="tanggal_permintaan" id="dm_tanggal_input" value="">
+                        </form>
                     </section>
                 </div>
-
-                {{-- Form POST verifikasi --}}
-                <form id="dm_form" method="POST" action="#" class="hidden">
-                    @csrf
-                    <input type="hidden" name="status" id="dm_status_input" value="">
-                    <input type="hidden" name="tanggal_permintaan" id="dm_tanggal_input" value="">
-                </form>
             </div>
 
             {{-- Footer --}}
-            <div class="flex items-center justify-between gap-3 border-t border-neutral-100 px-6 py-4">
-                <button type="button"
-                    class="dm-close rounded-lg border border-neutral-200 bg-white px-3 py-2 text-sm text-neutral-700 hover:bg-neutral-50">
-                    Tutup
-                </button>
+            <div class="sticky bottom-0 z-10 flex items-center justify-between gap-3 border-t border-neutral-100/80 bg-white/80 px-4 py-3 sm:px-6 sm:py-4 backdrop-blur">
+                <button type="button" class="dm-close rounded-lg border border-neutral-200 bg-white px-3 py-2 text-sm text-neutral-700 transition hover:bg-neutral-50 focus:outline-none focus:ring-2 focus:ring-navy-300">Tutup</button>
                 <div id="dm_action_buttons" class="flex items-center gap-2">
-                    <button type="button" id="dm_reject"
-                        class="rounded-lg border border-rose-200 bg-rose-50 px-3 py-2 text-sm font-medium text-rose-700 hover:bg-rose-100">
-                        Tolak
-                    </button>
-                    <button type="button" id="dm_approve"
-                        class="rounded-lg border border-blue-200 bg-blue-50 px-3 py-2 text-sm font-medium text-blue-700 hover:bg-blue-100">
-                        Terima
-                    </button>
+                    <button type="button" id="dm_reject" class="min-h-10 rounded-lg border border-rose-200 bg-rose-50 px-3 py-2 text-sm font-medium text-rose-700 transition hover:bg-rose-100 focus:outline-none focus:ring-2 focus:ring-rose-200">Tolak</button>
+                    <button type="button" id="dm_approve" class="min-h-10 rounded-lg border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm font-medium text-emerald-700 transition hover:bg-emerald-100 focus:outline-none focus:ring-2 focus:ring-emerald-200">Setuju</button>
                 </div>
             </div>
         </div>
     </div>
 
-    {{-- ===== Modal: Konfirmasi ===== --}}
-    <div id="confirmModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/30 p-4">
-        <div class="w-full max-w-md rounded-2xl border border-neutral-200 bg-white shadow-xl">
-            <div class="px-5 py-4">
-                <h4 id="cm_title" class="text-base font-semibold">Konfirmasi</h4>
-                <p id="cm_desc" class="mt-1 text-sm text-neutral-600">Apakah Anda yakin?</p>
+    {{-- =================== Modal: Konfirmasi =================== --}}
+    <div id="confirmModal" class="fixed inset-0 z-[60] hidden items-center justify-center bg-black/40 backdrop-blur-sm p-3 sm:p-4 transition-opacity duration-150">
+        <div class="w-full max-w-md overflow-hidden rounded-2xl border border-neutral-200 bg-white shadow-2xl">
+            <div class="px-4 pt-4 sm:px-5 sm:pt-5">
+                <div class="flex items-start gap-3">
+                    <span id="cm_icon" class="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-neutral-200 bg-neutral-50 text-neutral-700">
+                        <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 9v4m0 4h.01M12 22a10 10 0 1 1 0-20 10 10 0 0 1 0 20z"/>
+                        </svg>
+                    </span>
+                    <div class="min-w-0">
+                        <h4 id="cm_title" class="text-base font-semibold text-neutral-900">Konfirmasi</h4>
+                        <p id="cm_desc" class="mt-0.5 text-sm text-neutral-600">Apakah Anda yakin?</p>
+                    </div>
+                </div>
             </div>
-            <div class="flex items-center justify-end gap-2 border-t border-neutral-100 px-5 py-3">
-                <button type="button" id="cm_cancel"
-                    class="rounded-lg border border-neutral-200 bg-white px-3 py-2 text-sm text-neutral-700 hover:bg-neutral-50">Batal</button>
-                <button type="button" id="cm_ok"
-                    class="rounded-lg bg-neutral-900 px-3 py-2 text-sm text-white hover:bg-neutral-800">Ya,
-                    lanjutkan</button>
+            <div class="mt-4 flex items-center justify-end gap-2 border-t border-neutral-100 px-4 py-3 sm:px-5 sm:py-3.5">
+                <button type="button" id="cm_cancel" class="min-h-10 rounded-lg border border-neutral-200 bg-white px-3 py-2 text-sm text-neutral-700 transition hover:bg-neutral-50 focus:outline-none focus:ring-2 focus:ring-emerald-300">Batal</button>
+                <button type="button" id="cm_ok" class="min-h-10 rounded-lg px-3 py-2 text-sm font-medium text-white bg-emerald-600 hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-300">Ya, lanjutkan</button>
             </div>
         </div>
     </div>
 
-    {{-- ===== JS: filter + modal detail + konfirmasi ===== --}}
+    {{-- =================== JS =================== --}}
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            /* ==== Filter & page size ==== */
-            const btn = document.getElementById('filterBtn');
-            const menu = document.getElementById('filterMenu');
+            /* ==== Filter panel ==== */
+            const btn   = document.getElementById('filterBtn');
+            const menu  = document.getElementById('filterMenu');
             const apply = document.getElementById('applyBtn');
             const reset = document.getElementById('resetBtn');
-            const statusSelect = document.getElementById('statusSelect');
-            const golSelect = document.getElementById('golSelect');
-            const statusInput = document.getElementById('statusInput');
-            const golInput = document.getElementById('golInput');
-            const form = document.getElementById('filterForm');
-            const pageSize = document.getElementById('pageSize');
-            const perInput = document.getElementById('perPageInput');
+            const form  = document.getElementById('filterForm');
 
             btn.addEventListener('click', (e) => {
                 e.stopPropagation();
                 menu.classList.toggle('hidden');
+                btn.setAttribute('aria-expanded', menu.classList.contains('hidden') ? 'false' : 'true');
             });
             document.addEventListener('click', (e) => {
                 if (!menu.contains(e.target) && !btn.contains(e.target)) menu.classList.add('hidden');
             });
+
+            /* ==== Produk dropdown (lembut) ==== */
+            const produkBtn   = document.getElementById('produkBtn');
+            const produkMenu  = document.getElementById('produkMenu');
+            const produkLabel = document.getElementById('produkLabel');
+            const produkInput = document.getElementById('produkInput');
+            let produkSelected = @json($produkQ);
+
+            function closeProdukMenu(){ produkMenu.classList.add('hidden'); }
+            function updateProdukActive(value) {
+                document.querySelectorAll('#produkMenu .produk-item').forEach(el => {
+                    const active = el.getAttribute('data-value') === value;
+                    el.setAttribute('aria-checked', active ? 'true' : 'false');
+                    if (active) {
+                        el.classList.add('bg-blue-50','text-blue-800','ring-1','ring-blue-200','cursor-default');
+                    } else {
+                        el.classList.remove('bg-blue-50','text-blue-800','ring-1','ring-blue-200','cursor-default');
+                    }
+                });
+            }
+            produkBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                produkMenu.classList.toggle('hidden');
+                updateProdukActive(produkSelected || '');
+            });
+            produkMenu.querySelectorAll('.produk-item').forEach(item => {
+                item.addEventListener('click', () => {
+                    const val   = item.getAttribute('data-value') ?? '';
+                    const label = item.querySelector('span')?.textContent?.trim() || 'Semua Produk';
+                    produkSelected = val;
+                    produkLabel.textContent = label;
+                    updateProdukActive(val);
+                    closeProdukMenu();
+                });
+            });
+            document.addEventListener('click', (e) => {
+                if (!produkMenu.contains(e.target) && !produkBtn.contains(e.target)) closeProdukMenu();
+            });
+
+            /* ==== Golongan dropdown (lembut) ==== */
+            const golBtn   = document.getElementById('golBtn');
+            const golMenu  = document.getElementById('golMenu');
+            const golLabel = document.getElementById('golLabel');
+            const golInput = document.getElementById('golInput');
+            let golSelected = @json($golQ);
+
+            function closeGolMenu(){ golMenu.classList.add('hidden'); }
+            function updateGolActive(value){
+                document.querySelectorAll('#golMenu .gol-item').forEach(el=>{
+                    const active = el.getAttribute('data-value') === (value ?? '');
+                    el.setAttribute('aria-checked', active ? 'true' : 'false');
+                    if (active){
+                        el.classList.add('bg-blue-50','text-blue-800','ring-1','ring-blue-200','cursor-default');
+                    } else {
+                        el.classList.remove('bg-blue-50','text-blue-800','ring-1','ring-blue-200','cursor-default');
+                    }
+                });
+            }
+            golBtn.addEventListener('click', (e)=>{
+                e.stopPropagation();
+                golMenu.classList.toggle('hidden');
+                updateGolActive(golSelected || '');
+            });
+            golMenu.querySelectorAll('.gol-item').forEach(item=>{
+                item.addEventListener('click', ()=>{
+                    const val   = item.getAttribute('data-value') ?? '';
+                    const label = item.querySelector('span')?.textContent?.trim() || 'Semua';
+                    golSelected = val;
+                    golLabel.textContent = label;
+                    updateGolActive(val);
+                    closeGolMenu();
+                });
+            });
+            document.addEventListener('click', (e)=>{
+                if (!golMenu.contains(e.target) && !golBtn.contains(e.target)) closeGolMenu();
+            });
+
+            /* ==== Apply & Reset ==== */
             apply.addEventListener('click', () => {
-                statusInput.value = statusSelect.value || '';
-                golInput.value = golSelect.value || '';
+                produkInput.value = produkSelected || '';
+                golInput.value    = golSelected   || '';
                 menu.classList.add('hidden');
                 form.submit();
             });
             reset.addEventListener('click', () => {
-                statusSelect.value = '';
-                golSelect.value = '';
-                statusInput.value = '';
-                golInput.value = '';
-                form.submit();
-            });
-            pageSize.addEventListener('change', () => {
-                perInput.value = pageSize.value;
+                produkSelected = ''; produkInput.value = '';
+                golSelected    = ''; golInput.value    = '';
+                document.getElementById('produkLabel').textContent = 'Semua Produk';
+                golLabel.textContent = 'Semua';
+                const q = form.querySelector('input[name="q"]'); if (q) q.value = '';
                 form.submit();
             });
 
-            /* ==== Modal Detail ==== */
-            const detailModal = document.getElementById('detailModal');
-            const confirmModal = document.getElementById('confirmModal');
-            const dmCloseBtns = detailModal.querySelectorAll('.dm-close');
-            const dmApprove = document.getElementById('dm_approve');
-            const dmReject = document.getElementById('dm_reject');
-            const dmActionButtons = document.getElementById('dm_action_buttons');
-            const dmForm = document.getElementById('dm_form');
-            const dmStatusInput = document.getElementById('dm_status_input');
+            // Chip remove & clear all
+            document.querySelectorAll('.remove-chip')?.forEach(chip => {
+                chip.addEventListener('click', () => {
+                    const t = chip.dataset.target;
+                    if (t === 'produk') document.getElementById('produkInput').value = '';
+                    if (t === 'gol')    document.getElementById('golInput').value = '';
+                    form.submit();
+                });
+            });
+            const clearAllBtn = document.getElementById('clearAllBtn');
+            if (clearAllBtn) {
+                clearAllBtn.addEventListener('click', () => {
+                    document.getElementById('produkInput').value = '';
+                    document.getElementById('golInput').value = '';
+                    const q = form.querySelector('input[name="q"]'); if (q) q.value = '';
+                    form.submit();
+                });
+            }
+
+            /* ==== Page size ==== */
+            const perInput    = document.getElementById('perPageInput');
+            const pageSizeBtn = document.getElementById('pageSizeBtn');
+            const pageSizeMenu= document.getElementById('pageSizeMenu');
+            pageSizeBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                pageSizeMenu.classList.toggle('hidden');
+                pageSizeBtn.setAttribute('aria-expanded', pageSizeMenu.classList.contains('hidden') ? 'false' : 'true');
+            });
+            document.addEventListener('click', (e) => {
+                if (!pageSizeMenu.contains(e.target) && !pageSizeBtn.contains(e.target)) pageSizeMenu.classList.add('hidden');
+            });
+            pageSizeMenu.querySelectorAll('button[data-size]').forEach(item => {
+                item.addEventListener('click', () => {
+                    const size = item.getAttribute('data-size'); if (!size) return;
+                    perInput.value = size;
+                    pageSizeMenu.classList.add('hidden');
+                    form.submit();
+                });
+            });
+
+            /* ==== Detail modal & confirm modal (tidak diubah) ==== */
+            const detailModal    = document.getElementById('detailModal');
+            const detailCard     = document.getElementById('detailCard');
+            const dmActionBtns   = document.getElementById('dm_action_buttons');
+            const dmForm         = document.getElementById('dm_form');
+            const dmStatusInput  = document.getElementById('dm_status_input');
             const dmTanggalInput = document.getElementById('dm_tanggal_input');
 
-            // Elemen detail
             const dm = {
                 status: document.getElementById('dm_status'),
                 tglPesan: document.getElementById('dm_tgl_pesan'),
                 tglMinta: document.getElementById('dm_tgl_minta'),
-
                 nama: document.getElementById('dm_nama'),
                 rs: document.getElementById('dm_rs'),
                 jk: document.getElementById('dm_jk'),
@@ -546,196 +714,141 @@
                 noRegis: document.getElementById('dm_no_regis'),
                 email: document.getElementById('dm_email'),
                 telp: document.getElementById('dm_telp'),
-
                 gol: document.getElementById('dm_gol'),
                 rhesus: document.getElementById('dm_rhesus'),
                 produk: document.getElementById('dm_produk'),
                 jumlah: document.getElementById('dm_jumlah'),
-
                 alasan: document.getElementById('dm_alasan'),
                 gejala: document.getElementById('dm_gejala'),
-                cek: document.getElementById('dm_cek'),
-
                 suamiIstri: document.getElementById('dm_suami_istri'),
                 diagnosa: document.getElementById('dm_diagnosa'),
                 pernahSerologi: document.getElementById('dm_pernah_serologi'),
                 lokasiSerologi: document.getElementById('dm_lokasi_serologi'),
                 tglSerologi: document.getElementById('dm_tgl_serologi'),
                 tglTransfusi: document.getElementById('dm_tgl_transfusi'),
-                hasilSerologi: document.getElementById('dm_hasil_serologi')
+                hasilSerologi: document.getElementById('dm_hasil_serologi'),
             };
 
-            function fmt(v) {
-                if (!v) return '-';
-                return v;
+            function fmt(v){ return v ? v : '-'; }
+            function yaTidak(v){ if(v===true) return 'Ya'; if(v===false) return 'Tidak'; const s=String(v||'').toLowerCase(); return s==='ya'?'Ya':(s==='tidak'?'Tidak':'-'); }
+            function labelJK(v){ return !v?'-':(v==='L'?'Laki-laki':(v==='P'?'Perempuan':v)); }
+            function productLabel(c){ const m={WB:'WB: Whole Blood',PRC:'PRC: Packed Red Cell',TC:'TC: Thrombocyte Concentrate',FFP:'FFP: Fresh Frozen Plasma',CRYO:'CRYO: Cryoprecipitated Anti-Hemophilic Factor',LP:'LP: Liquid Plasma',TCA:'TCA: Thrombocyte Apheresis',CP:'CP: Convalescent Plasma'}; return m[c]||c||'-'; }
+            function jumlahLabel(v){ const n=Number(v||0); return n>0?`${n} kantong`:'-'; }
+            function colorStatusChip(s){
+                const base='inline-flex items-center gap-1 rounded-full border px-2.5 py-1 text-xs font-medium ';
+                let tone = s==='approved'?'border-emerald-200 bg-emerald-50 text-emerald-700':
+                           s==='rejected'?'border-rose-200 bg-rose-50 text-rose-700':
+                           s==='pending' ?'border-amber-200 bg-amber-50 text-amber-700':
+                                          'border-neutral-200 bg-neutral-50 text-neutral-700';
+                dm.status.className = base + tone;
             }
 
-            function yaTidak(v) {
-                if (v === true) return 'Ya';
-                if (v === false) return 'Tidak';
-                const s = String(v || '').toLowerCase();
-                if (s === 'ya') return 'Ya';
-                if (s === 'tidak') return 'Tidak';
-                return '-';
-            }
+            function openDetail(payload, actionUrl){
+                try{
+                    const statusCap=(payload.status??'-').toString().replace(/^./,c=>c.toUpperCase());
+                    dm.status.textContent=statusCap;
+                    const clone=document.getElementById('dm_status_clone'); if(clone) clone.textContent=statusCap;
+                    dm.tglPesan.textContent=fmt(payload.tanggal_pemesanan ?? payload.tanggal);
+                    dm.tglMinta.textContent=fmt(payload.tanggal_permintaan ?? payload.tanggal);
+                    dm.nama.textContent=payload.nama_pasien ?? '-';
+                    dm.rs.textContent=payload.rs_pemesan ?? '-';
+                    dm.jk.textContent=labelJK(payload.jenis_kelamin);
+                    dm.dokter.textContent=payload.nama_dokter ?? '-';
+                    dm.noRegis.textContent=payload.no_regis_rs ?? '-';
+                    dm.email.textContent=payload.email ?? '-';
+                    dm.telp.textContent=payload.nomor_telepon ?? '-';
+                    dm.gol.textContent=payload.gol_darah ?? '-';
+                    dm.rhesus.textContent=payload.rhesus ?? '-';
+                    dm.produk.textContent=productLabel(payload.produk);
+                    dm.jumlah.textContent=jumlahLabel(payload.jumlah_kantong);
+                    dm.alasan.textContent=payload.alasan_transfusi ?? '-';
+                    dm.gejala.textContent=(payload.alasan_tambahan ?? '').toString().trim() || '—';
+                    dm.suamiIstri.textContent=payload.nama_suami_istri ?? '-';
+                    dm.diagnosa.textContent=payload.diagnosa_klinik ?? '-';
+                    dm.pernahSerologi.textContent=yaTidak(payload.pernah_serologi);
+                    dm.lokasiSerologi.textContent=payload.lokasi_serologi ?? '-';
+                    dm.tglSerologi.textContent=fmt(payload.tanggal_serologi);
+                    dm.tglTransfusi.textContent=fmt(payload.tanggal_transfusi);
+                    dm.hasilSerologi.textContent=payload.hasil_serologi ?? '-';
 
-            function labelJK(v) {
-                if (!v) return '-';
-                return v === 'L' ? 'Laki-laki' : (v === 'P' ? 'Perempuan' : v);
-            }
-
-            function productLabel(code) {
-                const map = {
-                    WB: 'WB: Whole Blood',
-                    PRC: 'PRC: Packed Red Cell',
-                    TC: 'TC: Thrombocyte Concentrate',
-                    FFP: 'FFP: Fresh Frozen Plasma',
-                    AHF: 'AHF: Anti Hemophilic Factor',
-                    LP: 'LP: Leukocyte Poor',
-                    TCA: 'TCA: Thrombocyte Apheresis',
-                    PK: 'PK: Platelet Kriopresipitat'
-                };
-                return map[code] || code || '-';
-            }
-
-            function jumlahLabel(v) {
-                const n = Number(v || 0);
-                return n > 0 ? `${n} kantong` : '-';
-            }
-
-            function openDetail(payload, actionUrl) {
-                try {
-                    // Status & tanggal
-                    dm.status && (dm.status.textContent = (payload.status ?? '-').toString().replace(/^./, c => c
-                        .toUpperCase()));
-                    dm.tglPesan && (dm.tglPesan.textContent = fmt(payload.tanggal_pemesanan ?? payload.tanggal));
-                    dm.tglMinta && (dm.tglMinta.textContent = fmt(payload.tanggal_permintaan ?? payload.tanggal));
-
-                    // Identitas
-                    dm.nama && (dm.nama.textContent = payload.nama_pasien ?? '-');
-                    dm.rs && (dm.rs.textContent = payload.rs_pemesan ?? '-');
-                    dm.jk && (dm.jk.textContent = labelJK(payload.jenis_kelamin));
-                    dm.dokter && (dm.dokter.textContent = payload.nama_dokter ?? '-');
-                    dm.noRegis && (dm.noRegis.textContent = payload.no_regis_rs ?? '-');
-                    dm.noRekap && (dm.noRekap.textContent = payload.no_rekap_rs ?? '-');
-                    dm.email && (dm.email.textContent = payload.email ?? '-');
-                    dm.telp && (dm.telp.textContent = payload.nomor_telepon ?? '-');
-
-                    // Kebutuhan darah
-                    dm.gol && (dm.gol.textContent = payload.gol_darah ?? '-');
-                    dm.rhesus && (dm.rhesus.textContent = payload.rhesus ?? '-');
-                    dm.produk && (dm.produk.textContent = productLabel(payload.produk));
-                    dm.jumlah && (dm.jumlah.textContent = jumlahLabel(payload.jumlah_kantong));
-
-                    // Alasan & pemeriksaan
-                    dm.alasan && (dm.alasan.textContent = payload.alasan_transfusi ?? '-');
-                    dm.gejala && (dm.gejala.textContent = (payload.alasan_tambahan ?? '').toString().trim() || '—');
-                    dm.cek && (dm.cek.textContent = yaTidak(payload.cek_transfusi));
-
-                    // Serologi
-                    dm.suamiIstri && (dm.suamiIstri.textContent = payload.nama_suami_istri ?? '-');
-                    dm.diagnosa && (dm.diagnosa.textContent = payload.diagnosa_klinik ?? '-');
-                    dm.pernahSerologi && (dm.pernahSerologi.textContent = yaTidak(payload.pernah_serologi));
-                    dm.lokasiSerologi && (dm.lokasiSerologi.textContent = payload.lokasi_serologi ?? '-');
-                    dm.tglSerologi && (dm.tglSerologi.textContent = fmt(payload.tanggal_serologi));
-                    dm.tglTransfusi && (dm.tglTransfusi.textContent = fmt(payload.tanggal_transfusi));
-                    dm.hasilSerologi && (dm.hasilSerologi.textContent = payload.hasil_serologi ?? '-');
-
-                    // Set form action & default tanggal_permintaan untuk POST verifikasi
                     dmForm.action = actionUrl || '#';
-                    dmTanggalInput.value = (payload.tanggal_permintaan ?? payload.tanggal ?? new Date()
-                    .toISOString().slice(0, 10));
+                    dmTanggalInput.value = (payload.tanggal_permintaan ?? payload.tanggal ?? new Date().toISOString().slice(0,10));
 
-                    // HIDE tombol Terima/Tolak jika status sudah approved atau rejected
-                    const currentStatus = (payload.status || '').toLowerCase();
-                    if (currentStatus === 'approved' || currentStatus === 'rejected') {
-                        dmActionButtons.classList.add('hidden');
-                    } else {
-                        dmActionButtons.classList.remove('hidden');
-                    }
+                    const currentStatus=(payload.status||'').toLowerCase();
+                    if(currentStatus==='approved' || currentStatus==='rejected'){ dmActionBtns.classList.add('hidden'); } else { dmActionBtns.classList.remove('hidden'); }
+                    colorStatusChip(currentStatus);
 
-                    detailModal.classList.remove('hidden');
-                    detailModal.classList.add('flex');
-                } catch (e) {
-                    console.error('Gagal membuka modal detail:', e);
-                    alert('Terjadi kesalahan saat membuka detail.');
+                    detailModal.classList.remove('hidden'); detailModal.classList.add('flex');
+                    requestAnimationFrame(()=>{ detailModal.classList.add('modal-show'); detailCard.classList.add('card-show'); });
+                }catch(e){ console.error('Gagal membuka modal detail:', e); alert('Terjadi kesalahan saat membuka detail.'); }
+            }
+            function closeDetail(){
+                detailCard.classList.remove('card-show'); detailModal.classList.remove('modal-show');
+                setTimeout(()=>{ detailModal.classList.add('hidden'); detailModal.classList.remove('flex'); },200);
+            }
+            detailModal.querySelectorAll('.dm-close').forEach(b=>b.addEventListener('click', closeDetail));
+            detailModal.addEventListener('click',(e)=>{ if(e.target===detailModal) closeDetail(); });
+            document.addEventListener('click',(e)=>{
+                const b=e.target.closest('.lihat-detail-btn'); if(!b) return;
+                try{ openDetail(JSON.parse(b.dataset.payload||'{}'), b.dataset.action||'#'); }catch(err){ console.error('Payload tidak valid:', err); alert('Gagal membuka detail. Data tidak valid.'); }
+            });
+
+            /* ==== Confirm modal ==== */
+            const cmTitle=document.getElementById('cm_title');
+            const cmDesc=document.getElementById('cm_desc');
+            const cmCancel=document.getElementById('cm_cancel');
+            const cmOk=document.getElementById('cm_ok');
+            const cmIcon=document.getElementById('cm_icon');
+            const confirmModal=document.getElementById('confirmModal');
+            let cmNext=null;
+
+            function setConfirmAppearance(variant){
+                const base='inline-flex h-9 w-9 items-center justify-center rounded-lg border ';
+                if(variant==='approve'){
+                    cmIcon.className=base+'border-emerald-200 bg-emerald-50 text-emerald-700';
+                    cmIcon.innerHTML=`<svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M5 13l4 4L19 7"/></svg>`;
+                    cmOk.className='min-h-10 rounded-lg px-3 py-2 text-sm font-medium text-white bg-emerald-600 hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-300';
+                    cmOk.textContent='Setuju';
+                } else if(variant==='reject'){
+                    cmIcon.className=base+'border-rose-200 bg-rose-50 text-rose-700';
+                    cmIcon.innerHTML=`<svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M6 18L18 6M6 6l12 12"/></svg>`;
+                    cmOk.className='min-h-10 rounded-lg px-3 py-2 text-sm font-medium text-white bg-rose-600 hover:bg-rose-700 focus:outline-none focus:ring-2 focus:ring-rose-300';
+                    cmOk.textContent='Tolak';
+                } else {
+                    cmIcon.className=base+'border-neutral-200 bg-neutral-50 text-neutral-700';
+                    cmIcon.innerHTML=`<svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 9v4m0 4h.01M12 22a10 10 0 1 1 0-20 10 10 0 0 1 0 20z"/></svg>`;
+                    cmOk.className='min-h-10 rounded-lg px-3 py-2 text-sm font-medium text-white bg-emerald-600 hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-300';
+                    cmOk.textContent='Lanjutkan';
                 }
             }
-
-            function closeDetail() {
-                detailModal.classList.add('hidden');
-                detailModal.classList.remove('flex');
+            function openConfirm(title, desc, onOk, variant='neutral'){
+                cmTitle.textContent=title||'Konfirmasi';
+                cmDesc.innerHTML=desc||'Apakah Anda yakin?';
+                cmNext=onOk||null;
+                setConfirmAppearance(variant);
+                confirmModal.classList.remove('hidden'); confirmModal.classList.add('flex');
             }
-            dmCloseBtns.forEach(b => b.addEventListener('click', closeDetail));
-            detailModal.addEventListener('click', (e) => {
-                if (e.target === detailModal) closeDetail();
-            });
+            function closeConfirm(){ confirmModal.classList.add('hidden'); confirmModal.classList.remove('flex'); cmNext=null; }
+            document.getElementById('cm_cancel').addEventListener('click', closeConfirm);
+            confirmModal.addEventListener('click',(e)=>{ if(e.target===confirmModal) closeConfirm(); });
+            document.getElementById('cm_ok').addEventListener('click',()=>{ if(typeof cmNext==='function') cmNext(); closeConfirm(); });
 
-            // Bind semua tombol "Lihat detail"
-            document.querySelectorAll('.lihat-detail-btn').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    const payload = JSON.parse(btn.dataset.payload || '{}');
-                    const actionUrl = btn.dataset.action;
-                    openDetail(payload, actionUrl);
-                });
-            });
-
-            /* ==== Modal Konfirmasi ==== */
-            const cmTitle = document.getElementById('cm_title');
-            const cmDesc = document.getElementById('cm_desc');
-            const cmCancel = document.getElementById('cm_cancel');
-            const cmOk = document.getElementById('cm_ok');
-            let cmNext = null;
-
-            function openConfirm(title, desc, onOk) {
-                cmTitle.textContent = title || 'Konfirmasi';
-                cmDesc.textContent = desc || 'Apakah Anda yakin?';
-                cmNext = onOk || null;
-                confirmModal.classList.remove('hidden');
-                confirmModal.classList.add('flex');
-            }
-
-            function closeConfirm() {
-                confirmModal.classList.add('hidden');
-                confirmModal.classList.remove('flex');
-                cmNext = null;
-            }
-            cmCancel.addEventListener('click', closeConfirm);
-            confirmModal.addEventListener('click', (e) => {
-                if (e.target === confirmModal) closeConfirm();
-            });
-            cmOk.addEventListener('click', () => {
-                if (typeof cmNext === 'function') cmNext();
-                closeConfirm();
-            });
-
-            // Tombol approve / reject → konfirmasi → submit
-            dmApprove.addEventListener('click', () => {
-                openConfirm(
-                    'Setujui Pemesanan',
-                    'Anda akan MENYETUJUI pemesanan ini. Lanjutkan?',
-                    () => {
-                        dmStatusInput.value = 'approved';
-                        dmForm.submit();
-                    }
-                );
-            });
-            dmReject.addEventListener('click', () => {
-                openConfirm(
-                    'Tolak Pemesanan',
-                    'Anda akan MENOLAK pemesanan ini. Lanjutkan?',
-                    () => {
-                        dmStatusInput.value = 'rejected';
-                        dmForm.submit();
-                    }
-                );
-            });
+            document.getElementById('dm_approve').addEventListener('click',()=>openConfirm('Setujui Pemesanan','Anda akan <strong>MENYETUJUI</strong> pemesanan ini. Lanjutkan?',()=>{ dmStatusInput.value='approved'; dmForm.submit(); },'approve'));
+            document.getElementById('dm_reject').addEventListener('click',()=>openConfirm('Tolak Pemesanan','Anda akan <strong>MENOLAK</strong> pemesanan ini. Lanjutkan?',()=>{ dmStatusInput.value='rejected'; dmForm.submit(); },'reject'));
         });
     </script>
 
     <style>
-        th.sortable:hover {
-            background-color: rgba(0, 0, 0, 0.02);
-        }
+        th.sortable:hover { background-color: rgba(0,0,0,.02); }
+        .two-col-dl { display:grid; grid-template-columns:1fr; gap:.5rem 1.25rem; font-size:.875rem; }
+        .two-col-dl dt { color: rgb(115 115 115); }
+        .two-col-dl dd { color: rgb(23 23 23); }
+        @media (min-width:768px){ .two-col-dl { grid-template-columns:1fr 1.2fr; gap:.5rem 2rem; } }
+        #detailModal.modal-show { opacity:1; } #detailModal:not(.modal-show){ opacity:0; }
+        #detailCard.card-show { transform:translateY(0) scale(1); opacity:1; }
+        #detailCard:not(.card-show){ transform:translateY(.5rem) scale(.97); opacity:0; }
+        #confirmModal { opacity:1; } #confirmModal.hidden { opacity:0; }
+        /* kecilkan icon centang saat selected agar lembut */
+        .check-icon { transition: opacity .12s ease; }
     </style>
 @endsection
