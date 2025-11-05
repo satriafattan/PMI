@@ -18,6 +18,12 @@ class RiwayatPemesanan extends Model
         'aksi'
     ];
 
+    protected $casts = [
+        'tanggal' => 'date',
+        'jumlah_kantong' => 'integer',
+    ];
+
+
     public function pemesanan()
     {
         return $this->belongsTo(PemesananDarah::class, 'pemesanan_id');

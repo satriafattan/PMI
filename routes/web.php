@@ -19,6 +19,8 @@ use App\Http\Controllers\Admin\StokDarahController;
 use App\Http\Controllers\Admin\VerifikasiPemesananController;
 use App\Http\Controllers\Admin\RiwayatController;
 use App\Http\Controllers\Admin\LaporanController;
+use App\Http\Controllers\Admin\EventVerificationController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -102,4 +104,17 @@ Route::middleware('auth:admin')->prefix('admin')->name('admin.')->group(function
     Route::get('laporan',                [LaporanController::class, 'index'])->name('laporan.index');
     Route::get('laporan/export-pdf',     [LaporanController::class, 'exportPdf'])->name('laporan.exportPdf');
     Route::get('laporan/export-excel',   [LaporanController::class, 'exportExcel'])->name('laporan.exportExcel');
+
+    // Event Verifikasi
+    Route::get('event-verifikasi', [EventVerificationController::class, 'index'])
+        ->name('event-verifikasi.index');
+
+    Route::get('event-verifikasi/{event}', [EventVerificationController::class, 'show'])
+        ->name('event-verifikasi.show');
+
+    Route::post('event-verifikasi/{event}/decide', [EventVerificationController::class, 'decide'])
+        ->name('event-verifikasi.decide');
+
+    Route::get('event-verifikasi/{event}/surat', [EventVerificationController::class, 'downloadSurat'])
+        ->name('event-verifikasi.surat');
 });

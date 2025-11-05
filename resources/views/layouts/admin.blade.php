@@ -24,6 +24,8 @@
       <x-admin.nav-item route="admin.stok-darah.index" icon="M20 13V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v7m16 0v5a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-5m16 0H4">Stok Darah</x-admin.nav-item>
       <x-admin.nav-item route="admin.pemesanan.index" icon="M3 7h18M8 7v13m8-13v13">Detail Darah</x-admin.nav-item>
       <x-admin.nav-item route="admin.laporan.index" icon="M4 6h16v12H4z">Laporan Stok Darah</x-admin.nav-item>
+      <x-admin.nav-item route="admin.event-verifikasi.index" icon="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z">
+    Verifikasi Event </x-admin.nav-item>
     </nav>
 
     <div class="p-3 border-t border-slate-800">
