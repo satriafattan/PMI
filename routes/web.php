@@ -18,6 +18,7 @@ use App\Http\Controllers\Admin\RekapStokController;
 use App\Http\Controllers\Admin\StokDarahController;
 use App\Http\Controllers\Admin\VerifikasiPemesananController;
 use App\Http\Controllers\Admin\RiwayatController;
+use App\Http\Controllers\Admin\LaporanController;
 
 /*
 |--------------------------------------------------------------------------
@@ -84,9 +85,6 @@ Route::middleware('auth:admin')->prefix('admin')->name('admin.')->group(function
     Route::resource('pemesanan', PemesananController::class)
         ->only(['index', 'create', 'store', 'show', 'edit', 'update', 'destroy']);
 
-    // Rekap Stok
-    Route::resource('rekap-stok', RekapStokController::class)->except(['show']);
-
     // Stok Darah
     Route::resource('stok-darah', StokDarahController::class)->except(['show']);
     Route::get('/stok',    [StokDarahController::class, 'index'])->name('stok.index');
@@ -99,4 +97,9 @@ Route::middleware('auth:admin')->prefix('admin')->name('admin.')->group(function
 
     // Riwayat
     Route::get('riwayat', [RiwayatController::class, 'index'])->name('riwayat.index');
+
+    // Laporan
+    Route::get('laporan',                [LaporanController::class, 'index'])->name('laporan.index');
+    Route::get('laporan/export-pdf',     [LaporanController::class, 'exportPdf'])->name('laporan.exportPdf');
+    Route::get('laporan/export-excel',   [LaporanController::class, 'exportExcel'])->name('laporan.exportExcel');
 });

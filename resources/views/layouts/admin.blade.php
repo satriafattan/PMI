@@ -23,7 +23,7 @@
       <x-admin.nav-item route="admin.riwayat.index" icon="M4 6h16M4 10h16M4 14h16M4 18h16">Riwayat Pemesanan</x-admin.nav-item>
       <x-admin.nav-item route="admin.stok-darah.index" icon="M20 13V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v7m16 0v5a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-5m16 0H4">Stok Darah</x-admin.nav-item>
       <x-admin.nav-item route="admin.pemesanan.index" icon="M3 7h18M8 7v13m8-13v13">Detail Darah</x-admin.nav-item>
-      <x-admin.nav-item route="admin.rekap-stok.index" icon="M4 6h16v12H4z">Rekapitulasi Stok Darah</x-admin.nav-item>
+      <x-admin.nav-item route="admin.laporan.index" icon="M4 6h16v12H4z">Laporan Stok Darah</x-admin.nav-item>
     </nav>
 
     <div class="p-3 border-t border-slate-800">
@@ -48,8 +48,6 @@
           <div class="text-sm text-slate-500">Sistem Manajemen Stok Darah</div>
         </div>
         <div class="flex items-center gap-3">
-          <button class="px-3 py-1.5 rounded-lg border text-sm hover:bg-slate-50">Export Data</button>
-          <a href="{{ route('admin.rekap-stok.create') }}" class="px-3 py-1.5 rounded-lg bg-blue-600 text-white text-sm hover:bg-blue-700">Tambah Stok</a>
           <div class="size-9 grid place-items-center bg-blue-100 text-blue-700 font-semibold rounded-xl">
             {{ Str::of(auth('admin')->user()->name ?? 'A')->substr(0,1)->upper() }}
           </div>
