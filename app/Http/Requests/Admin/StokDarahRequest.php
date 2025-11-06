@@ -8,26 +8,27 @@ class StokDarahRequest extends FormRequest
 {
     public function authorize(): bool
     {
+        // Atur sesuai kebutuhan auth admin
         return true;
     }
 
     public function rules(): array
     {
         return [
-            'produk'         => ['required', 'string', 'max:191'],
-            'gol_darah'      => ['required', 'in:A,AB,B,O'],
-            'rhesus'        => ['required', 'in:Rh+,Rh-'],
-            'jumlah'         => ['required', 'integer', 'min:1'],
-            'tgl_masuk'      => ['required', 'date'],
-            'tgl_kadaluarsa' => ['required', 'date', 'after_or_equal:tgl_masuk'],
+            'produk'          => ['required', 'string', 'in:WB,PRC,TC,TRC,FFP,AHF,LP,TCA,PK'],
+            'gol_darah'       => ['required', 'in:A,B,AB,O'],
+            'rhesus'          => ['required', 'in:Rh+,Rh-'],
+            'jumlah'          => ['required', 'integer', 'min:1'],
+            'tgl_masuk'       => ['required', 'date'],
+            'tgl_kadaluarsa'  => ['required', 'date', 'after_or_equal:tgl_masuk'],
+            // tambahkan field lain kalau ada (lokasi, catatan, dsb.)
         ];
     }
 
-    public function attributes(): array
+    public function messages(): array
     {
         return [
-            'gol_darah' => 'golongan darah',
-            'tgl_kadaluarsa' => 'tanggal kadaluwarsa',
+            'produk.in' => 'Produk harus salah satu dari: WB, PRC, TC, TRC, FFP, AHF, LP, TCA, PK.',
         ];
     }
 }

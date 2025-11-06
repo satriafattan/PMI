@@ -7,20 +7,17 @@ use App\Http\Controllers\WelcomeController;
 use App\Http\Controllers\Public\PublicPemesananController;
 use App\Http\Controllers\Public\EventScheduleController;
 use App\Http\Controllers\Public\StokController;
-use App\Http\Controllers\Public\StokController as PublicStokController;
-
 
 // === Admin Controllers ===
 use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\Admin\PemesananController;
+use App\Http\Controllers\Admin\BloodUnitController;
 use App\Http\Controllers\Admin\RekapStokController;
 use App\Http\Controllers\Admin\StokDarahController;
 use App\Http\Controllers\Admin\VerifikasiPemesananController;
 use App\Http\Controllers\Admin\RiwayatController;
 use App\Http\Controllers\Admin\LaporanController;
 use App\Http\Controllers\Admin\EventVerificationController;
-
 
 /*
 |--------------------------------------------------------------------------
@@ -35,10 +32,6 @@ Route::get('/about', fn() => view('about'))->name('about');
 |--------------------------------------------------------------------------
 | Public: Pemesanan (Non-Login)
 |--------------------------------------------------------------------------
-| Alur:
-|  - GET  /pemesanan               -> form pemesanan
-|  - POST /pemesanan               -> simpan (status 'pending'), catat riwayat
-|  - GET  /pemesanan/konfirmasi/{kode} -> ringkasan + tracking status by 'kode'
 */
 Route::get('/pemesanan', [PublicPemesananController::class, 'create'])->name('pemesanan.create');
 Route::post('/pemesanan', [PublicPemesananController::class, 'store'])->name('pemesanan.store');
@@ -69,52 +62,41 @@ Route::post('/admin/logout', [AuthController::class, 'logout'])->name('admin.log
 |--------------------------------------------------------------------------
 | Admin Area (guard: admin)
 |--------------------------------------------------------------------------
-| Catatan Verifikasi:
-|   - GET    admin/verifikasi                 -> list pemesanan (pending/approved/rejected)
-|   - POST   admin/verifikasi/{pemesanan}     -> buat entri verifikasi (approved/rejected),
-|                                                SEKALIGUS update status di 'pemesanan_darah'
-|   - PATCH  admin/verifikasi/{verifikasi}/status -> ubah status entri verifikasi (mis. koreksi)
-|
-| Kontrak parameter:
-|   {pemesanan}   -> binding ke model PemesananDarah (default by id)
-|   {verifikasi}  -> binding ke model VerifikasiPemesanan (default by id)
 */
 Route::middleware('auth:admin')->prefix('admin')->name('admin.')->group(function () {
 
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
-    // Pemesanan (CMS)
-    Route::resource('pemesanan', PemesananController::class)
-        ->only(['index', 'create', 'store', 'show', 'edit', 'update', 'destroy']);
+    // ===== Detail Darah (Blood Units) =====
+    // ==> PERBAIKAN: pakai nama rute 'detail-darah.*' supaya sesuai dengan pemanggilan di Blade.
+    Route::get('/detail-darah', [BloodUnitController::class, 'index'])
+        ->name('detail-darah.index');   // final: admin.detail-darah.index
+    Route::get('/detail-darah/{unit}', [BloodUnitController::class, 'show'])
+        ->name('detail-darah.show');    // final: admin.detail-darah.show
+    Route::get('/detail-darah/data', [BloodUnitController::class, 'data'])
+        ->name('detail-darah.data');    // final: admin.detail-darah.data
 
-    // Stok Darah
+    // ===== Stok Darah =====
     Route::resource('stok-darah', StokDarahController::class)->except(['show']);
-    Route::get('/stok',    [StokDarahController::class, 'index'])->name('stok.index');
-    Route::post('/stok',   [StokDarahController::class, 'store'])->name('stok.store');
+    Route::get('/stok',  [StokDarahController::class, 'index'])->name('stok.index');
+    Route::post('/stok', [StokDarahController::class, 'store'])->name('stok.store');
 
-    // Verifikasi Pemesanan
-    Route::get('verifikasi',                         [VerifikasiPemesananController::class, 'index'])->name('verifikasi.index');
-    Route::post('verifikasi/{pemesanan}',            [VerifikasiPemesananController::class, 'store'])->name('verifikasi.store');
-    Route::patch('verifikasi/{verifikasi}/status',   [VerifikasiPemesananController::class, 'updateStatus'])->name('verifikasi.updateStatus');
+    // ===== Verifikasi Pemesanan =====
+    Route::get('verifikasi',                       [VerifikasiPemesananController::class, 'index'])->name('verifikasi.index');
+    Route::post('verifikasi/{pemesanan}',          [VerifikasiPemesananController::class, 'store'])->name('verifikasi.store');
+    Route::patch('verifikasi/{verifikasi}/status', [VerifikasiPemesananController::class, 'updateStatus'])->name('verifikasi.updateStatus');
 
-    // Riwayat
+    // ===== Riwayat =====
     Route::get('riwayat', [RiwayatController::class, 'index'])->name('riwayat.index');
 
-    // Laporan
-    Route::get('laporan',                [LaporanController::class, 'index'])->name('laporan.index');
-    Route::get('laporan/export-pdf',     [LaporanController::class, 'exportPdf'])->name('laporan.exportPdf');
-    Route::get('laporan/export-excel',   [LaporanController::class, 'exportExcel'])->name('laporan.exportExcel');
+    // ===== Laporan =====
+    Route::get('laporan',              [LaporanController::class, 'index'])->name('laporan.index');
+    Route::get('laporan/export-pdf',   [LaporanController::class, 'exportPdf'])->name('laporan.exportPdf');
+    Route::get('laporan/export-excel', [LaporanController::class, 'exportExcel'])->name('laporan.exportExcel');
 
-    // Event Verifikasi
-    Route::get('event-verifikasi', [EventVerificationController::class, 'index'])
-        ->name('event-verifikasi.index');
-
-    Route::get('event-verifikasi/{event}', [EventVerificationController::class, 'show'])
-        ->name('event-verifikasi.show');
-
-    Route::post('event-verifikasi/{event}/decide', [EventVerificationController::class, 'decide'])
-        ->name('event-verifikasi.decide');
-
-    Route::get('event-verifikasi/{event}/surat', [EventVerificationController::class, 'downloadSurat'])
-        ->name('event-verifikasi.surat');
+    // ===== Event Verifikasi =====
+    Route::get('event-verifikasi',                   [EventVerificationController::class, 'index'])->name('event-verifikasi.index');
+    Route::get('event-verifikasi/{event}',           [EventVerificationController::class, 'show'])->name('event-verifikasi.show');
+    Route::post('event-verifikasi/{event}/decide',   [EventVerificationController::class, 'decide'])->name('event-verifikasi.decide');
+    Route::get('event-verifikasi/{event}/surat',     [EventVerificationController::class, 'downloadSurat'])->name('event-verifikasi.surat');
 });

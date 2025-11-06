@@ -7,6 +7,7 @@ use App\Models\PemesananDarah;
 use App\Models\VerifikasiPemesanan;
 use App\Models\RiwayatPemesanan;
 use App\Models\StokDarah;
+use App\Models\BloodUnit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
@@ -16,50 +17,40 @@ use App\Mail\VerifikasiPemesananMail;
 class VerifikasiPemesananController extends Controller
 {
     /**
-     * Daftar pemesanan dengan verifikasi terakhir (ringkas di tabel) + filter.
-     * NOTE: Dipaksa hanya menampilkan status 'pending'.
-     * Route: GET /admin/verifikasi
+     * Daftar pemesanan 'pending' + filter sederhana.
+     * GET /admin/verifikasi
      */
     public function index(Request $r)
     {
         $per    = (int) $r->input('per_page', 12);
         $q      = trim((string) $r->input('q'));
         $gol    = $r->input('gol');
-        $produk = $r->input('produk');      // ⬅️ baca filter produk dari UI
+        $produk = $r->input('produk');
 
-        $allowedGol = ['A','B','AB','O'];
-        if (!in_array($gol, $allowedGol, true)) {
-            $gol = null;
-        }
+        $allowedGol = ['A', 'B', 'AB', 'O'];
+        if (!in_array($gol, $allowedGol, true)) $gol = null;
 
         $query = PemesananDarah::query()
             ->with('verifikasiTerakhir')
-            ->where('status', 'pending')     // ✅ hanya tampilkan yang pending
+            ->where('status', 'pending')
             ->latest();
 
         if ($q !== '') {
             $query->where(function ($w) use ($q) {
                 $w->where('nama_pasien', 'like', "%{$q}%")
-                  ->orWhere('rs_pemesan', 'like', "%{$q}%");
+                    ->orWhere('rs_pemesan', 'like', "%{$q}%");
             });
         }
-
-        if (!empty($gol)) {
-           $query->where('gol_darah', 'like', $gol.'%');
-        }
-
-        if (!empty($produk)) {               // ⬅️ terapkan filter produk jika dipilih
-            $query->where('produk', $produk);
-        }
+        if (!empty($gol))    $query->where('gol_darah', 'like', $gol . '%');
+        if (!empty($produk)) $query->where('produk', $produk);
 
         $pemesanan = $query->paginate($per)->appends($r->query());
-
         return view('admin.verifikasi.index', compact('pemesanan'));
     }
 
     /**
-     * Buat/catat verifikasi untuk 1 pemesanan + sinkronkan status pemesanan.
-     * Route: POST /admin/verifikasi/{pemesanan}
+     * POST /admin/verifikasi/{pemesanan}
+     * Simpan verifikasi; saat approved, alokasikan unit per-kantong (FEFO).
      */
     public function store(Request $request, PemesananDarah $pemesanan)
     {
@@ -70,15 +61,25 @@ class VerifikasiPemesananController extends Controller
         ]);
 
         $isApproved = $data['status'] === 'approved';
+        $allocatedCodes = [];
 
-        DB::transaction(function () use ($data, $pemesanan, $isApproved) {
+        DB::transaction(function () use ($data, $pemesanan, $isApproved, &$allocatedCodes) {
             if ($isApproved) {
-                $this->approveAndReduceStock($pemesanan);
+                // 🔽 pilih unit & kurangi stok batch secara presisi
+                $allocatedCodes = $this->allocateUnitsAndSyncStock($pemesanan);
             }
 
+            // verifikasi terakhir (upsert)
             $this->saveVerification($pemesanan, $data);
-            $this->saveHistory($pemesanan, $data['status']);
 
+            // catat riwayat + cantumkan kode unit bila ada
+            $aksi = "verifikasi: {$data['status']}";
+            if ($isApproved && !empty($allocatedCodes)) {
+                $aksi .= ' (unit: ' . implode(',', $allocatedCodes) . ')';
+            }
+            $this->saveHistory($pemesanan, $data['status'], $aksi);
+
+            // sinkronkan status pemesanan
             $pemesanan->update(['status' => $data['status']]);
         });
 
@@ -90,7 +91,6 @@ class VerifikasiPemesananController extends Controller
                     ->send(new VerifikasiPemesananMail($pemesanan, $data['status']));
             }
         } catch (\Throwable $e) {
-            // Email gagal tidak membatalkan verifikasi
             return back()->with('success', 'Verifikasi disimpan, namun email gagal dikirim.');
         }
 
@@ -98,68 +98,67 @@ class VerifikasiPemesananController extends Controller
     }
 
     /**
-     * Kurangi stok jika disetujui
+     * FEFO per-kantong dengan tabel blood_units + sinkron stok_darah per-batch.
+     * Mengembalikan array kode_unit yang dialokasikan.
      */
-    private function approveAndReduceStock(PemesananDarah $pemesanan): void
+    private function allocateUnitsAndSyncStock(PemesananDarah $pemesanan): array
     {
         try {
-            $criteria = [
-                'produk'    => $pemesanan->produk,
-                'gol_darah' => $pemesanan->gol_darah,
-            ];
+            $needed = (int) $pemesanan->jumlah_kantong;
 
-            if ($pemesanan->rhesus) {
-                $criteria['rhesus'] = $pemesanan->rhesus;
-            }
-
-            // Lock stok berdasarkan kriterianya (FEFO)
-            $batchList = StokDarah::where($criteria)
+            // 1) Cari unit available yang cocok (FEFO by tgl_kadaluarsa)
+            $units = BloodUnit::query()
+                ->where('produk', $pemesanan->produk)
+                ->where('gol_darah', $pemesanan->gol_darah)
+                ->when($pemesanan->rhesus, fn($q) => $q->where('rhesus', $pemesanan->rhesus))
+                ->where('status', 'available')
+                ->whereDate('tgl_kadaluarsa', '>=', now()->toDateString())
                 ->orderBy('tgl_kadaluarsa')
-                ->lockForUpdate()
+                ->lockForUpdate() // cegah race
+                ->limit($needed)
                 ->get();
 
-            $needed = (int) $pemesanan->jumlah_kantong;
-            $total  = $batchList->sum('jumlah');
-
-            // Stok tidak cukup
-            if ($total < $needed) {
+            if ($units->count() < $needed) {
                 throw ValidationException::withMessages([
-                    'status' => "Stok kurang. Dibutuhkan {$needed}, tersedia {$total}.",
+                    'status' => "Stok unit tidak mencukupi. Dibutuhkan {$needed}, tersedia {$units->count()}.",
                 ]);
             }
 
-            // Kurangi stok per batch
-            foreach ($batchList as $batch) {
-                if ($needed <= 0) break;
-
-                $take = min($batch->jumlah, $needed);
-                $batch->decrement('jumlah', $take);
-                $needed -= $take;
-            }
-
-            // Jika masih ada sisa (harusnya tidak terjadi)
-            if ($needed > 0) {
-                throw ValidationException::withMessages([
-                    'status' => 'Terjadi konflik stok saat pengurangan. Silakan coba ulang.',
+            // 2) Tandai unit sebagai dispensed & kaitkan ke pemesanan
+            foreach ($units as $u) {
+                $u->update([
+                    'status'       => 'dispensed',
+                    'pemesanan_id' => $pemesanan->id,
+                    'penerima'     => $pemesanan->rs_pemesan,
                 ]);
             }
 
+            // 3) Sinkronkan stok_darah.jumlah per-batch PERSIS sebanyak unit yang terpakai
+            //    (hindari scan semua batch; pakai groupBy stok_id dari unit yang dipilih)
+            $byBatch = $units->groupBy('stok_id')->map->count();
+            foreach ($byBatch as $stokId => $count) {
+                // lock baris stok yang relevan saja
+                $batch = StokDarah::whereKey($stokId)->lockForUpdate()->first();
+                if ($batch) {
+                    // batas bawah nol (jaga-jaga)
+                    $newVal = max(0, (int) $batch->jumlah - (int) $count);
+                    $batch->update(['jumlah' => $newVal]);
+                }
+            }
+
+            return $units->pluck('kode_unit')->all();
         } catch (\Throwable $e) {
-
-            // Jika error bawaan ValidationException → lempar lagi agar tampil ke user
             if ($e instanceof ValidationException) {
                 throw $e;
             }
-
-            // Untuk error tak terduga, bungkus dengan pesan lebih ramah
             throw ValidationException::withMessages([
-                'status' => 'Terjadi kesalahan sistem saat mengurangi stok. Silakan coba kembali.',
+                'status' => 'Terjadi kesalahan saat mengalokasikan unit. Silakan coba kembali.',
             ]);
         }
     }
 
     /**
-     * Simpan data verifikasi (upsert by pemesanan_id untuk menghindari duplikasi).
+     * Simpan data verifikasi (upsert by pemesanan_id).
      */
     private function saveVerification(PemesananDarah $pemesanan, array $data): void
     {
@@ -179,9 +178,9 @@ class VerifikasiPemesananController extends Controller
     }
 
     /**
-     * Simpan riwayat verifikasi.
+     * Simpan riwayat verifikasi (boleh diberi keterangan tambahan di $aksi).
      */
-    private function saveHistory(PemesananDarah $pemesanan, string $status): void
+    private function saveHistory(PemesananDarah $pemesanan, string $status, ?string $aksi = null): void
     {
         RiwayatPemesanan::create([
             'pemesanan_id'   => $pemesanan->id,
@@ -191,13 +190,12 @@ class VerifikasiPemesananController extends Controller
             'rhesus'         => $pemesanan->rhesus,
             'jumlah_kantong' => $pemesanan->jumlah_kantong,
             'produk'         => $pemesanan->produk,
-            'aksi'           => "verifikasi: {$status}",
+            'aksi'           => $aksi ?? "verifikasi: {$status}",
         ]);
     }
 
     /**
-     * Koreksi status pada entri verifikasi tertentu + sinkronkan status pemesanan.
-     * Route: PATCH /admin/verifikasi/{verifikasi}/status
+     * PATCH /admin/verifikasi/{verifikasi}/status
      */
     public function updateStatus(Request $r, VerifikasiPemesanan $verifikasi)
     {
@@ -207,16 +205,13 @@ class VerifikasiPemesananController extends Controller
         ]);
 
         DB::transaction(function () use ($verifikasi, $payload) {
-            // Update entri verifikasi
             $verifikasi->update([
                 'status' => $payload['status'],
-                // 'note' => $payload['note'] ?? $verifikasi->note, // aktifkan bila kolom ada
+                // 'note' => $payload['note'] ?? $verifikasi->note,
             ]);
 
-            // Sinkronkan status pemesanan
             $verifikasi->pemesanan->update(['status' => $payload['status']]);
 
-            // Catat riwayat koreksi
             RiwayatPemesanan::create([
                 'pemesanan_id'   => $verifikasi->pemesanan_id,
                 'nama'           => $verifikasi->pemesanan->nama_pasien,

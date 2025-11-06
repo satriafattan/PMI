@@ -13,45 +13,43 @@ class EventVerificationController extends Controller
 {
     public function index(Request $r)
     {
-        $per = (int) $r->input('per_page', 12);
-        $q   = $r->input('q');
-        $st  = $r->input('status');  // pending|approved|rejected|all
-        $tgl = $r->input('tanggal'); // YYYY-MM-DD
+        // Ambil "Baris" (prioritaskan ?per, fallback ke ?per_page), default 10
+        $per = (int) ($r->integer('per') ?? $r->integer('per_page') ?? 10);
+
+        $q  = trim((string) $r->input('q', ''));
+        $st = strtolower((string) $r->input('status', '')); // '', pending|approved|rejected
 
         $query = EventSchedule::query()
             ->with('verifikasiTerakhir')
             ->latest();
 
-        if ($q) {
+        if ($q !== '') {
             $query->where(function ($w) use ($q) {
-                $w->where('nama', 'like', "%{$q}%")
-                  ->orWhere('institusi_pemohon', 'like', "%{$q}%")
-                  ->orWhere('email', 'like', "%{$q}%")
-                  ->orWhere('jenis_event', 'like', "%{$q}%")
-                  ->orWhere('lokasi_lengkap', 'like', "%{$q}%");
+                $like = "%{$q}%";
+                $w->where('nama', 'like', $like)
+                    ->orWhere('institusi_pemohon', 'like', $like)
+                    ->orWhere('email', 'like', $like)
+                    ->orWhere('jenis_event', 'like', $like)
+                    ->orWhere('lokasi_lengkap', 'like', $like);
             });
         }
 
-        if ($st && $st !== 'all') {
+        if (in_array($st, ['pending', 'approved', 'rejected'], true)) {
             $query->where('status', $st);
-        }
-
-        if ($tgl) {
-            $query->whereDate('tanggal_event', $tgl);
         }
 
         $items = $query->paginate($per)->appends($r->query());
 
         return view('admin.event-verifikasi.index', [
-            'items'   => $items,
-            'filters' => [
-                'q'        => $q,
-                'status'   => $st,
-                'tanggal'  => $tgl,
-                'per_page' => $per,
+            'items'    => $items,
+            'filters'  => [
+                'q'   => $q,
+                'status' => $st,
+                'per' => $per,
             ],
         ]);
     }
+
 
     public function show(EventSchedule $event)
     {
