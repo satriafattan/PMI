@@ -80,6 +80,61 @@ class DashboardController extends Controller
         $stokKritis = $statsStok->kritis ?? 0;
         $totalStok = $statsStok->total ?? 0;
 
+        // ===== DATA BARU UNTUK ANALYTICS =====
+
+        // 1. Trend pemesanan 6 bulan terakhir (untuk line chart)
+        $trendPemesanan = collect();
+        for ($i = 5; $i >= 0; $i--) {
+            $month = Carbon::now()->subMonths($i);
+            $count = PemesananDarah::whereYear('tanggal_pemesanan', $month->year)
+                ->whereMonth('tanggal_pemesanan', $month->month)
+                ->count();
+            $trendPemesanan->push([
+                'month' => $month->format('M Y'),
+                'count' => $count
+            ]);
+        }
+
+        // 2. Top 5 Rumah Sakit Pemesan (bulan ini)
+        $topHospitals = PemesananDarah::select('rs_pemesan', DB::raw('COUNT(*) as total'))
+            ->where('tanggal_pemesanan', '>=', $bulanIni)
+            ->groupBy('rs_pemesan')
+            ->orderByDesc('total')
+            ->limit(5)
+            ->get();
+
+        // 3. Rata-rata waktu verifikasi (dalam jam)
+        $avgVerificationTime = DB::table('pemesanan_darah as p')
+            ->join('verifikasi_pemesanan as v', 'p.id', '=', 'v.pemesanan_id')
+            ->whereNotNull('v.created_at')
+            ->where('v.status', '!=', 'pending')
+            ->where('p.created_at', '>=', $bulanIni)
+            ->select(DB::raw('AVG(TIMESTAMPDIFF(HOUR, p.created_at, v.updated_at)) as avg_hours'))
+            ->value('avg_hours');
+
+        // 4. Distribusi Status Pemesanan (untuk pie chart)
+        $statusDistribution = PemesananDarah::select('status', DB::raw('COUNT(*) as count'))
+            ->groupBy('status')
+            ->pluck('count', 'status')
+            ->toArray();
+
+        // 5. Stock Alert Level (golongan darah dengan stok < 30)
+        $stockAlerts = StokDarah::select('gol_darah', 'rhesus', DB::raw('SUM(jumlah) as total'))
+            ->whereDate('tgl_kadaluarsa', '>=', now()->toDateString())
+            ->groupBy('gol_darah', 'rhesus')
+            ->havingRaw('SUM(jumlah) < 30')
+            ->orderBy('total')
+            ->get();
+
+        // 6. Produk Terlaris (bulan ini)
+        $topProducts = RiwayatPemesanan::select('produk', DB::raw('SUM(jumlah_kantong) as total'))
+            ->where('tanggal', '>=', $bulanIni)
+            ->groupBy('produk')
+            ->orderByDesc('total')
+            ->limit(6)
+            ->pluck('total', 'produk')
+            ->toArray();
+
         return view('admin.dashboard', [
             'stats' => [
                 'stok' => $stokPerGolongan,
@@ -97,7 +152,15 @@ class DashboardController extends Controller
                     'diproses' => $permintaanDiproses
                 ],
                 'stok_kritis' => $stokKritis,
-                'total_stok' => $totalStok
+                'total_stok' => $totalStok,
+
+                // Analytics baru
+                'trend_pemesanan' => $trendPemesanan,
+                'top_hospitals' => $topHospitals,
+                'avg_verification_hours' => round($avgVerificationTime ?? 0, 1),
+                'status_distribution' => $statusDistribution,
+                'stock_alerts' => $stockAlerts,
+                'top_products' => $topProducts,
             ]
         ]);
     }

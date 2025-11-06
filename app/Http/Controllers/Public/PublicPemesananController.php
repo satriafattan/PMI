@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StorePemesananRequest;
 use App\Models\PemesananDarah;
 use App\Models\RiwayatPemesanan;
+use App\Events\PemesananBaruEvent;
 use Illuminate\Support\Facades\DB;
 
 class PublicPemesananController extends Controller
@@ -78,6 +79,9 @@ class PublicPemesananController extends Controller
 
             return $order;
         });
+
+        // 🔔 BROADCAST: Notifikasi real-time ke admin
+        event(new PemesananBaruEvent($order));
 
         return redirect()
             ->route('pemesanan.create')

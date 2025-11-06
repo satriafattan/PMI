@@ -18,6 +18,7 @@ use App\Http\Controllers\Admin\VerifikasiPemesananController;
 use App\Http\Controllers\Admin\RiwayatController;
 use App\Http\Controllers\Admin\LaporanController;
 use App\Http\Controllers\Admin\EventVerificationController;
+use App\Http\Controllers\Admin\NotificationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -66,6 +67,9 @@ Route::post('/admin/logout', [AuthController::class, 'logout'])->name('admin.log
 Route::middleware('auth:admin')->prefix('admin')->name('admin.')->group(function () {
 
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
+    // ===== API Notifikasi (untuk polling) =====
+    Route::get('/api/notifications', [NotificationController::class, 'getPendingNotifications'])->name('api.notifications');
 
     // ===== Detail Darah (Blood Units) =====
     // ==> PERBAIKAN: pakai nama rute 'detail-darah.*' supaya sesuai dengan pemanggilan di Blade.

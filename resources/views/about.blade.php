@@ -1,169 +1,750 @@
 {{-- resources/views/about.blade.php --}}
 @extends('layouts.app')
-<x-navbar />
-
 
 @section('title', 'Tentang Kami – UDD PMI Provinsi Lampung')
 @section('content')
 <div class="min-h-screen bg-white text-slate-800">
+  <x-navbar />
 
-  {{-- HERO --}}
-  <section class="relative overflow-hidden bg-slate-50">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24 text-center">
-      <h1 class="text-3xl sm:text-5xl font-extrabold tracking-tight text-slate-800">Tentang Kami</h1>
-      <div class="mt-3 flex justify-center">
-        <span class="h-1 w-16 rounded-full bg-red-600"></span>
+  {{-- HERO - Enhanced Design --}}
+  <section class="relative overflow-hidden bg-gradient-to-br from-red-700 via-red-600 to-rose-500">
+    {{-- Animated background elements --}}
+    <div class="pointer-events-none absolute inset-0">
+      <div class="absolute -left-24 -top-24 h-96 w-96 animate-pulse rounded-full bg-white/10 blur-3xl"></div>
+      <div class="absolute -bottom-32 -right-32 h-96 w-96 animate-pulse rounded-full bg-rose-300/20 blur-3xl"
+           style="animation-delay: 1s;"></div>
+      <div class="absolute left-1/2 top-1/2 h-64 w-64 -translate-x-1/2 -translate-y-1/2 animate-pulse rounded-full bg-white/5 blur-3xl"
+           style="animation-delay: 2s;"></div>
+    </div>
+
+    <div class="relative mx-auto max-w-7xl px-4 py-20 sm:px-6 sm:py-32 lg:px-8">
+      <div class="text-center text-white">
+        <div
+             class="mx-auto inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 text-sm font-medium ring-1 ring-white/20 backdrop-blur-sm">
+          <svg class="h-4 w-4"
+               fill="currentColor"
+               viewBox="0 0 20 20">
+            <path fill-rule="evenodd"
+                  d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                  clip-rule="evenodd" />
+          </svg>
+          Kepercayaan & Dedikasi
+        </div>
+
+        <h1 class="mt-6 text-5xl font-extrabold leading-tight tracking-tight sm:text-6xl lg:text-7xl">
+          Tentang
+          <span class="block bg-gradient-to-r from-white to-red-100 bg-clip-text text-transparent">UDD PMI Provinsi Lampung</span>
+        </h1>
+
+        <p class="mx-auto mt-6 max-w-3xl text-lg leading-relaxed text-white/90 sm:text-xl">
+          Membangun masa depan kesehatan yang lebih baik melalui <strong class="font-semibold text-white">inovasi,
+            dedikasi, dan pelayanan terdepan</strong> untuk seluruh masyarakat Indonesia.
+        </p>
+
+        {{-- Stats --}}
+        <div class="mx-auto mt-12 grid max-w-4xl grid-cols-3 gap-6 sm:gap-8">
+          <div class="group">
+            <div
+                 class="mb-3 inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-white/10 ring-1 ring-white/20 backdrop-blur-sm transition group-hover:scale-110 group-hover:bg-white/20">
+              <svg class="h-7 w-7 text-white"
+                   fill="none"
+                   stroke="currentColor"
+                   viewBox="0 0 24 24">
+                <path stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+              </svg>
+            </div>
+            <div class="text-3xl font-extrabold tracking-tight"
+                 data-counter>25</div>
+            <div class="mt-1 text-sm text-white/80">Tahun Pengalaman</div>
+          </div>
+          <div class="group">
+            <div
+                 class="mb-3 inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-white/10 ring-1 ring-white/20 backdrop-blur-sm transition group-hover:scale-110 group-hover:bg-white/20">
+              <svg class="h-7 w-7 text-white"
+                   fill="none"
+                   stroke="currentColor"
+                   viewBox="0 0 24 24">
+                <path stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+              </svg>
+            </div>
+            <div class="text-3xl font-extrabold tracking-tight"
+                 data-counter>1000000</div>
+            <div class="mt-1 text-sm text-white/80">Pasien Dilayani</div>
+          </div>
+          <div class="group">
+            <div
+                 class="mb-3 inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-white/10 ring-1 ring-white/20 backdrop-blur-sm transition group-hover:scale-110 group-hover:bg-white/20">
+              <svg class="h-7 w-7 text-white"
+                   fill="none"
+                   stroke="currentColor"
+                   viewBox="0 0 24 24">
+                <path stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+              </svg>
+            </div>
+            <div class="text-3xl font-extrabold tracking-tight"
+                 data-counter>50</div>
+            <div class="mt-1 text-sm text-white/80">Tenaga Medis Profesional</div>
+          </div>
+        </div>
       </div>
-      <p class="mt-6 max-w-3xl mx-auto text-slate-600">
-        Membangun masa depan kesehatan yang lebih baik melalui inovasi, dedikasi, dan pelayanan terdepan untuk seluruh masyarakat Indonesia.
-      </p>
+    </div>
+
+    {{-- Scroll Indicator --}}
+    <div class="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce">
+      <div class="flex flex-col items-center gap-2 text-white/70">
+        <span class="text-xs font-medium">Scroll untuk melihat lebih lanjut</span>
+        <svg class="h-6 w-6"
+             fill="none"
+             stroke="currentColor"
+             viewBox="0 0 24 24">
+          <path stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+        </svg>
+      </div>
     </div>
   </section>
 
-  {{-- PROFIL PERUSAHAAN --}}
-  <section class="py-14 sm:py-20">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="grid lg:grid-cols-2 gap-10 items-start">
+  {{-- PROFIL PERUSAHAAN - Enhanced Design --}}
+  <section class="relative bg-gradient-to-b from-white to-slate-50 py-20 sm:py-28">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div class="mb-12 text-center">
+        <div
+             class="mx-auto inline-flex items-center gap-2 rounded-full bg-red-100 px-4 py-1.5 text-sm font-semibold text-red-700">
+          <span class="relative flex h-2 w-2">
+            <span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-red-400 opacity-75"></span>
+            <span class="relative inline-flex h-2 w-2 rounded-full bg-red-600"></span>
+          </span>
+          Profil Institusi
+        </div>
+        <h2 class="mt-4 text-4xl font-extrabold text-slate-900 sm:text-5xl">
+          Mengenal UDD PMI Lampung
+        </h2>
+      </div>
+
+      <div class="grid items-center gap-12 lg:grid-cols-2 lg:gap-16">
+        {{-- Left Content --}}
         <div>
-          <h2 class="text-2xl sm:text-3xl font-bold">Profil Perusahaan</h2>
-          <p class="mt-3 text-slate-600">
-            Sebagai institusi kesehatan terdepan, kami berkomitmen untuk memberikan pelayanan medis berkualitas tinggi
-            dengan mengintegrasikan teknologi modern dan pendekatan humanis dalam setiap aspek pelayanan.
-          </p>
-          <p class="mt-3 text-slate-600">
-            Dengan pengalaman lebih dari dua dekade, kami terus berinovasi untuk memenuhi kebutuhan kesehatan masyarakat
-            yang berkembang.
-          </p>
-
-          {{-- Stat cards --}}
-          <div class="mt-6 grid grid-cols-3 gap-4">
-            @foreach ([
-              ['25+', 'Tahun Pengalaman'],
-              ['1M+', 'Pasien Dilayani'],
-              ['50+', 'Dokter Spesialis'],
-            ] as $s)
-              <div class="rounded-xl border border-slate-200 bg-white shadow-sm p-4">
-                <div class="text-2xl font-extrabold text-red-600">{{ $s[0] }}</div>
-                <div class="text-xs text-slate-500 mt-1">{{ $s[1] }}</div>
-              </div>
-            @endforeach
-          </div>
-        </div>
-
-        {{-- Ilustrasi / Gambar --}}
-        <div class="relative">
-          <div class="absolute -inset-2 rounded-3xl bg-red-200/40 blur"></div>
-          <div class="relative aspect-[4/3] rounded-3xl bg-white grid place-items-center text-slate-500 text-2xl shadow-xl ring-1 ring-slate-200">
-            Medical Team
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  {{-- VISI & MISI --}}
-  <section class="py-14 sm:py-20 bg-slate-50">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-      <h2 class="text-2xl sm:text-3xl font-bold">Visi & Misi</h2>
-      <p class="mt-2 text-slate-600 max-w-2xl mx-auto">Fondasi nilai dan tujuan yang mengarahkan setiap langkah perjalanan kami.</p>
-
-      {{-- Tabs --}}
-      <div class="mt-6 inline-flex rounded-2xl border border-slate-200 bg-white p-1">
-        <button data-tab="visi" class="tab-btn px-4 py-2 rounded-xl text-sm font-medium bg-red-600 text-white shadow">Visi</button>
-        <button data-tab="misi" class="tab-btn px-4 py-2 rounded-xl text-sm font-medium hover:bg-slate-50">Misi</button>
-      </div>
-
-      {{-- Konten Visi & Misi --}}
-      <div class="mt-8">
-        <div id="tab-visi" class="tab-panel">
-          <div class="grid md:grid-cols-3 gap-6 text-left">
-            @foreach ([
-              ['Kepemimpinan Global','Menjadi institusi kesehatan terdepan di Asia Tenggara yang diakui secara internasional.'],
-              ['Aksesibilitas Universal','Setiap individu memiliki akses layanan kesehatan berkualitas tanpa memandang latar belakang.'],
-              ['Inovasi Berkelanjutan','Mengintegrasikan teknologi terdepan dengan pendekatan medis holistik.'],
-            ] as $v)
-              <div class="p-6 rounded-2xl border border-slate-200 bg-white shadow-sm hover:shadow transition">
-                <div class="h-10 w-10 rounded-xl bg-red-100 text-red-600 grid place-items-center mb-3">★</div>
-                <div class="font-semibold">{{ $v[0] }}</div>
-                <p class="mt-2 text-sm text-slate-600">{{ $v[1] }}</p>
-              </div>
-            @endforeach
-          </div>
-        </div>
-
-        <div id="tab-misi" class="tab-panel hidden">
-          <div class="grid md:grid-cols-3 gap-6 text-left">
-            @foreach ([
-              ['Pelayanan Aman','Menjaga standar keamanan donor & transfusi sesuai protokol WHO.'],
-              ['Pendidikan & Riset','Mendorong pendidikan, riset, dan kolaborasi lintas disiplin.'],
-              ['Respons 24/7','Menyiapkan respon cepat keadaan darurat kapan pun.'],
-            ] as $m)
-              <div class="p-6 rounded-2xl border border-slate-200 bg-white shadow-sm hover:shadow transition">
-                <div class="h-10 w-10 rounded-xl bg-red-100 text-red-600 grid place-items-center mb-3">✓</div>
-                <div class="font-semibold">{{ $m[0] }}</div>
-                <p class="mt-2 text-sm text-slate-600">{{ $m[1] }}</p>
-              </div>
-            @endforeach
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  {{-- NILAI-NILAI --}}
-  <section class="py-14 sm:py-20">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-      <h2 class="text-2xl sm:text-3xl font-bold">Nilai-Nilai Kami</h2>
-      <p class="mt-2 text-slate-600 max-w-2xl mx-auto">Prinsip fundamental yang menjadi landasan tindakan dan keputusan kami.</p>
-
-      <div class="mt-8 grid sm:grid-cols-2 lg:grid-cols-5 gap-6 text-left">
-        @for ($i=0; $i<5; $i++)
-          <div class="p-6 rounded-2xl border border-slate-200 bg-white shadow-sm hover:shadow transition">
-            <div class="h-12 w-12 rounded-full bg-red-600 text-white grid place-items-center shadow ring-4 ring-white mb-3">☆</div>
-            <div class="font-semibold">Integritas</div>
-            <p class="mt-2 text-sm text-slate-600">
-              Berkomitmen pada kejujuran, transparansi, dan etika profesional dalam setiap pelayanan.
+          <div class="space-y-4 text-lg leading-relaxed text-slate-600">
+            <p>
+              Sebagai <strong class="font-semibold text-slate-900">institusi kesehatan terdepan</strong>, kami
+              berkomitmen untuk memberikan pelayanan medis berkualitas tinggi dengan mengintegrasikan teknologi modern
+              dan pendekatan humanis dalam setiap aspek pelayanan.
+            </p>
+            <p>
+              Dengan pengalaman lebih dari <strong class="font-semibold text-red-600">dua dekade</strong>, kami terus
+              berinovasi untuk memenuhi kebutuhan kesehatan masyarakat yang berkembang.
+            </p>
+            <p>
+              Didukung oleh <strong class="font-semibold text-slate-900">tim medis profesional</strong> dan peralatan
+              canggih, kami memastikan setiap unit darah yang disalurkan telah melalui proses screening ketat sesuai
+              standar internasional.
             </p>
           </div>
-        @endfor
-      </div>
-    </div>
-  </section>
 
-  {{-- CTA GRADIENT --}}
-  <section class="py-16 sm:py-20">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="relative overflow-hidden rounded-3xl bg-gradient-to-r from-red-600 to-rose-500 text-white p-8 sm:p-12 text-center">
-        <div class="absolute -right-16 -top-16 h-48 w-48 bg-white/10 rounded-full blur-2xl"></div>
-        <h3 class="text-2xl sm:text-3xl font-bold">Berkolaborasi Dengan Kami</h3>
-        <p class="mt-2 text-white/90 max-w-2xl mx-auto">
-          Mari bersama-sama membangun masa depan kesehatan yang lebih baik untuk Indonesia.
-        </p>
-        <div class="mt-6 flex flex-wrap gap-3 justify-center">
-          <a href="{{ url('/karir') }}" class="px-5 py-3 rounded-xl bg-white text-red-700 font-semibold hover:bg-slate-100">Jadwalkan Event!</a>
-          <a href="{{ url('/kontak') }}" class="px-5 py-3 rounded-xl border border-white/40 text-white hover:bg-white/10">Hubungi Kami</a>
+          {{-- Achievement Cards --}}
+          <div class="mt-8 grid grid-cols-3 gap-4">
+            @foreach ([
+              ['25+', 'Tahun Pengalaman', '<svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" /></svg>'],
+              ['1M+', 'Pasien Dilayani', '<svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" /></svg>'],
+              ['50+', 'Tenaga Medis', '<svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" /></svg>'],
+            ] as $s)
+              <div class="group relative">
+                <div
+                     class="absolute -inset-0.5 rounded-2xl bg-gradient-to-br from-red-500/30 to-rose-400/20 opacity-0 blur transition duration-300 group-hover:opacity-100">
+                </div>
+                <div
+                     class="relative rounded-2xl border-2 border-slate-200 bg-white p-4 shadow-lg transition duration-300 group-hover:border-red-200 group-hover:shadow-xl">
+                  <div class="mb-2 flex h-8 w-8 items-center justify-center rounded-lg bg-red-100 text-red-600">
+                    {!! $s[2] !!}
+                  </div>
+                  <div class="text-3xl font-extrabold text-red-600"
+                       data-counter-stat>{{ $s[0] }}</div>
+                  <div class="mt-1 text-xs font-medium text-slate-500">{{ $s[1] }}</div>
+                </div>
+              </div>
+            @endforeach
+          </div>
+
+          {{-- CTA Button --}}
+          <div class="mt-8">
+            <a href="{{ url('/pemesanan') }}"
+               class="inline-flex items-center gap-2 rounded-xl bg-red-600 px-6 py-3 font-semibold text-white shadow-lg transition hover:bg-red-700 hover:shadow-xl">
+              Ajukan Permintaan Darah
+              <svg class="h-5 w-5"
+                   fill="none"
+                   stroke="currentColor"
+                   viewBox="0 0 24 24">
+                <path stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M13 7l5 5m0 0l-5 5m5-5H6" />
+              </svg>
+            </a>
+          </div>
+        </div>
+
+        {{-- Right Content - Image --}}
+        <div class="relative">
+          <div class="absolute -inset-4 rounded-3xl bg-gradient-to-r from-red-200/50 to-rose-200/50 blur-2xl"></div>
+          <div class="relative overflow-hidden rounded-3xl bg-white shadow-2xl ring-1 ring-slate-200">
+            <div class="aspect-[4/3] bg-gradient-to-br from-slate-50 to-slate-100 p-12">
+              <div class="flex h-full items-center justify-center">
+                <div class="text-center">
+                  <svg class="mx-auto h-40 w-40 text-slate-300"
+                       fill="none"
+                       stroke="currentColor"
+                       viewBox="0 0 24 24">
+                    <path stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="1.5"
+                          d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                  </svg>
+                  <p class="mt-4 text-lg font-semibold text-slate-400">Tim Medis Profesional</p>
+                </div>
+              </div>
+            </div>
+
+            {{-- Image Overlay Badge --}}
+            <div class="border-t border-slate-100 bg-white p-6">
+              <div class="flex items-center justify-center gap-6 text-center">
+                <div>
+                  <div class="text-2xl font-bold text-red-600">ISO</div>
+                  <div class="mt-1 text-xs text-slate-600">Certified</div>
+                </div>
+                <div class="h-8 w-px bg-slate-200"></div>
+                <div>
+                  <div class="text-2xl font-bold text-red-600">24/7</div>
+                  <div class="mt-1 text-xs text-slate-600">Available</div>
+                </div>
+                <div class="h-8 w-px bg-slate-200"></div>
+                <div>
+                  <div class="text-2xl font-bold text-red-600">100%</div>
+                  <div class="mt-1 text-xs text-slate-600">Safe</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {{-- Floating Badge --}}
+          <div class="absolute -left-6 top-12 rounded-2xl bg-white p-4 shadow-2xl ring-1 ring-slate-200">
+            <div class="flex items-center gap-3">
+              <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-green-100 text-green-600">
+                <svg class="h-6 w-6"
+                     fill="none"
+                     stroke="currentColor"
+                     viewBox="0 0 24 24">
+                  <path stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M5 13l4 4L19 7" />
+                </svg>
+              </div>
+              <div>
+                <div class="text-sm font-bold text-slate-900">Terakreditasi</div>
+                <div class="text-xs text-slate-500">Standar Nasional</div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
   </section>
+
+  {{-- VISI & MISI - Enhanced Design --}}
+  <section class="relative overflow-hidden bg-white py-20 sm:py-28">
+    {{-- Background Pattern --}}
+    <div class="pointer-events-none absolute inset-0 opacity-40">
+      <div class="absolute left-0 top-0 h-96 w-96 rounded-full bg-red-100 blur-3xl"></div>
+      <div class="absolute bottom-0 right-0 h-96 w-96 rounded-full bg-rose-100 blur-3xl"></div>
+    </div>
+
+    <div class="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div class="text-center">
+        <div
+             class="mx-auto inline-flex items-center gap-2 rounded-full bg-red-100 px-4 py-1.5 text-sm font-semibold text-red-700">
+          <svg class="h-4 w-4"
+               fill="currentColor"
+               viewBox="0 0 20 20">
+            <path d="M10.394 2.08a1 1 0 00-.788 0l-7 3a1 1 0 000 1.84L5.25 8.051a.999.999 0 01.356-.257l4-1.714a1 1 0 11.788 1.838L7.667 9.088l1.94.831a1 1 0 00.787 0l7-3a1 1 0 000-1.838l-7-3zM3.31 9.397L5 10.12v4.102a8.969 8.969 0 00-1.05-.174 1 1 0 01-.89-.89 11.115 11.115 0 01.25-3.762zM9.3 16.573A9.026 9.026 0 007 14.935v-3.957l1.818.78a3 3 0 002.364 0l5.508-2.361a11.026 11.026 0 01.25 3.762 1 1 0 01-.89.89 8.968 8.968 0 00-5.35 2.524 1 1 0 01-1.4 0zM6 18a1 1 0 001-1v-2.065a8.935 8.935 0 00-2-.712V17a1 1 0 001 1z" />
+          </svg>
+          Visi & Misi
+        </div>
+        <h2 class="mt-4 text-4xl font-extrabold text-slate-900 sm:text-5xl">
+          Fondasi <span class="bg-gradient-to-r from-red-600 to-rose-500 bg-clip-text text-transparent">Kami</span>
+        </h2>
+        <p class="mx-auto mt-3 max-w-2xl text-lg text-slate-600">
+          Nilai dan tujuan yang mengarahkan setiap langkah perjalanan kami.
+        </p>
+      </div>
+
+      {{-- Enhanced Tabs --}}
+      <div class="mt-10 flex justify-center">
+        <div class="inline-flex rounded-2xl border-2 border-slate-200 bg-white p-1.5 shadow-lg">
+          <button data-tab="visi"
+                  class="tab-btn rounded-xl px-6 py-3 text-sm font-semibold transition-all duration-200 bg-red-600 text-white shadow-md">
+            <div class="flex items-center gap-2">
+              <svg class="h-5 w-5"
+                   fill="none"
+                   stroke="currentColor"
+                   viewBox="0 0 24 24">
+                <path stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                <path stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+              </svg>
+              Visi Kami
+            </div>
+          </button>
+          <button data-tab="misi"
+                  class="tab-btn rounded-xl px-6 py-3 text-sm font-semibold text-slate-700 transition-all duration-200 hover:bg-slate-50">
+            <div class="flex items-center gap-2">
+              <svg class="h-5 w-5"
+                   fill="none"
+                   stroke="currentColor"
+                   viewBox="0 0 24 24">
+                <path stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+              </svg>
+              Misi Kami
+            </div>
+          </button>
+        </div>
+      </div>
+
+      {{-- Tab Content --}}
+      <div class="mt-12">
+        {{-- Visi --}}
+        <div id="tab-visi"
+             class="tab-panel">
+          <div class="grid gap-6 md:grid-cols-3">
+            @foreach ([
+              ['Kepemimpinan Global', 'Menjadi institusi kesehatan terdepan di Asia Tenggara yang diakui secara internasional.', '<svg class="h-7 w-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>', 'blue'],
+              ['Aksesibilitas Universal', 'Setiap individu memiliki akses layanan kesehatan berkualitas tanpa memandang latar belakang.', '<svg class="h-7 w-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" /></svg>', 'green'],
+              ['Inovasi Berkelanjutan', 'Mengintegrasikan teknologi terdepan dengan pendekatan medis holistik.', '<svg class="h-7 w-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" /></svg>', 'purple'],
+            ] as $v)
+              <div class="group relative text-left">
+                <div
+                     class="absolute -inset-0.5 rounded-3xl bg-gradient-to-br from-{{ $v[3] }}-500/30 to-{{ $v[3] }}-400/20 opacity-0 blur transition duration-300 group-hover:opacity-100">
+                </div>
+                <div
+                     class="relative h-full rounded-3xl border-2 border-slate-200 bg-white p-6 shadow-lg transition duration-300 group-hover:border-{{ $v[3] }}-200 group-hover:shadow-2xl">
+                  <div
+                       class="mb-4 inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-{{ $v[3] }}-600 to-{{ $v[3] }}-500 text-white shadow-lg ring-4 ring-white">
+                    {!! $v[2] !!}
+                  </div>
+                  <h3 class="text-xl font-bold text-slate-900">{{ $v[0] }}</h3>
+                  <p class="mt-3 leading-relaxed text-slate-600">{{ $v[1] }}</p>
+                </div>
+              </div>
+            @endforeach
+          </div>
+        </div>
+
+        {{-- Misi --}}
+        <div id="tab-misi"
+             class="tab-panel hidden">
+          <div class="grid gap-6 md:grid-cols-3">
+            @foreach ([
+              ['Pelayanan Aman', 'Menjaga standar keamanan donor & transfusi sesuai protokol WHO dan standar internasional.', '<svg class="h-7 w-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" /></svg>', 'red'],
+              ['Pendidikan & Riset', 'Mendorong pendidikan, penelitian, dan kolaborasi lintas disiplin untuk kemajuan medis.', '<svg class="h-7 w-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" /></svg>', 'indigo'],
+              ['Respons 24/7', 'Menyiapkan tim responsif untuk keadaan darurat kesehatan kapan pun dibutuhkan.', '<svg class="h-7 w-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>', 'amber'],
+            ] as $m)
+              <div class="group relative text-left">
+                <div
+                     class="absolute -inset-0.5 rounded-3xl bg-gradient-to-br from-{{ $m[3] }}-500/30 to-{{ $m[3] }}-400/20 opacity-0 blur transition duration-300 group-hover:opacity-100">
+                </div>
+                <div
+                     class="relative h-full rounded-3xl border-2 border-slate-200 bg-white p-6 shadow-lg transition duration-300 group-hover:border-{{ $m[3] }}-200 group-hover:shadow-2xl">
+                  <div
+                       class="mb-4 inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-{{ $m[3] }}-600 to-{{ $m[3] }}-500 text-white shadow-lg ring-4 ring-white">
+                    {!! $m[2] !!}
+                  </div>
+                  <h3 class="text-xl font-bold text-slate-900">{{ $m[0] }}</h3>
+                  <p class="mt-3 leading-relaxed text-slate-600">{{ $m[1] }}</p>
+                </div>
+              </div>
+            @endforeach
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  {{-- NILAI-NILAI - Enhanced Design --}}
+  <section class="relative bg-gradient-to-b from-slate-50 to-white py-20 sm:py-28">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div class="text-center">
+        <div
+             class="mx-auto inline-flex items-center gap-2 rounded-full bg-red-100 px-4 py-1.5 text-sm font-semibold text-red-700">
+          <svg class="h-4 w-4"
+               fill="currentColor"
+               viewBox="0 0 20 20">
+            <path fill-rule="evenodd"
+                  d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z"
+                  clip-rule="evenodd" />
+          </svg>
+          Core Values
+        </div>
+        <h2 class="mt-4 text-4xl font-extrabold text-slate-900 sm:text-5xl">
+          Nilai-Nilai <span class="bg-gradient-to-r from-red-600 to-rose-500 bg-clip-text text-transparent">Kami</span>
+        </h2>
+        <p class="mx-auto mt-3 max-w-2xl text-lg text-slate-600">
+          Prinsip fundamental yang menjadi landasan setiap tindakan dan keputusan kami.
+        </p>
+      </div>
+
+      <div class="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-5">
+        @foreach ([
+          ['Integritas', 'Berkomitmen pada kejujuran, transparansi, dan etika profesional dalam setiap pelayanan.', '<svg class="h-7 w-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" /></svg>', 'red'],
+          ['Profesional', 'Menjaga standar pelayanan tertinggi dengan tenaga medis terlatih dan berpengalaman.', '<svg class="h-7 w-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>', 'blue'],
+          ['Peduli', 'Mengutamakan empati dan kepedulian terhadap setiap kebutuhan pasien dan donor.', '<svg class="h-7 w-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" /></svg>', 'rose'],
+          ['Inovatif', 'Terus berinovasi dengan teknologi dan metode terkini untuk pelayanan optimal.', '<svg class="h-7 w-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>', 'amber'],
+          ['Bertanggung Jawab', 'Menjamin keamanan dan kualitas setiap proses dengan akuntabilitas penuh.', '<svg class="h-7 w-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" /></svg>', 'green'],
+        ] as $nilai)
+          <div class="group relative text-left">
+            <div
+                 class="absolute -inset-0.5 rounded-3xl bg-gradient-to-br from-{{ $nilai[3] }}-500/30 to-{{ $nilai[3] }}-400/20 opacity-0 blur transition duration-300 group-hover:opacity-100">
+            </div>
+            <div
+                 class="relative h-full rounded-3xl border-2 border-slate-200 bg-white p-6 shadow-lg transition duration-300 group-hover:border-{{ $nilai[3] }}-200 group-hover:shadow-2xl">
+              <div
+                   class="mb-4 inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-{{ $nilai[3] }}-600 to-{{ $nilai[3] }}-500 text-white shadow-lg ring-4 ring-white transition group-hover:scale-110">
+                {!! $nilai[2] !!}
+              </div>
+              <h3 class="text-lg font-bold text-slate-900">{{ $nilai[0] }}</h3>
+              <p class="mt-2 text-sm leading-relaxed text-slate-600">
+                {{ $nilai[1] }}
+              </p>
+            </div>
+          </div>
+        @endforeach
+      </div>
+
+      {{-- Additional Trust Indicators --}}
+      <div class="mt-12 grid gap-6 md:grid-cols-3">
+        <div class="rounded-2xl border border-slate-200 bg-white p-6 text-center shadow-lg">
+          <div class="mx-auto mb-3 flex h-16 w-16 items-center justify-center rounded-2xl bg-green-100 text-green-600">
+            <svg class="h-8 w-8"
+                 fill="none"
+                 stroke="currentColor"
+                 viewBox="0 0 24 24">
+              <path stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
+            </svg>
+          </div>
+          <h3 class="font-bold text-slate-900">Terakreditasi Nasional</h3>
+          <p class="mt-2 text-sm text-slate-600">Memenuhi standar akreditasi kesehatan Indonesia</p>
+        </div>
+        <div class="rounded-2xl border border-slate-200 bg-white p-6 text-center shadow-lg">
+          <div class="mx-auto mb-3 flex h-16 w-16 items-center justify-center rounded-2xl bg-blue-100 text-blue-600">
+            <svg class="h-8 w-8"
+                 fill="none"
+                 stroke="currentColor"
+                 viewBox="0 0 24 24">
+              <path stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+            </svg>
+          </div>
+          <h3 class="font-bold text-slate-900">Sertifikasi ISO</h3>
+          <p class="mt-2 text-sm text-slate-600">Manajemen mutu sesuai standar internasional</p>
+        </div>
+        <div class="rounded-2xl border border-slate-200 bg-white p-6 text-center shadow-lg">
+          <div class="mx-auto mb-3 flex h-16 w-16 items-center justify-center rounded-2xl bg-purple-100 text-purple-600">
+            <svg class="h-8 w-8"
+                 fill="none"
+                 stroke="currentColor"
+                 viewBox="0 0 24 24">
+              <path stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+            </svg>
+          </div>
+          <h3 class="font-bold text-slate-900">Keamanan Terjamin</h3>
+          <p class="mt-2 text-sm text-slate-600">Screening lengkap sesuai protokol WHO</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  {{-- CTA - Enhanced Design --}}
+  <section class="relative overflow-hidden py-20 sm:py-28">
+    {{-- Background Pattern --}}
+    <div class="pointer-events-none absolute inset-0">
+      <div class="absolute -left-24 top-0 h-96 w-96 rounded-full bg-red-100 blur-3xl"></div>
+      <div class="absolute -right-24 bottom-0 h-96 w-96 rounded-full bg-rose-100 blur-3xl"></div>
+    </div>
+
+    <div class="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div class="relative overflow-hidden rounded-3xl bg-gradient-to-r from-red-700 via-red-600 to-rose-500 shadow-2xl">
+        {{-- Animated background blobs --}}
+        <div class="pointer-events-none absolute inset-0">
+          <div class="absolute -left-16 -top-16 h-64 w-64 animate-pulse rounded-full bg-white/10 blur-3xl"></div>
+          <div class="absolute -bottom-16 -right-16 h-64 w-64 animate-pulse rounded-full bg-rose-300/20 blur-3xl"
+               style="animation-delay: 1s;"></div>
+        </div>
+
+        <div class="relative px-8 py-16 text-center text-white sm:px-12 sm:py-20">
+          <div
+               class="mx-auto inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 text-sm font-medium ring-1 ring-white/20 backdrop-blur-sm">
+            <span class="relative flex h-2 w-2">
+              <span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-white opacity-75"></span>
+              <span class="relative inline-flex h-2 w-2 rounded-full bg-white"></span>
+            </span>
+            Mari Bergabung
+          </div>
+
+          <h3 class="mt-6 text-4xl font-extrabold leading-tight sm:text-5xl">
+            Berkolaborasi Dengan Kami
+          </h3>
+          <p class="mx-auto mt-4 max-w-2xl text-lg leading-relaxed text-white/90">
+            Mari bersama-sama membangun masa depan kesehatan yang lebih baik untuk Indonesia.
+            <strong class="font-semibold text-white">Setiap kontribusi Anda sangat berarti.</strong>
+          </p>
+
+          <div class="mt-8 flex flex-wrap justify-center gap-4">
+            <a href="{{ url('/pemesanan') }}"
+               class="group inline-flex items-center gap-2 rounded-xl bg-white px-6 py-4 font-semibold text-red-700 shadow-xl transition hover:scale-105 hover:bg-red-50 hover:shadow-2xl">
+              <svg class="h-5 w-5 transition group-hover:rotate-12"
+                   fill="none"
+                   stroke="currentColor"
+                   viewBox="0 0 24 24">
+                <path stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+              </svg>
+              Ajukan Permintaan Darah
+            </a>
+            <a href="{{ url('/') }}"
+               class="inline-flex items-center gap-2 rounded-xl border-2 border-white/30 bg-white/5 px-6 py-4 font-semibold text-white backdrop-blur-sm transition hover:bg-white/10">
+              Kembali ke Beranda
+              <svg class="h-5 w-5"
+                   fill="none"
+                   stroke="currentColor"
+                   viewBox="0 0 24 24">
+                <path stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+              </svg>
+            </a>
+          </div>
+
+          {{-- Contact Info --}}
+          <div class="mx-auto mt-12 flex max-w-3xl flex-wrap justify-center gap-6 text-sm text-white/80">
+            <div class="flex items-center gap-2">
+              <svg class="h-5 w-5"
+                   fill="none"
+                   stroke="currentColor"
+                   viewBox="0 0 24 24">
+                <path stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+              </svg>
+              <span>24/7 Emergency Line</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <svg class="h-5 w-5"
+                   fill="none"
+                   stroke="currentColor"
+                   viewBox="0 0 24 24">
+                <path stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+              </svg>
+              <span>info@pmilampung.or.id</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <svg class="h-5 w-5"
+                   fill="none"
+                   stroke="currentColor"
+                   viewBox="0 0 24 24">
+                <path stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                <path stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+              </svg>
+              <span>Lampung, Indonesia</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <x-footer bg="bg-slate-50" />
 
 </div>
 
-{{-- Tabs JS kecil --}}
+{{-- Enhanced JavaScript with animations --}}
 <script>
   document.addEventListener('DOMContentLoaded', () => {
+    // Tab switching with smooth transitions
     const btns = document.querySelectorAll('.tab-btn');
     const panels = {
       visi: document.getElementById('tab-visi'),
       misi: document.getElementById('tab-misi'),
     };
+
     btns.forEach(b => b.addEventListener('click', () => {
-      btns.forEach(x => x.classList.remove('bg-red-600','text-white','shadow'));
-      b.classList.add('bg-red-600','text-white','shadow');
-      panels.visi.classList.toggle('hidden', b.dataset.tab !== 'visi');
-      panels.misi.classList.toggle('hidden', b.dataset.tab !== 'misi');
+      // Update button states
+      btns.forEach(x => {
+        x.classList.remove('bg-red-600', 'text-white', 'shadow-md');
+        x.classList.add('text-slate-700', 'hover:bg-slate-50');
+      });
+      b.classList.add('bg-red-600', 'text-white', 'shadow-md');
+      b.classList.remove('text-slate-700', 'hover:bg-slate-50');
+
+      // Toggle panels with fade effect
+      Object.values(panels).forEach(p => {
+        p.style.opacity = '0';
+        p.style.transform = 'translateY(10px)';
+      });
+
+      setTimeout(() => {
+        panels.visi.classList.toggle('hidden', b.dataset.tab !== 'visi');
+        panels.misi.classList.toggle('hidden', b.dataset.tab !== 'misi');
+
+        const activePanel = b.dataset.tab === 'visi' ? panels.visi : panels.misi;
+        activePanel.style.transition = 'opacity 0.3s ease-out, transform 0.3s ease-out';
+        activePanel.style.opacity = '1';
+        activePanel.style.transform = 'translateY(0)';
+      }, 150);
     }));
+
+    // Counter animation for stats
+    const counters = document.querySelectorAll('[data-counter], [data-counter-stat]');
+    const easeOutQuart = t => 1 - Math.pow(1 - t, 4);
+
+    const counterObserver = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (!entry.isIntersecting) return;
+        const el = entry.target;
+        const text = el.textContent.trim();
+
+        // Extract number from text like "25+", "1M+", "50+"
+        let target = 0;
+        if (text.includes('M+')) {
+          target = parseFloat(text) * 1000000;
+        } else if (text.includes('K+')) {
+          target = parseFloat(text) * 1000;
+        } else {
+          target = parseInt(text.replace(/[^0-9]/g, ''), 10) || 0;
+        }
+
+        let start = null;
+        const suffix = text.includes('+') ? '+' : '';
+        const prefix = text.includes('M') ? 'M' : text.includes('K') ? 'K' : '';
+
+        const animate = (timestamp) => {
+          if (!start) start = timestamp;
+          const progress = Math.min(1, (timestamp - start) / 1200);
+          let value = Math.floor(easeOutQuart(progress) * target);
+
+          // Format display
+          if (prefix === 'M') {
+            el.textContent = (value / 1000000).toFixed(0) + 'M' + suffix;
+          } else if (prefix === 'K') {
+            el.textContent = (value / 1000).toFixed(0) + 'K' + suffix;
+          } else {
+            el.textContent = value.toLocaleString('id-ID') + suffix;
+          }
+
+          if (progress < 1) requestAnimationFrame(animate);
+        };
+
+        requestAnimationFrame(animate);
+        counterObserver.unobserve(el);
+      });
+    }, {
+      threshold: 0.5
+    });
+
+    counters.forEach(el => counterObserver.observe(el));
+
+    // Parallax effect for hero background
+    let ticking = false;
+    window.addEventListener('scroll', () => {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          const scrolled = window.pageYOffset;
+          const hero = document.querySelector('.bg-gradient-to-br.from-red-700');
+          if (hero && scrolled < 800) {
+            const parallax = hero.querySelector('.pointer-events-none');
+            if (parallax) {
+              parallax.style.transform = `translateY(${scrolled * 0.5}px)`;
+            }
+          }
+          ticking = false;
+        });
+        ticking = true;
+      }
+    });
+
+    // Fade-in animation for sections
+    const sections = document.querySelectorAll('section');
+    const sectionObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.style.opacity = '1';
+          entry.target.style.transform = 'translateY(0)';
+        }
+      });
+    }, {
+      threshold: 0.1
+    });
+
+    sections.forEach(section => {
+      section.style.opacity = '0';
+      section.style.transform = 'translateY(20px)';
+      section.style.transition = 'opacity 0.6s ease-out, transform 0.6s ease-out';
+      sectionObserver.observe(section);
+    });
+
+    // Smooth scroll for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function(e) {
+        const href = this.getAttribute('href');
+        if (href !== '#' && href.length > 1) {
+          e.preventDefault();
+          const target = document.querySelector(href);
+          if (target) {
+            target.scrollIntoView({
+              behavior: 'smooth',
+              block: 'start'
+            });
+          }
+        }
+      });
+    });
   });
 </script>
 @endsection
