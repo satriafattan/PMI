@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\RiwayatPemesanan;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 
 class RiwayatController extends Controller
@@ -15,22 +16,57 @@ class RiwayatController extends Controller
         $st  = $r->input('status');
         $gol = $r->input('gol');
 
+        // OPTIMASI: Ambil riwayat terakhir per pemesanan dengan window function (MySQL 8+)
+        // atau gunakan join untuk performa lebih baik
+        $subquery = RiwayatPemesanan::select('pemesanan_id', DB::raw('MAX(id) as latest_id'))
+            ->groupBy('pemesanan_id');
+
         $query = RiwayatPemesanan::query()
-            ->with(['pemesanan'])
-            // ✅ Hanya tampilkan data dengan status approved / rejected
-            ->whereHas('pemesanan', function ($p) {
-                $p->whereIn('status', ['approved', 'rejected']); // ⬅ filter utama
+            ->joinSub($subquery, 'latest', function ($join) {
+                $join->on('riwayat_pemesanan.id', '=', 'latest.latest_id');
             })
-            ->latest();
+            ->with(['pemesanan' => function ($q) {
+                $q->select(
+                    'id',
+                    'nama_pasien',
+                    'rs_pemesan',
+                    'status',
+                    'gol_darah',
+                    'rhesus',
+                    'produk',
+                    'jumlah_kantong',
+                    'tanggal_pemesanan',
+                    'tanggal_permintaan',
+                    'jenis_kelamin',
+                    'nama_dokter',
+                    'email',
+                    'nomor_telepon',
+                    'no_regis_rs',
+                    'nama_suami_istri',
+                    'alasan_transfusi',
+                    'alasan_tambahan',
+                    'cek_transfusi',
+                    'diagnosa_klinik',
+                    'pernah_serologi',
+                    'lokasi_serologi',
+                    'tanggal_serologi',
+                    'tanggal_transfusi',
+                    'hasil_serologi',
+                    'created_at'
+                );
+            }])
+            ->whereHas('pemesanan', function ($p) {
+                $p->whereIn('status', ['approved', 'rejected']);
+            });
 
         // 🔍 Filter pencarian nama / rumah sakit
         if ($q !== '') {
             $query->where(function ($w) use ($q) {
                 $w->where('nama', 'like', "%{$q}%")
-                  ->orWhereHas('pemesanan', function ($p) use ($q) {
-                      $p->where('rs_pemesan', 'like', "%{$q}%")
-                        ->orWhere('nama_pasien', 'like', "%{$q}%");
-                  });
+                    ->orWhereHas('pemesanan', function ($p) use ($q) {
+                        $p->where('rs_pemesan', 'like', "%{$q}%")
+                            ->orWhere('nama_pasien', 'like', "%{$q}%");
+                    });
             });
         }
 
@@ -43,19 +79,14 @@ class RiwayatController extends Controller
         if (!empty($gol)) {
             $query->where(function ($w) use ($gol) {
                 $w->where('gol_darah', $gol)
-                  ->orWhereHas('pemesanan', fn($p) => $p->where('gol_darah', $gol));
+                    ->orWhereHas('pemesanan', fn($p) => $p->where('gol_darah', $gol));
             });
         }
 
-        // Ambil hanya riwayat terakhir per pemesanan
+        // OPTIMASI: Gunakan pagination daripada take() + get()
         $items = $query
-            ->whereIn('id', function ($sub) {
-                $sub->selectRaw('MAX(id)')
-                    ->from('riwayat_pemesanan')
-                    ->groupBy('pemesanan_id');
-            })
-            ->latest()
-            ->take(500)
+            ->latest('riwayat_pemesanan.created_at')
+            ->limit(500)
             ->get();
 
         // Format data untuk dikirim ke Blade
@@ -103,7 +134,7 @@ class RiwayatController extends Controller
                     'pernah_serologi'  => $p->pernah_serologi ?? null,
                     'lokasi_serologi'  => $p->lokasi_serologi ?? null,
                     'tanggal_serologi' => optional($p->tanggal_serologi)->toDateString(),
-                    'tanggal_transfusi'=> optional($p->tanggal_transfusi)->toDateString(),
+                    'tanggal_transfusi' => optional($p->tanggal_transfusi)->toDateString(),
                     'hasil_serologi'   => $p->hasil_serologi ?? null,
 
                     // C. Permintaan Darah

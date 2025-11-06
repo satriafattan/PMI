@@ -8,6 +8,7 @@ use App\Models\StokDarah;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use App\Services\GenerateBloodUnits;
+use App\Services\StokCacheService;
 
 class StokDarahController extends Controller
 {
@@ -65,6 +66,9 @@ class StokDarahController extends Controller
             // Jika service non-static, gunakan:
             // app(GenerateBloodUnits::class)->run($stok, $jumlah);
         }
+
+        // PERBAIKAN: Clear cache setelah tambah stok
+        StokCacheService::clearCache();
 
         return redirect()
             ->route('admin.stok.index')

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Public;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\EventScheduleRequest;
 use App\Models\EventSchedule;
+use Illuminate\Support\Facades\Log;
 
 class EventScheduleController extends Controller
 {
@@ -26,15 +27,35 @@ class EventScheduleController extends Controller
         $data['butuh_mobil_unit'] = (bool)($data['butuh_mobil_unit'] ?? false);
         $data['izin_publikasi']   = (bool)($data['izin_publikasi'] ?? false);
 
-        // simpan file
-        if ($r->hasFile('surat_instansi')) {
-            $data['surat_instansi_path'] = $r->file('surat_instansi')->store('surat_instansi', 'public');
+        // PERBAIKAN: Error handling untuk file upload
+        try {
+            if ($r->hasFile('surat_instansi')) {
+                $file = $r->file('surat_instansi');
+
+                // Validasi ulang untuk keamanan
+                if ($file->isValid()) {
+                    // Generate nama file unik untuk hindari collision
+                    $filename = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+                    $data['surat_instansi_path'] = $file->storeAs('surat_instansi', $filename, 'public');
+                } else {
+                    return back()
+                        ->withInput()
+                        ->with('error', 'File surat instansi tidak valid. Silakan upload ulang.');
+                }
+            }
+
+            EventSchedule::create($data);
+
+            return redirect()
+                ->route('public.event.create')
+                ->with('success', 'Pengajuan penjadwalan berhasil dikirim.');
+        } catch (\Exception $e) {
+            // Log error untuk debugging
+            Log::error('Event schedule upload error: ' . $e->getMessage());
+
+            return back()
+                ->withInput()
+                ->with('error', 'Terjadi kesalahan saat menyimpan data. Silakan coba lagi.');
         }
-
-        EventSchedule::create($data);
-
-        return redirect()
-            ->route('public.event.create')
-            ->with('success', 'Pengajuan penjadwalan berhasil dikirim.');
     }
 }

@@ -205,23 +205,35 @@ class VerifikasiPemesananController extends Controller
         ]);
 
         DB::transaction(function () use ($verifikasi, $payload) {
-            $verifikasi->update([
+            // PERBAIKAN: Lock row untuk cegah race condition
+            $fresh = VerifikasiPemesanan::whereKey($verifikasi->id)->lockForUpdate()->first();
+
+            if (!$fresh) {
+                abort(404, 'Data verifikasi tidak ditemukan.');
+            }
+
+            $fresh->update([
                 'status' => $payload['status'],
-                // 'note' => $payload['note'] ?? $verifikasi->note,
+                'note' => $payload['note'] ?? $fresh->note,
             ]);
 
-            $verifikasi->pemesanan->update(['status' => $payload['status']]);
+            // Lock pemesanan juga
+            $pemesanan = PemesananDarah::whereKey($fresh->pemesanan_id)->lockForUpdate()->first();
 
-            RiwayatPemesanan::create([
-                'pemesanan_id'   => $verifikasi->pemesanan_id,
-                'nama'           => $verifikasi->pemesanan->nama_pasien,
-                'tanggal'        => now()->toDateString(),
-                'gol_darah'      => $verifikasi->gol_darah,
-                'rhesus'         => $verifikasi->rhesus,
-                'jumlah_kantong' => $verifikasi->pemesanan->jumlah_kantong,
-                'produk'         => $verifikasi->produk,
-                'aksi'           => 'ubah status: ' . $payload['status'],
-            ]);
+            if ($pemesanan) {
+                $pemesanan->update(['status' => $payload['status']]);
+
+                RiwayatPemesanan::create([
+                    'pemesanan_id'   => $pemesanan->id,
+                    'nama'           => $pemesanan->nama_pasien,
+                    'tanggal'        => now()->toDateString(),
+                    'gol_darah'      => $fresh->gol_darah,
+                    'rhesus'         => $fresh->rhesus,
+                    'jumlah_kantong' => $pemesanan->jumlah_kantong,
+                    'produk'         => $fresh->produk,
+                    'aksi'           => 'ubah status: ' . $payload['status'],
+                ]);
+            }
         });
 
         return back()->with('success', 'Status verifikasi & pemesanan berhasil diperbarui.');

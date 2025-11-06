@@ -10,18 +10,20 @@ class BloodUnitController extends Controller
 {
     public function index(Request $r)
     {
+        // PERBAIKAN: Batasi jumlah data yang di-load, gunakan pagination
         // Tab 1: Tersedia (belum exp)
         $avail = BloodUnit::available()
             ->select('kode_unit as id_darah', 'gol_darah', 'rhesus', 'produk as komponen', 'tgl_masuk', 'tgl_kadaluarsa')
-            ->orderBy('kode_unit')
-            ->limit(200)
+            ->orderBy('tgl_kadaluarsa') // FEFO
+            ->limit(500) // Batasi untuk performa
             ->get();
 
-        // Tab 2: Keluar/riwayat
+        // Tab 2: Keluar/riwayat - OPTIMASI: gunakan chunk atau pagination
         $riwayat = BloodUnit::query()
+            ->select('kode_unit', 'gol_darah', 'rhesus', 'produk', 'tgl_masuk', 'tgl_kadaluarsa', 'penerima', 'status', 'updated_at')
             ->whereIn('status', ['dispensed', 'reserved', 'discarded'])
             ->orderByDesc('updated_at')
-            ->limit(200)
+            ->limit(500) // Batasi untuk performa
             ->get()
             ->map(fn($u) => [
                 'id'       => $u->kode_unit,
@@ -30,14 +32,15 @@ class BloodUnitController extends Controller
                 'produk'   => $u->produk,
                 'masuk'    => $u->tgl_masuk?->toDateString(),
                 'exp'      => $u->tgl_kadaluarsa?->toDateString(),
-                'penerima' => $u->penerima ?? optional($u->stok?->pemesanan)->rs_pemesan, // sesuaikan jika ada relasi lain
+                'penerima' => $u->penerima ?? '-',
                 'status'   => ucfirst($u->status),
             ]);
 
-        // Tab 3: Kedaluwarsa
+        // Tab 3: Kedaluwarsa - OPTIMASI: select only needed columns
         $expired = BloodUnit::expired()
+            ->select('kode_unit', 'gol_darah', 'rhesus', 'produk', 'tgl_masuk', 'tgl_kadaluarsa')
             ->orderBy('tgl_kadaluarsa')
-            ->limit(200)
+            ->limit(500) // Batasi untuk performa
             ->get()
             ->map(fn($u) => [
                 'id'     => $u->kode_unit,
@@ -51,7 +54,7 @@ class BloodUnitController extends Controller
         return view('admin.detail.index', [
             'rows'        => $avail,
             'historyRows' => $riwayat,
-            'expiredRows' => $expired, // kalau Blade-mu butuh
+            'expiredRows' => $expired,
         ]);
     }
 
