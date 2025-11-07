@@ -120,13 +120,13 @@
         <table class="min-w-full text-sm">
           <thead class="bg-neutral-50 text-neutral-600">
             <tr>
+              <th class="w-10 px-4 py-3 text-center"></th>
               <th class="w-1/6 px-4 py-3 text-left">Produk</th>
               <th class="w-1/6 px-4 py-3 text-center">A</th>
               <th class="w-1/6 px-4 py-3 text-center">AB</th>
               <th class="w-1/6 px-4 py-3 text-center">B</th>
               <th class="w-1/6 px-4 py-3 text-center">O</th>
               <th class="w-1/6 px-4 py-3 text-center">Total</th>
-              <th class="w-20 px-4 py-3 text-center">Aksi</th>
             </tr>
           </thead>
           <tbody id="tableBody"></tbody>
@@ -356,9 +356,32 @@
       </button>
     `;
 
+    const iconChevronDown = `
+      <svg class="size-5 transition-transform duration-200" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+      </svg>
+    `;
+
+    const iconHistory = `
+      <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" 
+              d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+      </svg>
+    `;
+
 
     const iconTrash = () =>
       `<svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M4 7h16M9 7V5h6v2m-8 0 1 12h8l1-12"/></svg>`;
+
+    // Fungsi untuk format tanggal dari ISO ke DD-MM-YYYY
+    function formatDate(dateString) {
+      if (!dateString) return '-';
+      const date = new Date(dateString);
+      const day = String(date.getDate()).padStart(2, '0');
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const year = date.getFullYear();
+      return `${day}-${month}-${year}`;
+    }
 
     document.addEventListener('click', function(e) {
       // ===== OPEN MODAL =====
@@ -393,20 +416,23 @@
     const rowTotal = (r) => (r.A || 0) + (r.AB || 0) + (r.B || 0) + (r.O || 0);
 
     function pillFor(value) {
-      let bgColor, textColor;
+      let bgColor, textColor, borderColor;
       if (value >= 50) {
         bgColor = 'bg-emerald-100';
         textColor = 'text-emerald-700';
+        borderColor = 'border-emerald-200';
       } else if (value >= 20) {
         bgColor = 'bg-amber-100';
         textColor = 'text-amber-700';
+        borderColor = 'border-amber-200';
       } else {
         bgColor = 'bg-rose-100';
         textColor = 'text-rose-700';
+        borderColor = 'border-rose-200';
       }
 
       return `
-      <span class="${bgColor} ${textColor} text-sm px-4 py-1.5 rounded-full inline-block min-w-[48px] text-center hover:opacity-75 transition-opacity duration-200 font-medium">
+      <span class="${bgColor} ${textColor} ${borderColor} text-sm px-4 py-1.5 rounded-full inline-block min-w-[48px] text-center font-semibold border-2 pill-hover shadow-sm">
         ${value}
       </span>
     `;
@@ -465,35 +491,120 @@
       if (!tb) return;
       if (data.length === 0) {
         tb.innerHTML =
-          `<tr><td colspan="7" class="px-4 py-8 text-center text-neutral-500">Belum ada data. Tambahkan stok terlebih dahulu.</td></tr>`;
+          `<tr><td colspan="8" class="px-4 py-8 text-center text-neutral-500">Belum ada data. Tambahkan stok terlebih dahulu.</td></tr>`;
         return;
       }
-      tb.innerHTML = data.map(r => {
+
+      tb.innerHTML = data.map((r, index) => {
+        const rowId = `row-${index}`;
+        const detailsId = `details-${index}`;
+
         const golDarahCells = ['A', 'AB', 'B', 'O'].map(k => {
           const value = r[k] || 0;
           return `
             <td class="w-1/6 px-4 py-3 text-center">
-              <button data-open="produkModal" 
-                      data-produk="${r.produk}" 
-                      data-goldarah="${k}"
-                      class="w-full inline-block">
+              <span class="inline-block w-full">
                 ${pillFor(value)}
-              </button>
+              </span>
             </td>
           `;
         }).join('');
 
+        // Buat baris detail untuk setiap golongan darah
+        const detailRows = ['A', 'AB', 'B', 'O'].map(gol => {
+          const key = `${r.produk}_${gol}`;
+          const riwayat = riwayatStok[key] || [];
+          const totalUnits = r[gol] || 0;
+
+          return `
+            <div class="mb-4 last:mb-0">
+              <div class="mb-2 flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                  <span class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500 to-blue-600 text-white font-bold text-sm shadow-sm">
+                    ${gol}
+                  </span>
+                  <h4 class="font-semibold text-neutral-800">Golongan ${gol}</h4>
+                  <span class="text-xs text-neutral-500">(${totalUnits} unit)</span>
+                </div>
+                ${riwayat.length > 0 ? `
+                      <span class="text-xs text-neutral-500 flex items-center gap-1">
+                        ${iconHistory}
+                        ${riwayat.length} riwayat
+                      </span>
+                    ` : ''}
+              </div>
+              
+              ${riwayat.length > 0 ? `
+                    <div class="rounded-lg border border-neutral-200 overflow-hidden">
+                      <table class="w-full text-xs">
+                        <thead class="bg-neutral-50 text-neutral-600">
+                          <tr>
+                            <th class="px-3 py-2 text-left font-medium">ID</th>
+                            <th class="px-3 py-2 text-left font-medium">Rhesus</th>
+                            <th class="px-3 py-2 text-left font-medium">Jumlah</th>
+                            <th class="px-3 py-2 text-left font-medium">Tgl Masuk</th>
+                            <th class="px-3 py-2 text-left font-medium">Tgl Kadaluarsa</th>
+                            <th class="px-3 py-2 text-left font-medium">Ditambahkan</th>
+                          </tr>
+                        </thead>
+                        <tbody class="divide-y divide-neutral-100 bg-white">
+                          ${riwayat.map(item => `
+                        <tr class="hover:bg-blue-50/30 transition-colors">
+                          <td class="px-3 py-2 font-medium text-neutral-700">#${item.id}</td>
+                          <td class="px-3 py-2">
+                            <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${item.rhesus === 'Rh+' ? 'bg-green-100 text-green-700' : 'bg-purple-100 text-purple-700'}">
+                              ${item.rhesus}
+                            </span>
+                          </td>
+                          <td class="px-3 py-2 font-medium text-blue-600">${item.jumlah} unit</td>
+                          <td class="px-3 py-2 text-neutral-600">${item.tgl_masuk}</td>
+                          <td class="px-3 py-2 text-neutral-600">${item.tgl_kadaluarsa}</td>
+                          <td class="px-3 py-2 text-neutral-500 text-xs">${item.created_at}</td>
+                        </tr>
+                      `).join('')}
+                        </tbody>
+                      </table>
+                    </div>
+                  ` : `
+                    <div class="rounded-lg border border-dashed border-neutral-300 bg-neutral-50 px-4 py-6 text-center">
+                      <p class="text-sm text-neutral-500">Belum ada riwayat penambahan stok untuk golongan ${gol}</p>
+                    </div>
+                  `}
+            </div>
+          `;
+        }).join('');
+
         return `
-          <tr class="border-t border-neutral-100">
-            <td class="w-1/6 px-4 py-3 text-left">${r.produk}</td>
+          <tr id="${rowId}" class="border-t border-neutral-100 hover:bg-neutral-50/50 transition-colors cursor-pointer" data-row-toggle="${detailsId}">
+            <td class="px-4 py-3 text-center">
+              <button class="text-neutral-500 hover:text-neutral-700 transition-colors" data-chevron>
+                ${iconChevronDown}
+              </button>
+            </td>
+            <td class="px-4 py-3 text-left font-medium text-neutral-800">${r.produk}</td>
             ${golDarahCells}
-            <td class="w-1/6 px-4 py-3 font-medium text-center">${rowTotal(r)}</td>
-            <td class="w-20 px-4 py-3 text-center">
-              <button class="hover:text-rose-700 p-1 rounded-md" title="Hapus">${iconTrash()}</button>
+            <td class="px-4 py-3 font-bold text-center text-neutral-800">${rowTotal(r)}</td>
+          </tr>
+          <tr id="${detailsId}" class="detail-row hidden border-t border-neutral-100">
+            <td colspan="8" class="px-0 py-0">
+              <div class="bg-gradient-to-br from-blue-50/50 via-white to-purple-50/30 px-6 py-5 border-l-4 border-blue-500">
+                <div class="max-w-6xl">
+                  <div class="mb-3 flex items-center gap-2">
+                    <div class="h-6 w-1 bg-blue-500 rounded-full"></div>
+                    <h3 class="text-base font-bold text-neutral-800">Detail Log Perubahan Stok: ${r.produk}</h3>
+                  </div>
+                  <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                    ${detailRows}
+                  </div>
+                </div>
+              </div>
             </td>
           </tr>
         `;
       }).join('');
+
+      // Attach click handlers untuk toggle
+      attachToggleHandlers();
     }
 
     function renderCards(data) {
@@ -503,24 +614,145 @@
         wrap.innerHTML = `<div class="text-center text-neutral-500">Belum ada data.</div>`;
         return;
       }
-      wrap.innerHTML = data.map(r => `
-      <div class="rounded-2xl border border-neutral-200 bg-white p-4">
-        <div class="flex items-start justify-between">
-          <p class="font-medium">${r.produk}</p>
-          <div class="flex items-center gap-3 text-neutral-600">
-            <button class="hover:text-neutral-900" title="Edit">${iconEdit()}</button>
-            <button class="hover:text-rose-700" title="Hapus">${iconTrash()}</button>
+
+      wrap.innerHTML = data.map((r, index) => {
+        const cardId = `card-${index}`;
+        const detailsId = `card-details-${index}`;
+
+        // Detail untuk setiap golongan darah
+        const detailContent = ['A', 'AB', 'B', 'O'].map(gol => {
+          const key = `${r.produk}_${gol}`;
+          const riwayat = riwayatStok[key] || [];
+          const totalUnits = r[gol] || 0;
+
+          return `
+            <div class="border-t border-neutral-200 pt-3 first:border-0 first:pt-0">
+              <div class="mb-2 flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                  <span class="inline-flex items-center justify-center w-7 h-7 rounded-lg bg-gradient-to-br from-blue-500 to-blue-600 text-white font-bold text-xs">
+                    ${gol}
+                  </span>
+                  <h5 class="font-semibold text-sm">Golongan ${gol}</h5>
+                  <span class="text-xs text-neutral-500">(${totalUnits} unit)</span>
+                </div>
+              </div>
+              
+              ${riwayat.length > 0 ? `
+                    <div class="space-y-2 mt-2">
+                      ${riwayat.slice(0, 3).map(item => `
+                    <div class="rounded-lg border border-neutral-200 bg-white p-2 text-xs">
+                      <div class="flex justify-between items-start mb-1">
+                        <span class="font-medium text-neutral-700">#${item.id}</span>
+                        <span class="inline-flex items-center px-1.5 py-0.5 rounded text-xs font-medium ${item.rhesus === 'Rh+' ? 'bg-green-100 text-green-700' : 'bg-purple-100 text-purple-700'}">
+                          ${item.rhesus}
+                        </span>
+                      </div>
+                      <div class="text-neutral-600 space-y-0.5">
+                        <div><span class="font-medium text-blue-600">${item.jumlah} unit</span></div>
+                        <div>Masuk: ${item.tgl_masuk}</div>
+                        <div>Exp: ${item.tgl_kadaluarsa}</div>
+                      </div>
+                    </div>
+                  `).join('')}
+                      ${riwayat.length > 3 ? `
+                    <p class="text-xs text-center text-neutral-500">+${riwayat.length - 3} lainnya</p>
+                  ` : ''}
+                    </div>
+                  ` : `
+                    <p class="text-xs text-neutral-500 text-center py-2">Belum ada riwayat</p>
+                  `}
+            </div>
+          `;
+        }).join('');
+
+        return `
+          <div id="${cardId}" class="rounded-2xl border border-neutral-200 bg-white overflow-hidden">
+            <div class="p-4">
+              <div class="flex items-start justify-between cursor-pointer" data-card-toggle="${detailsId}">
+                <div class="flex-1">
+                  <p class="font-semibold text-neutral-800">${r.produk}</p>
+                  <div class="mt-3 grid grid-cols-4 gap-2 text-sm">
+                    <div class="text-neutral-500 text-xs">A</div><div>${pillFor(r.A||0)}</div>
+                    <div class="text-neutral-500 text-xs">AB</div><div>${pillFor(r.AB||0)}</div>
+                    <div class="text-neutral-500 text-xs">B</div><div>${pillFor(r.B||0)}</div>
+                    <div class="text-neutral-500 text-xs">O</div><div>${pillFor(r.O||0)}</div>
+                    <div class="text-neutral-500 text-xs">Total</div><div class="col-span-3 font-bold">${rowTotal(r)}</div>
+                  </div>
+                </div>
+                <button class="text-neutral-500 hover:text-neutral-700 ml-2" data-chevron-card>
+                  ${iconChevronDown}
+                </button>
+              </div>
+            </div>
+            
+            <div id="${detailsId}" class="hidden bg-gradient-to-br from-blue-50/50 to-purple-50/30 px-4 py-3 border-t border-neutral-200">
+              <h4 class="text-sm font-bold text-neutral-800 mb-3">Detail Log Perubahan</h4>
+              <div class="space-y-3">
+                ${detailContent}
+              </div>
+            </div>
           </div>
-        </div>
-        <div class="mt-3 grid grid-cols-4 gap-2 text-sm">
-          <div class="text-neutral-500">A</div><div>${pillFor(r.A||0)}</div>
-          <div class="text-neutral-500">AB</div><div>${pillFor(r.AB||0)}</div>
-          <div class="text-neutral-500">B</div><div>${pillFor(r.B||0)}</div>
-          <div class="text-neutral-500">O</div><div>${pillFor(r.O||0)}</div>
-          <div class="text-neutral-500">Total</div><div class="col-span-3 font-medium">${rowTotal(r)}</div>
-        </div>
-      </div>
-    `).join('');
+        `;
+      }).join('');
+
+      // Attach click handlers untuk mobile cards
+      attachCardToggleHandlers();
+    }
+
+    function attachToggleHandlers() {
+      document.querySelectorAll('[data-row-toggle]').forEach(row => {
+        row.addEventListener('click', function(e) {
+          // Jangan toggle jika klik pada button/link
+          if (e.target.closest('button') || e.target.closest('a')) return;
+
+          const detailsId = this.dataset.rowToggle;
+          const detailsRow = document.getElementById(detailsId);
+          const chevron = this.querySelector('[data-chevron] svg');
+
+          if (detailsRow) {
+            const isHidden = detailsRow.classList.contains('hidden');
+
+            // Close all other detail rows
+            document.querySelectorAll('.detail-row').forEach(dr => {
+              if (dr !== detailsRow) {
+                dr.classList.add('hidden');
+              }
+            });
+            document.querySelectorAll('[data-chevron] svg').forEach(ch => {
+              if (ch !== chevron) {
+                ch.style.transform = 'rotate(0deg)';
+              }
+            });
+
+            // Toggle current row
+            if (isHidden) {
+              detailsRow.classList.remove('hidden');
+              if (chevron) chevron.style.transform = 'rotate(180deg)';
+            } else {
+              detailsRow.classList.add('hidden');
+              if (chevron) chevron.style.transform = 'rotate(0deg)';
+            }
+          }
+        });
+      });
+    }
+
+    function attachCardToggleHandlers() {
+      document.querySelectorAll('[data-card-toggle]').forEach(trigger => {
+        trigger.addEventListener('click', function() {
+          const detailsId = this.dataset.cardToggle;
+          const detailsDiv = document.getElementById(detailsId);
+          const chevron = this.querySelector('[data-chevron-card] svg');
+
+          if (detailsDiv) {
+            detailsDiv.classList.toggle('hidden');
+            if (chevron) {
+              const isHidden = detailsDiv.classList.contains('hidden');
+              chevron.style.transform = isHidden ? 'rotate(0deg)' : 'rotate(180deg)';
+            }
+          }
+        });
+      });
     }
 
     function markSortHeaders() {
@@ -587,9 +819,9 @@
             <td class="px-4 py-3 font-medium">#${item.id}</td>
             <td class="px-4 py-3">${item.rhesus}</td>
             <td class="px-4 py-3">${item.jumlah} unit</td>
-            <td class="px-4 py-3">${item.tgl_masuk}</td>
-            <td class="px-4 py-3">${item.tgl_kadaluarsa}</td>
-            <td class="px-4 py-3">${item.created_at}</td>
+            <td class="px-4 py-3">${formatDate(item.tgl_masuk)}</td>
+            <td class="px-4 py-3">${formatDate(item.tgl_kadaluarsa)}</td>
+            <td class="px-4 py-3">${formatDate(item.created_at)}</td>
           </tr>
         `).join('');
       }
@@ -653,6 +885,78 @@
   <style>
     th.sortable:hover {
       background-color: rgba(0, 0, 0, 0.02);
+    }
+
+    /* Animasi untuk detail rows */
+    .detail-row {
+      animation: slideDown 0.3s ease-out;
+    }
+
+    @keyframes slideDown {
+      from {
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Smooth transition untuk chevron */
+    [data-chevron] svg,
+    [data-chevron-card] svg {
+      transition: transform 0.3s ease;
+    }
+
+    /* Hover effect untuk rows yang bisa di-expand */
+    [data-row-toggle]:hover {
+      background-color: rgba(59, 130, 246, 0.05);
+    }
+
+    /* Glow effect untuk expanded row */
+    .detail-row td {
+      box-shadow: inset 0 2px 8px rgba(59, 130, 246, 0.1);
+    }
+
+    /* Styling untuk pills dengan hover effect */
+    .pill-hover {
+      transition: all 0.2s ease;
+    }
+
+    .pill-hover:hover {
+      transform: scale(1.05);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Gradient background untuk header detail */
+    .detail-header-gradient {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+
+    /* Scroll smooth untuk table yang panjang */
+    .detail-row td>div {
+      max-height: 600px;
+      overflow-y: auto;
+    }
+
+    .detail-row td>div::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .detail-row td>div::-webkit-scrollbar-track {
+      background: rgba(0, 0, 0, 0.05);
+      border-radius: 10px;
+    }
+
+    .detail-row td>div::-webkit-scrollbar-thumb {
+      background: rgba(59, 130, 246, 0.4);
+      border-radius: 10px;
+    }
+
+    .detail-row td>div::-webkit-scrollbar-thumb:hover {
+      background: rgba(59, 130, 246, 0.6);
     }
   </style>
 @endsection

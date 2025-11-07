@@ -89,20 +89,6 @@
                           class="font-semibold text-red-500">1</span> dari 4</p>
                 </div>
               </div>
-              <div
-                   class="hidden items-center gap-2 rounded-full bg-slate-100 px-4 py-2 text-sm font-medium text-slate-600 sm:flex">
-                <svg class="h-4 w-4"
-                     fill="none"
-                     stroke="currentColor"
-                     viewBox="0 0 24 24">
-                  <path stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                </svg>
-                <span>Step <span id="currentStep"
-                        class="font-semibold text-red-500">1</span>/4</span>
-              </div>
             </div>
           </div>
 
@@ -588,64 +574,64 @@
         </button>
       </div>
 
-            <div class="max-h-[70vh] overflow-y-auto px-6 py-6">
-              <div class="grid gap-8 divide-y divide-slate-100 sm:grid-cols-2 sm:divide-x sm:divide-y-0">
-                <div class="sm:pr-8">
-                  <h4 class="flex items-center gap-2 text-base font-semibold text-slate-800">
-                    <svg class="h-5 w-5 text-slate-400"
-                         fill="none"
-                         stroke="currentColor"
-                         viewBox="0 0 24 24">
-                      <path stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="2"
-                            d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
-                    </svg>
-                    Data Pasien & RS
-                  </h4>
-                  <dl class="mt-3 space-y-2 text-sm">
-                    <div class="flex">
-                      <dt class="w-40 font-medium text-slate-500">Rumah Sakit</dt>
-                      <dd id="cf_rs_pemesan"
-                          class="text-slate-800"></dd>
-                    </div>
-                    <div class="flex">
-                      <dt class="w-40 text-slate-500">Jenis Kelamin</dt>
-                      <dd id="cf_jenis_kelamin"
-                          class="font-medium"></dd>
-                    </div>
-                    <div class="flex">
-                      <dt class="w-40 text-slate-500">No. Registrasi</dt>
-                      <dd id="cf_no_regis_rs"
-                          class="font-medium"></dd>
-                    </div>
-                    <div class="flex">
-                      <dt class="w-40 text-slate-500">Nama Dokter</dt>
-                      <dd id="cf_nama_dokter"
-                          class="font-medium"></dd>
-                    </div>
-                    <div class="flex">
-                      <dt class="w-40 text-slate-500">Nama Pasien</dt>
-                      <dd id="cf_nama_pasien"
-                          class="font-medium"></dd>
-                    </div>
-                    <div class="flex">
-                      <dt class="w-40 text-slate-500">Suami/Istri</dt>
-                      <dd id="cf_nama_suami_istri"
-                          class="font-medium"></dd>
-                    </div>
-                    <div class="flex">
-                      <dt class="w-40 text-slate-500">Telepon</dt>
-                      <dd id="cf_nomor_telepon"
-                          class="font-medium"></dd>
-                    </div>
-                    <div class="flex">
-                      <dt class="w-40 text-slate-500">Email</dt>
-                      <dd id="cf_email"
-                          class="font-medium"></dd>
-                    </div>
-                  </dl>
-                </div>
+      <div class="max-h-[70vh] overflow-y-auto px-6 py-6">
+        <div class="grid gap-8 divide-y divide-slate-100 sm:grid-cols-2 sm:divide-x sm:divide-y-0">
+          <div class="sm:pr-8">
+            <h4 class="flex items-center gap-2 text-base font-semibold text-slate-800">
+              <svg class="h-5 w-5 text-slate-400"
+                   fill="none"
+                   stroke="currentColor"
+                   viewBox="0 0 24 24">
+                <path stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+              </svg>
+              Data Pasien & RS
+            </h4>
+            <dl class="mt-3 space-y-2 text-sm">
+              <div class="flex">
+                <dt class="w-40 font-medium text-slate-500">Rumah Sakit</dt>
+                <dd id="cf_rs_pemesan"
+                    class="text-slate-800"></dd>
+              </div>
+              <div class="flex">
+                <dt class="w-40 text-slate-500">Jenis Kelamin</dt>
+                <dd id="cf_jenis_kelamin"
+                    class="font-medium"></dd>
+              </div>
+              <div class="flex">
+                <dt class="w-40 text-slate-500">No. Registrasi</dt>
+                <dd id="cf_no_regis_rs"
+                    class="font-medium"></dd>
+              </div>
+              <div class="flex">
+                <dt class="w-40 text-slate-500">Nama Dokter</dt>
+                <dd id="cf_nama_dokter"
+                    class="font-medium"></dd>
+              </div>
+              <div class="flex">
+                <dt class="w-40 text-slate-500">Nama Pasien</dt>
+                <dd id="cf_nama_pasien"
+                    class="font-medium"></dd>
+              </div>
+              <div class="flex">
+                <dt class="w-40 text-slate-500">Suami/Istri</dt>
+                <dd id="cf_nama_suami_istri"
+                    class="font-medium"></dd>
+              </div>
+              <div class="flex">
+                <dt class="w-40 text-slate-500">Telepon</dt>
+                <dd id="cf_nomor_telepon"
+                    class="font-medium"></dd>
+              </div>
+              <div class="flex">
+                <dt class="w-40 text-slate-500">Email</dt>
+                <dd id="cf_email"
+                    class="font-medium"></dd>
+              </div>
+            </dl>
+          </div>
 
           <!-- B -->
           <div class="sm:pl-8">

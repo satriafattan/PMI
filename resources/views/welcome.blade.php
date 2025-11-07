@@ -103,79 +103,28 @@
         {{-- Right Content - Hero Image --}}
         <div class="relative">
           <div class="absolute -inset-4 rounded-3xl bg-gradient-to-r from-white/20 to-rose-300/20 blur-2xl"></div>
-          <div class="relative">
-            <div class="overflow-hidden rounded-3xl bg-white/20 shadow-2xl ring-1 ring-white/30 backdrop-blur-xl">
-              <div class="aspect-[4/3] bg-gradient-to-br from-red-100/20 to-rose-200/20 p-8">
-                {{-- Medical illustration placeholder --}}
-                <div class="grid h-full w-full place-items-center text-center">
-                  <div>
-                    <svg class="mx-auto h-32 w-32 text-white/90"
-                         fill="none"
-                         stroke="currentColor"
-                         viewBox="0 0 24 24">
-                      <path stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="1.5"
-                            d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-                    </svg>
-                    <div class="mt-4 text-2xl font-bold text-white">Profesional Medis Terpercaya</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {{-- Floating Card --}}
-            <div class="absolute -bottom-6 -left-6 rounded-2xl bg-white p-5 shadow-2xl ring-1 ring-slate-200">
-              <div class="flex items-center gap-3">
-                <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-green-100">
-                  <svg class="h-6 w-6 text-green-600"
+          <div class="overflow-hidden rounded-3xl bg-white/20 shadow-2xl ring-1 ring-white/30 backdrop-blur-xl">
+            <div class="aspect-[4/3] bg-gradient-to-br from-red-100/20 to-rose-200/20 p-8">
+              {{-- Medical illustration placeholder --}}
+              <div class="grid h-full w-full place-items-center text-center">
+                <div>
+                  <svg class="mx-auto h-32 w-32 text-white/90"
                        fill="none"
                        stroke="currentColor"
                        viewBox="0 0 24 24">
                     <path stroke-linecap="round"
                           stroke-linejoin="round"
-                          stroke-width="2"
-                          d="M5 13l4 4L19 7" />
+                          stroke-width="1.5"
+                          d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
                   </svg>
+                  <div class="mt-4 text-2xl font-bold text-white">Profesional Medis Terpercaya</div>
                 </div>
-                <div>
-                  <div class="text-xs text-slate-500">Estimasi Proses</div>
-                  <div class="font-bold text-slate-900">&lt; 10 Menit</div>
-                </div>
-              </div>
-            </div>
-
-            {{-- Floating Badge --}}
-            <div class="absolute -right-4 top-12 rounded-xl bg-white px-4 py-3 shadow-xl ring-1 ring-slate-200">
-              <div class="flex items-center gap-2 text-sm font-semibold text-slate-900">
-                <span class="relative flex h-3 w-3">
-                  <span
-                        class="absolute inline-flex h-full w-full animate-ping rounded-full bg-green-400 opacity-75"></span>
-                  <span class="relative inline-flex h-3 w-3 rounded-full bg-green-500"></span>
-                </span>
-                Online Now
               </div>
             </div>
           </div>
         </div>
       </div>
     </div>
-
-    {{-- Scroll Indicator --}}
-    <div class="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce">
-      <a href="#stok"
-         class="flex flex-col items-center gap-2 text-white/70 transition hover:text-white">
-        <span class="text-xs font-medium">Scroll untuk melihat stok</span>
-        <svg class="h-6 w-6"
-             fill="none"
-             stroke="currentColor"
-             viewBox="0 0 24 24">
-          <path stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M19 14l-7 7m0 0l-7-7m7 7V3" />
-        </svg>
-      </a>
     </div>
   </section>
 
@@ -435,36 +384,6 @@
               </div>
             </li>
           </ul>
-
-          {{-- CTA --}}
-          <div class="mt-8 flex flex-wrap gap-4">
-            <a href="{{ url('/pemesanan') }}"
-               class="inline-flex items-center gap-2 rounded-xl bg-red-600 px-6 py-3 font-semibold text-white shadow-lg transition hover:bg-red-700 hover:shadow-xl">
-              Ajukan Permintaan Sekarang
-              <svg class="h-5 w-5"
-                   fill="none"
-                   stroke="currentColor"
-                   viewBox="0 0 24 24">
-                <path stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M13 7l5 5m0 0l-5 5m5-5H6" />
-              </svg>
-            </a>
-            <a href="{{ url('/about') }}"
-               class="inline-flex items-center gap-2 rounded-xl border-2 border-slate-300 bg-white px-6 py-3 font-semibold text-slate-700 transition hover:border-red-600 hover:text-red-600">
-              Tentang Kami
-              <svg class="h-5 w-5"
-                   fill="none"
-                   stroke="currentColor"
-                   viewBox="0 0 24 24">
-                <path stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-            </a>
-          </div>
         </div>
 
         {{-- Right Content - Image & Stats --}}
@@ -473,21 +392,17 @@
           <div class="relative">
             <div class="absolute -inset-4 rounded-3xl bg-gradient-to-r from-red-200/50 to-rose-200/50 blur-2xl"></div>
             <div class="relative overflow-hidden rounded-3xl bg-white shadow-2xl ring-1 ring-slate-200">
-              <div class="aspect-[4/3] bg-gradient-to-br from-slate-50 to-slate-100 p-12">
-                <div class="flex h-full items-center justify-center">
-                  <div class="text-center">
-                    <svg class="mx-auto h-40 w-40 text-slate-300"
-                         fill="none"
-                         stroke="currentColor"
-                         viewBox="0 0 24 24">
-                      <path stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="1"
-                            d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
-                    </svg>
-                    <p class="mt-4 text-lg font-semibold text-slate-400">Fasilitas PMI Lampung</p>
-                  </div>
-                </div>
+              <div class="aspect-[4/3] bg-gradient-to-br from-slate-50 to-slate-100">
+                {{-- Google Maps Embed - UDD PMI Provinsi Lampung --}}
+                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3972.210535434445!2d105.26447807475985!3d-5.385924294598647!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e40daee965d96df%3A0x2a77d94b9bc3b7c9!2sUDD%20PMI%20Provinsi%20Lampung!5e0!3m2!1sid!2sid!4v1699355555555!5m2!1sid!2sid&markers=color:red%7Clabel:PMI%7C-5.385924,-105.264478"
+                        width="100%"
+                        height="100%"
+                        style="border:0;"
+                        allowfullscreen=""
+                        loading="lazy"
+                        referrerpolicy="no-referrer-when-downgrade"
+                        class="h-full w-full">
+                </iframe>
               </div>
 
               {{-- Stats Overlay --}}
@@ -506,32 +421,6 @@
                     <div class="mt-1 text-xs text-slate-600">Tersertifikasi</div>
                   </div>
                 </div>
-              </div>
-            </div>
-          </div>
-
-          {{-- Floating Badge 1 --}}
-          <div class="absolute -left-6 top-12 rounded-2xl bg-white p-4 shadow-2xl ring-1 ring-slate-200">
-            <div class="flex items-center gap-3">
-              <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-green-100 text-2xl">
-                ✓
-              </div>
-              <div>
-                <div class="text-sm font-bold text-slate-900">ISO Certified</div>
-                <div class="text-xs text-slate-500">Quality Assured</div>
-              </div>
-            </div>
-          </div>
-
-          {{-- Floating Badge 2 --}}
-          <div class="absolute -right-6 bottom-12 rounded-2xl bg-white p-4 shadow-2xl ring-1 ring-slate-200">
-            <div class="flex items-center gap-3">
-              <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-blue-100 text-2xl">
-                ⚡
-              </div>
-              <div>
-                <div class="text-sm font-bold text-slate-900">Fast Response</div>
-                <div class="text-xs text-slate-500">&lt; 1 Hour</div>
               </div>
             </div>
           </div>

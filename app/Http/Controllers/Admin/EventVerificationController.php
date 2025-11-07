@@ -3,10 +3,13 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Mail\EventVerifikasiNotification;
 use App\Models\EventSchedule;
 use App\Models\EventVerification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 
 class EventVerificationController extends Controller
@@ -73,7 +76,7 @@ class EventVerificationController extends Controller
             $fresh = EventSchedule::whereKey($event->id)->lockForUpdate()->first();
 
             if ($fresh->status !== 'pending') {
-                abort(409, 'Event sudah berstatus '.ucfirst($fresh->status).' dan tidak dapat diubah.');
+                abort(409, 'Event sudah berstatus ' . ucfirst($fresh->status) . ' dan tidak dapat diubah.');
             }
 
             EventVerification::create([
@@ -85,12 +88,32 @@ class EventVerificationController extends Controller
             ]);
 
             $fresh->forceFill(['status' => $data['status']])->save();
+
+            // Kirim email notifikasi ke pengaju event
+            if ($fresh->email) {
+                try {
+                    Mail::to($fresh->email)->send(
+                        new EventVerifikasiNotification(
+                            $fresh,
+                            $data['status'],
+                            $data['catatan'] ?? null
+                        )
+                    );
+                } catch (\Exception $e) {
+                    // Log error tapi tidak menggagalkan transaksi
+                    Log::error('Gagal mengirim email verifikasi event', [
+                        'event_id' => $fresh->id,
+                        'email'    => $fresh->email,
+                        'error'    => $e->getMessage(),
+                    ]);
+                }
+            }
         });
 
         // Pakai id supaya re-binding dari DB (fresh)
         return redirect()
             ->route('admin.event-verifikasi.show', $event->id)
-            ->with('success', 'Keputusan verifikasi berhasil disimpan.');
+            ->with('success', 'Keputusan verifikasi berhasil disimpan dan notifikasi email telah dikirim.');
     }
 
     public function downloadSurat(EventSchedule $event)

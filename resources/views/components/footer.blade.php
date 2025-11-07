@@ -35,9 +35,9 @@
       <div class="flex flex-col gap-4">
         <a href="{{ url('/') }}"
            class="flex items-center gap-3 text-slate-800 transition-opacity duration-200 hover:opacity-80">
-          <div class="grid h-10 w-10 place-items-center rounded-lg bg-red-600 text-sm font-bold text-white shadow-sm">
-            UDD
-          </div>
+          <img src="{{ asset('images/LOGO NAV.png') }}"
+               alt="Logo PMI"
+               class="h-32 w-32 object-contain">
           <span class="text-lg font-semibold tracking-tight">PMI Provinsi Lampung</span>
         </a>
         <p class="mt-2 text-sm text-slate-600">Unit Donor Darah PMI Provinsi Lampung berkomitmen untuk memberikan
