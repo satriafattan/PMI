@@ -156,12 +156,19 @@
               </div>
             </div>
 
-            <div class="grid size-9 place-items-center rounded-xl bg-blue-100 font-semibold text-blue-700">
-              {{ Str::of(auth('admin')->user()->name ?? 'A')->substr(0, 1)->upper() }}
-            </div>
+        <div class="flex items-center gap-2 sm:gap-3 flex-wrap justify-end">
+          <button class="px-3 py-1.5 rounded-lg border text-xs sm:text-sm hover:bg-slate-50">
+            Export Data
+          </button>
+          <a class="px-3 py-1.5 rounded-lg bg-blue-600 text-white text-xs sm:text-sm hover:bg-blue-700">
+            Tambah Stok
+          </a>
+          <div class="size-9 grid place-items-center bg-blue-100 text-blue-700 font-semibold rounded-xl">
+            {{ Str::of(auth('admin')->user()->name ?? 'A')->substr(0,1)->upper() }}
           </div>
         </div>
-      </header>
+      </div>
+    </header>
 
       {{-- PAGE CONTENT --}}
       <main class="p-4 md:p-6">
