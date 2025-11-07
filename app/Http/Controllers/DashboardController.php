@@ -55,11 +55,15 @@ class DashboardController extends Controller
         $trendKeluar = $keluarBulanLalu > 0 ? round((($keluarBulanIni - $keluarBulanLalu) / $keluarBulanLalu) * 100) : null;
 
         // OPTIMASI: Data untuk grafik stok per produk (hanya yang belum expired)
-        $stokProduk = StokDarah::select('produk', DB::raw('SUM(jumlah) as total'))
+        $stokProdukData = StokDarah::select('produk', DB::raw('SUM(jumlah) as total'))
             ->whereDate('tgl_kadaluarsa', '>=', now()->toDateString())
             ->groupBy('produk')
             ->pluck('total', 'produk')
             ->toArray();
+
+        // Urutkan sesuai label chart: WB, PRC, TC, FFP, AHF, LP
+        $produkOrder = ['WB', 'PRC', 'TC', 'FFP', 'AHF', 'LP'];
+        $stokProduk = array_map(fn($p) => $stokProdukData[$p] ?? 0, $produkOrder);
 
         // OPTIMASI: Gabungkan query statistik tambahan dalam 1 query
         $statsPemesanan = PemesananDarah::select(
@@ -137,7 +141,12 @@ class DashboardController extends Controller
 
         return view('admin.dashboard', [
             'stats' => [
-                'stok' => $stokPerGolongan,
+                'stok' => [
+                    'A' => $stokPerGolongan->A ?? 0,
+                    'AB' => $stokPerGolongan->AB ?? 0,
+                    'B' => $stokPerGolongan->B ?? 0,
+                    'O' => $stokPerGolongan->O ?? 0,
+                ],
                 'masuk' => [
                     'jumlah' => $masukBulanIni,
                     'trend' => $trendMasuk
@@ -146,7 +155,7 @@ class DashboardController extends Controller
                     'jumlah' => $keluarBulanIni,
                     'trend' => $trendKeluar
                 ],
-                'stok_produk' => array_values($stokProduk),
+                'stok_produk' => $stokProduk,
                 'permintaan' => [
                     'total' => $totalPermintaan,
                     'diproses' => $permintaanDiproses
@@ -155,7 +164,7 @@ class DashboardController extends Controller
                 'total_stok' => $totalStok,
 
                 // Analytics baru
-                'trend_pemesanan' => $trendPemesanan,
+                'trend_pemesanan' => $trendPemesanan->toArray(),
                 'top_hospitals' => $topHospitals,
                 'avg_verification_hours' => round($avgVerificationTime ?? 0, 1),
                 'status_distribution' => $statusDistribution,

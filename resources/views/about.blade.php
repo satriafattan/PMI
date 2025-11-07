@@ -498,6 +498,7 @@
 
     <div class="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
       <div class="relative overflow-hidden rounded-3xl bg-gradient-to-r from-red-700 via-red-600 to-rose-500 shadow-2xl">
+        
         {{-- Animated background blobs --}}
         <div class="pointer-events-none absolute inset-0">
           <div class="absolute -left-16 -top-16 h-64 w-64 animate-pulse rounded-full bg-white/10 blur-3xl"></div>
@@ -506,15 +507,6 @@
         </div>
 
         <div class="relative px-8 py-16 text-center text-white sm:px-12 sm:py-20">
-          <div
-               class="mx-auto inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 text-sm font-medium ring-1 ring-white/20 backdrop-blur-sm">
-            <span class="relative flex h-2 w-2">
-              <span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-white opacity-75"></span>
-              <span class="relative inline-flex h-2 w-2 rounded-full bg-white"></span>
-            </span>
-            Mari Bergabung
-          </div>
-
           <h3 class="mt-6 text-4xl font-extrabold leading-tight sm:text-5xl">
             Berkolaborasi Dengan Kami
           </h3>
@@ -524,7 +516,7 @@
           </p>
 
           <div class="mt-8 flex flex-wrap justify-center gap-4">
-            <a href="{{ url('/pemesanan') }}"
+            <a href="{{ url('/jadwal-event') }}"
                class="group inline-flex items-center gap-2 rounded-xl bg-white px-6 py-4 font-semibold text-red-700 shadow-xl transition hover:scale-105 hover:bg-red-50 hover:shadow-2xl">
               <svg class="h-5 w-5 transition group-hover:rotate-12"
                    fill="none"
@@ -535,7 +527,7 @@
                       stroke-width="2"
                       d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
               </svg>
-              Ajukan Permintaan Darah
+              Jadwalkan Event
             </a>
             <a href="{{ url('/') }}"
                class="inline-flex items-center gap-2 rounded-xl border-2 border-white/30 bg-white/5 px-6 py-4 font-semibold text-white backdrop-blur-sm transition hover:bg-white/10">

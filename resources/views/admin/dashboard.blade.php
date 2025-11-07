@@ -207,120 +207,150 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
       document.addEventListener('DOMContentLoaded', function() {
+        // Debug data
+        console.log('Stok Produk:', @json($stats['stok_produk'] ?? []));
+        console.log('Trend Pemesanan:', @json($stats['trend_pemesanan'] ?? []));
+        console.log('Status Distribution:', @json($stats['status_distribution'] ?? []));
+
         // 1. Stok per Produk (Bar Chart)
         const ctx = document.getElementById('stokChart').getContext('2d');
-        new Chart(ctx, {
-          type: 'bar',
-          data: {
-            labels: ['WB', 'PRC', 'TC', 'FFP', 'AHF', 'LP'],
-            datasets: [{
-              label: 'Stok Tersedia',
-              data: {{ json_encode($stats['stok_produk'] ?? []) }},
-              backgroundColor: [
-                'rgba(59, 130, 246, 0.5)',
-                'rgba(16, 185, 129, 0.5)',
-                'rgba(245, 158, 11, 0.5)',
-                'rgba(99, 102, 241, 0.5)',
-                'rgba(236, 72, 153, 0.5)',
-                'rgba(124, 58, 237, 0.5)'
-              ],
-              borderColor: [
-                'rgb(59, 130, 246)',
-                'rgb(16, 185, 129)',
-                'rgb(245, 158, 11)',
-                'rgb(99, 102, 241)',
-                'rgb(236, 72, 153)',
-                'rgb(124, 58, 237)'
-              ],
-              borderWidth: 1
-            }]
-          },
-          options: {
-            responsive: true,
-            scales: {
-              y: {
-                beginAtZero: true,
-                grid: {
-                  color: 'rgba(0, 0, 0, 0.05)'
+        const stokData = @json($stats['stok_produk'] ?? []);
+
+        // Cek apakah ada data (selain 0 semua)
+        const hasData = stokData.some(val => val > 0);
+
+        if (hasData) {
+          new Chart(ctx, {
+            type: 'bar',
+            data: {
+              labels: ['WB', 'PRC', 'TC', 'FFP', 'AHF', 'LP'],
+              datasets: [{
+                label: 'Stok Tersedia',
+                data: stokData,
+                backgroundColor: [
+                  'rgba(59, 130, 246, 0.5)',
+                  'rgba(16, 185, 129, 0.5)',
+                  'rgba(245, 158, 11, 0.5)',
+                  'rgba(99, 102, 241, 0.5)',
+                  'rgba(236, 72, 153, 0.5)',
+                  'rgba(124, 58, 237, 0.5)'
+                ],
+                borderColor: [
+                  'rgb(59, 130, 246)',
+                  'rgb(16, 185, 129)',
+                  'rgb(245, 158, 11)',
+                  'rgb(99, 102, 241)',
+                  'rgb(236, 72, 153)',
+                  'rgb(124, 58, 237)'
+                ],
+                borderWidth: 1
+              }]
+            },
+            options: {
+              responsive: true,
+              scales: {
+                y: {
+                  beginAtZero: true,
+                  grid: {
+                    color: 'rgba(0, 0, 0, 0.05)'
+                  }
+                },
+                x: {
+                  grid: {
+                    display: false
+                  }
                 }
               },
-              x: {
-                grid: {
+              plugins: {
+                legend: {
                   display: false
                 }
               }
-            },
-            plugins: {
-              legend: {
-                display: false
-              }
             }
-          }
-        });
+          });
+        } else {
+          // Tampilkan pesan jika tidak ada data
+          ctx.canvas.parentElement.innerHTML =
+            '<div class="flex items-center justify-center h-full text-slate-400 text-sm">Tidak ada data stok produk</div>';
+        }
 
         // 2. Trend Pemesanan (Line Chart)
         const trendCtx = document.getElementById('trendChart').getContext('2d');
         const trendData = @json($stats['trend_pemesanan'] ?? []);
-        new Chart(trendCtx, {
-          type: 'line',
-          data: {
-            labels: trendData.map(t => t.month),
-            datasets: [{
-              label: 'Jumlah Pemesanan',
-              data: trendData.map(t => t.count),
-              borderColor: 'rgb(59, 130, 246)',
-              backgroundColor: 'rgba(59, 130, 246, 0.1)',
-              tension: 0.4,
-              fill: true,
-              pointRadius: 4,
-              pointHoverRadius: 6
-            }]
-          },
-          options: {
-            responsive: true,
-            scales: {
-              y: {
-                beginAtZero: true,
-                ticks: {
-                  precision: 0
+
+        if (trendData && trendData.length > 0) {
+          new Chart(trendCtx, {
+            type: 'line',
+            data: {
+              labels: trendData.map(t => t.month),
+              datasets: [{
+                label: 'Jumlah Pemesanan',
+                data: trendData.map(t => t.count),
+                borderColor: 'rgb(59, 130, 246)',
+                backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                tension: 0.4,
+                fill: true,
+                pointRadius: 4,
+                pointHoverRadius: 6
+              }]
+            },
+            options: {
+              responsive: true,
+              scales: {
+                y: {
+                  beginAtZero: true,
+                  ticks: {
+                    precision: 0
+                  }
+                }
+              },
+              plugins: {
+                legend: {
+                  display: false
                 }
               }
-            },
-            plugins: {
-              legend: {
-                display: false
-              }
             }
-          }
-        });
+          });
+        } else {
+          // Tampilkan pesan jika tidak ada data
+          trendCtx.canvas.parentElement.innerHTML =
+            '<div class="flex items-center justify-center h-full text-slate-400 text-sm">Tidak ada data pemesanan</div>';
+        }
 
         // 3. Status Distribution (Doughnut Chart)
         const statusCtx = document.getElementById('statusChart').getContext('2d');
         const statusData = @json($stats['status_distribution'] ?? []);
-        new Chart(statusCtx, {
-          type: 'doughnut',
-          data: {
-            labels: Object.keys(statusData).map(s => s.charAt(0).toUpperCase() + s.slice(1)),
-            datasets: [{
-              data: Object.values(statusData),
-              backgroundColor: [
-                'rgba(245, 158, 11, 0.7)', // pending - orange
-                'rgba(16, 185, 129, 0.7)', // approved - green
-                'rgba(239, 68, 68, 0.7)', // rejected - red
-              ],
-              borderWidth: 2,
-              borderColor: '#fff'
-            }]
-          },
-          options: {
-            responsive: true,
-            plugins: {
-              legend: {
-                position: 'bottom'
+
+        if (statusData && Object.keys(statusData).length > 0) {
+          new Chart(statusCtx, {
+            type: 'doughnut',
+            data: {
+              labels: Object.keys(statusData).map(s => s.charAt(0).toUpperCase() + s.slice(1)),
+              datasets: [{
+                data: Object.values(statusData),
+                backgroundColor: [
+                  'rgba(245, 158, 11, 0.7)', // pending - orange
+                  'rgba(16, 185, 129, 0.7)', // approved - green
+                  'rgba(239, 68, 68, 0.7)', // rejected - red
+                ],
+                borderWidth: 2,
+                borderColor: '#fff'
+              }]
+            },
+            options: {
+              responsive: true,
+              plugins: {
+                legend: {
+                  position: 'bottom'
+                }
               }
             }
-          }
-        });
+          });
+        } else {
+          // Tampilkan pesan jika tidak ada data
+          statusCtx.canvas.parentElement.innerHTML =
+            '<div class="flex items-center justify-center h-full text-slate-400 text-sm">Tidak ada data status pemesanan</div>';
+        }
       });
     </script>
   @endpush

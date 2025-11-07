@@ -115,14 +115,8 @@
     <div class="h-px w-full bg-gradient-to-r from-transparent via-slate-200 to-transparent"></div>
 
     {{-- Copyright & Additional Info --}}
-    <div class="mt-8 flex flex-col items-center justify-between gap-4 text-sm text-slate-500 md:flex-row">
-      <p class="text-center md:text-left">© {{ date('Y') }} UDD PMI Provinsi Lampung. All rights reserved.</p>
-      <div class="flex gap-6">
-        <a href="#"
-           class="transition-colors duration-200 hover:text-red-600">Privacy Policy</a>
-        <a href="#"
-           class="transition-colors duration-200 hover:text-red-600">Terms of Service</a>
-      </div>
+    <div class="mt-8 text-center text-sm text-slate-500">
+      <p>© {{ date('Y') }} UDD PMI Provinsi Lampung. All rights reserved.</p>
     </div>
   </div>
 </footer>

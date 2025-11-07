@@ -18,34 +18,24 @@
            style="animation-delay: 2s;"></div>
     </div>
 
-    <div class="relative mx-auto max-w-7xl px-4 py-16 sm:px-6 sm:py-24 lg:px-8">
-      <div class="grid items-center gap-12 lg:grid-cols-2">
+    <div class="relative mx-auto max-w-7xl px-4 py-12 sm:px-6 sm:py-16 lg:px-8">
+      <div class="grid items-center gap-8 lg:grid-cols-2">
         {{-- Left Content --}}
         <div class="text-white">
-          <div
-               class="inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 text-sm font-medium ring-1 ring-white/20 backdrop-blur-sm">
-            <span class="relative flex h-2 w-2">
-              <span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-white opacity-75"></span>
-              <span class="relative inline-flex h-2 w-2 rounded-full bg-white"></span>
-            </span>
-            Sistem Real-time 24/7
-          </div>
-
-          <h1 class="mt-6 text-5xl font-extrabold leading-tight tracking-tight sm:text-6xl lg:text-7xl">
-            Selamatkan Nyawa
+          <h1 class="mt-4 text-3xl font-extrabold leading-tight tracking-tight sm:text-4xl lg:text-5xl"> Selamatkan Nyawa
             <span class="block bg-gradient-to-r from-white to-red-100 bg-clip-text text-transparent">Bersama Kami</span>
           </h1>
 
-          <p class="mt-6 max-w-2xl text-lg leading-relaxed text-white/90 sm:text-xl">
+          <p class="mt-4 max-w-2xl text-base leading-relaxed text-white/90 sm:text-lg">
             Bergabunglah dengan misi mulia untuk menyediakan darah berkualitas bagi yang membutuhkan.
             <strong class="font-semibold text-white">Setiap tetes darah dapat menyelamatkan hingga 3 nyawa.</strong>
           </p>
 
           {{-- CTA Buttons --}}
-          <div class="mt-8 flex flex-wrap gap-4">
+          <div class="mt-6 flex flex-wrap gap-3">
             <a href="{{ url('/pemesanan') }}"
-               class="group inline-flex items-center gap-2 rounded-xl bg-white px-6 py-4 font-semibold text-red-700 shadow-xl transition hover:scale-105 hover:bg-red-50 hover:shadow-2xl">
-              <svg class="h-5 w-5 transition group-hover:rotate-12"
+               class="group inline-flex items-center gap-2 rounded-xl bg-white px-5 py-3 text-sm font-semibold text-red-700 shadow-xl transition hover:scale-105 hover:bg-red-50 hover:shadow-2xl">
+              <svg class="h-4 w-4 transition group-hover:rotate-12"
                    fill="none"
                    stroke="currentColor"
                    viewBox="0 0 24 24">
@@ -56,10 +46,10 @@
               </svg>
               Ajukan Permintaan Darah
             </a>
-            <a href="#about"
-               class="inline-flex items-center gap-2 rounded-xl border-2 border-white/30 bg-white/5 px-6 py-4 font-semibold text-white backdrop-blur-sm transition hover:bg-white/10">
+            <a href="{{ url('/about') }}"
+               class="inline-flex items-center gap-2 rounded-xl border-2 border-white/30 bg-white/5 px-5 py-3 text-sm font-semibold text-white backdrop-blur-sm transition hover:bg-white/10">
               Pelajari Lebih Lanjut
-              <svg class="h-5 w-5"
+              <svg class="h-4 w-4"
                    fill="none"
                    stroke="currentColor"
                    viewBox="0 0 24 24">
@@ -72,30 +62,30 @@
           </div>
 
           {{-- Stats --}}
-          <div class="mt-12 grid grid-cols-3 gap-6 sm:gap-8">
+          <div class="mt-8 grid grid-cols-3 gap-4 sm:gap-6">
             <div class="group">
               <div
-                   class="mb-3 inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-white/10 text-2xl ring-1 ring-white/20 backdrop-blur-sm transition group-hover:scale-110 group-hover:bg-white/20">
+                   class="mb-2 inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-white/10 text-xl ring-1 ring-white/20 backdrop-blur-sm transition group-hover:scale-110 group-hover:bg-white/20">
                 🩸
               </div>
-              <div class="text-3xl font-extrabold tracking-tight">15,000+</div>
-              <div class="mt-1 text-sm text-white/80">Donor Aktif</div>
+              <div class="text-2xl font-extrabold tracking-tight">15,000+</div>
+              <div class="mt-1 text-xs text-white/80">Donor Aktif</div>
             </div>
             <div class="group">
               <div
-                   class="mb-3 inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-white/10 text-2xl ring-1 ring-white/20 backdrop-blur-sm transition group-hover:scale-110 group-hover:bg-white/20">
+                   class="mb-2 inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-white/10 text-xl ring-1 ring-white/20 backdrop-blur-sm transition group-hover:scale-110 group-hover:bg-white/20">
                 ❤️
               </div>
-              <div class="text-3xl font-extrabold tracking-tight">50,000+</div>
-              <div class="mt-1 text-sm text-white/80">Nyawa Terselamatkan</div>
+              <div class="text-2xl font-extrabold tracking-tight">50,000+</div>
+              <div class="mt-1 text-xs text-white/80">Nyawa Terselamatkan</div>
             </div>
             <div class="group">
               <div
-                   class="mb-3 inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-white/10 text-2xl ring-1 ring-white/20 backdrop-blur-sm transition group-hover:scale-110 group-hover:bg-white/20">
+                   class="mb-2 inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-white/10 text-xl ring-1 ring-white/20 backdrop-blur-sm transition group-hover:scale-110 group-hover:bg-white/20">
                 ⏱️
               </div>
-              <div class="text-3xl font-extrabold tracking-tight">24/7</div>
-              <div class="mt-1 text-sm text-white/80">Layanan Darurat</div>
+              <div class="text-2xl font-extrabold tracking-tight">24/7</div>
+              <div class="mt-1 text-xs text-white/80">Layanan Darurat</div>
             </div>
           </div>
         </div>
@@ -104,22 +94,11 @@
         <div class="relative">
           <div class="absolute -inset-4 rounded-3xl bg-gradient-to-r from-white/20 to-rose-300/20 blur-2xl"></div>
           <div class="overflow-hidden rounded-3xl bg-white/20 shadow-2xl ring-1 ring-white/30 backdrop-blur-xl">
-            <div class="aspect-[4/3] bg-gradient-to-br from-red-100/20 to-rose-200/20 p-8">
-              {{-- Medical illustration placeholder --}}
-              <div class="grid h-full w-full place-items-center text-center">
-                <div>
-                  <svg class="mx-auto h-32 w-32 text-white/90"
-                       fill="none"
-                       stroke="currentColor"
-                       viewBox="0 0 24 24">
-                    <path stroke-linecap="round"
-                          stroke-linejoin="round"
-                          stroke-width="1.5"
-                          d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-                  </svg>
-                  <div class="mt-4 text-2xl font-bold text-white">Profesional Medis Terpercaya</div>
-                </div>
-              </div>
+            <div class="aspect-[4/3] bg-gradient-to-br from-red-100/20 to-rose-200/20">
+              {{-- Hero Banner Image --}}
+              <img src="{{ asset('images/card.jpg') }}"
+                   alt="Profesional Medis Terpercaya - PMI Lampung"
+                   class="h-full w-full object-cover">
             </div>
           </div>
         </div>
@@ -130,10 +109,10 @@
 
   {{-- STOK PRC - Enhanced Design --}}
   <section id="stok"
-           class="relative bg-gradient-to-b from-white to-slate-50 py-20 sm:py-28">
+           class="relative bg-gradient-to-b from-white to-slate-50 py-16 sm:py-20">
     <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
       {{-- Section Header --}}
-      <div class="mb-12 flex flex-col items-start justify-between gap-6 sm:flex-row sm:items-end">
+      <div class="mb-10 flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-end">
         <div class="max-w-2xl">
           <div
                class="inline-flex items-center gap-2 rounded-full bg-red-100 px-4 py-1.5 text-sm font-semibold text-red-700">
@@ -143,17 +122,17 @@
             </span>
             Live Update
           </div>
-          <h2 class="mt-4 text-4xl font-extrabold text-slate-900 sm:text-5xl">
+          <h2 class="mt-3 text-3xl font-extrabold text-slate-900 sm:text-4xl">
             Persediaan Darah Real-time
           </h2>
-          <p class="mt-3 text-lg text-slate-600">
+          <p class="mt-2 text-base text-slate-600">
             Pantau ketersediaan stok darah per golongan dengan update otomatis setiap 30 detik
           </p>
         </div>
         <a href="{{ url('/stok') }}"
-           class="group inline-flex items-center gap-2 rounded-xl border-2 border-red-600 bg-white px-6 py-3 font-semibold text-red-600 shadow-sm transition hover:bg-red-600 hover:text-white hover:shadow-xl">
+           class="group inline-flex items-center gap-2 rounded-xl border-2 border-red-600 bg-white px-5 py-2.5 text-sm font-semibold text-red-600 shadow-sm transition hover:bg-red-600 hover:text-white hover:shadow-xl">
           Lihat Detail Lengkap
-          <svg class="h-5 w-5 transition group-hover:translate-x-1"
+          <svg class="h-4 w-4 transition group-hover:translate-x-1"
                fill="none"
                stroke="currentColor"
                viewBox="0 0 24 24">
@@ -285,7 +264,7 @@
 
   {{-- MENGAPA MEMILIH - Enhanced Design --}}
   <section id="about"
-           class="relative overflow-hidden bg-slate-50 py-20 sm:py-28">
+           class="relative overflow-hidden bg-slate-50 py-16 sm:py-20">
     {{-- Background Pattern --}}
     <div class="pointer-events-none absolute inset-0 opacity-40">
       <div class="absolute right-0 top-0 h-96 w-96 rounded-full bg-red-100 blur-3xl"></div>
@@ -293,36 +272,24 @@
     </div>
 
     <div class="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-      <div class="grid items-center gap-12 lg:grid-cols-2 lg:gap-16">
+      <div class="grid items-center gap-8 lg:grid-cols-2 lg:gap-12">
         {{-- Left Content --}}
-        <div>
-          <div
-               class="inline-flex items-center gap-2 rounded-full bg-red-100 px-4 py-1.5 text-sm font-semibold text-red-700">
-            <svg class="h-4 w-4"
-                 fill="currentColor"
-                 viewBox="0 0 20 20">
-              <path fill-rule="evenodd"
-                    d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                    clip-rule="evenodd" />
-            </svg>
-            Kepercayaan & Kualitas
-          </div>
-
-          <h2 class="mt-4 text-4xl font-extrabold text-slate-900 sm:text-5xl">
+        <div class="pt-16">
+          <h2 class="text-3xl font-extrabold text-slate-900 sm:text-4xl">
             Mengapa Memilih
             <span class="bg-gradient-to-r from-red-600 to-rose-500 bg-clip-text text-transparent">UDD PMI</span>
           </h2>
 
-          <p class="mt-4 text-lg leading-relaxed text-slate-600">
+          <p class="mt-3 text-base leading-relaxed text-slate-600">
             Kami berkomitmen memberikan pelayanan terbaik dalam pengelolaan darah dengan standar internasional dan
             teknologi terdepan untuk keselamatan Anda.
           </p>
 
-          <ul class="mt-8 space-y-5">
-            <li class="group flex items-start gap-4">
+          <ul class="mt-6 space-y-4">
+            <li class="group flex items-start gap-3">
               <div
-                   class="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-red-600 to-red-500 text-white shadow-lg transition group-hover:scale-110">
-                <svg class="h-6 w-6"
+                   class="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-red-600 to-red-500 text-white shadow-lg transition group-hover:scale-110">
+                <svg class="h-5 w-5"
                      fill="none"
                      stroke="currentColor"
                      viewBox="0 0 24 24">
@@ -333,18 +300,18 @@
                 </svg>
               </div>
               <div class="flex-1">
-                <h3 class="text-lg font-bold text-slate-900">Standar Keamanan Tinggi</h3>
-                <p class="mt-1 text-slate-600">
+                <h3 class="text-base font-bold text-slate-900">Standar Keamanan Tinggi</h3>
+                <p class="mt-1 text-sm text-slate-600">
                   Seluruh proses screening dan pengolahan darah mengikuti protokol WHO dan standar internasional untuk
                   menjamin keamanan maksimal.
                 </p>
               </div>
             </li>
 
-            <li class="group flex items-start gap-4">
+            <li class="group flex items-start gap-3">
               <div
-                   class="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-600 to-blue-500 text-white shadow-lg transition group-hover:scale-110">
-                <svg class="h-6 w-6"
+                   class="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-600 to-blue-500 text-white shadow-lg transition group-hover:scale-110">
+                <svg class="h-5 w-5"
                      fill="none"
                      stroke="currentColor"
                      viewBox="0 0 24 24">
@@ -355,18 +322,18 @@
                 </svg>
               </div>
               <div class="flex-1">
-                <h3 class="text-lg font-bold text-slate-900">Teknologi Terdepan</h3>
-                <p class="mt-1 text-slate-600">
+                <h3 class="text-base font-bold text-slate-900">Teknologi Terdepan</h3>
+                <p class="mt-1 text-sm text-slate-600">
                   Sistem manajemen digital dan peralatan medis terkini untuk keandalan, efisiensi, dan traceability yang
                   sempurna.
                 </p>
               </div>
             </li>
 
-            <li class="group flex items-start gap-4">
+            <li class="group flex items-start gap-3">
               <div
-                   class="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-green-600 to-green-500 text-white shadow-lg transition group-hover:scale-110">
-                <svg class="h-6 w-6"
+                   class="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-green-600 to-green-500 text-white shadow-lg transition group-hover:scale-110">
+                <svg class="h-5 w-5"
                      fill="none"
                      stroke="currentColor"
                      viewBox="0 0 24 24">
@@ -377,8 +344,8 @@
                 </svg>
               </div>
               <div class="flex-1">
-                <h3 class="text-lg font-bold text-slate-900">Layanan 24/7</h3>
-                <p class="mt-1 text-slate-600">
+                <h3 class="text-base font-bold text-slate-900">Layanan 24/7</h3>
+                <p class="mt-1 text-sm text-slate-600">
                   Tim medis profesional dan berpengalaman siap melayani kebutuhan darurat Anda kapan saja, tanpa henti.
                 </p>
               </div>
@@ -393,8 +360,8 @@
             <div class="absolute -inset-4 rounded-3xl bg-gradient-to-r from-red-200/50 to-rose-200/50 blur-2xl"></div>
             <div class="relative overflow-hidden rounded-3xl bg-white shadow-2xl ring-1 ring-slate-200">
               <div class="aspect-[4/3] bg-gradient-to-br from-slate-50 to-slate-100">
-                {{-- Google Maps Embed - UDD PMI Provinsi Lampung --}}
-                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3972.210535434445!2d105.26447807475985!3d-5.385924294598647!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e40daee965d96df%3A0x2a77d94b9bc3b7c9!2sUDD%20PMI%20Provinsi%20Lampung!5e0!3m2!1sid!2sid!4v1699355555555!5m2!1sid!2sid&markers=color:red%7Clabel:PMI%7C-5.385924,-105.264478"
+                {{-- Google Maps Embed - UDD PMI Provinsi Lampung dengan Marker --}}
+                <iframe src="https://maps.google.com/maps?q=UDD+PMI+Provinsi+Lampung,Jl.+Dr.+Sam+Ratulangi+No.105,+Penengahan,+Kec.+Tj.+Karang+Pusat,+Kota+Bandar+Lampung&t=&z=15&ie=UTF8&iwloc=&output=embed"
                         width="100%"
                         height="100%"
                         style="border:0;"

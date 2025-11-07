@@ -374,6 +374,9 @@
     })();
   </script>
 
+  {{-- Stack untuk scripts tambahan dari child views --}}
+  @stack('scripts')
+
 </body>
 
 </html>

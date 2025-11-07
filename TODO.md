@@ -1,6 +1,0 @@
-- [ ] Update color scheme from red to blue (focus rings and button background)
-- [ ] Wrap sections A, B, C, D in card containers with shadows and borders
-- [ ] Add icons to section headers
-- [ ] Improve spacing and typography (margins, paddings, font sizes)
-- [ ] Add hover effects to inputs and button
-- [ ] Enhance button with gradient and transitions

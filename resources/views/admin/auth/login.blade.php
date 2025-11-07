@@ -3,8 +3,10 @@
 <main class="flex min-h-screen items-center justify-center bg-gray-50 px-6 py-12">
   <div class="w-full max-w-md rounded-xl bg-white p-8 shadow-lg">
     <div class="mb-8 text-center">
-      <div class="mx-auto mb-3 h-12 w-12 rounded-full bg-red-600 grid place-items-center text-white font-bold">
-        ADM
+      <div class="mx-auto mb-3">
+        <img src="{{ asset('images/LOGO NAV.png') }}" 
+             alt="Logo PMI" 
+             class="mx-auto h-32 w-32 object-contain">
       </div>
       <h1 class="text-2xl font-bold text-gray-800">Login Admin</h1>
       <p class="mt-1 text-sm text-gray-500">Silakan masuk untuk mengelola sistem</p>
@@ -54,6 +56,4 @@
     </form>
   </div>
 </main>
-
-<x-footer />
 
