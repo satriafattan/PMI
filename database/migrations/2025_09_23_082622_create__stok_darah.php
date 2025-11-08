@@ -10,9 +10,9 @@ return new class extends Migration {
         Schema::create('stok_darah', function (Blueprint $table) {
             $table->id();
 
-            $table->string('produk', 191);
+            $table->enum('produk', ['WB', 'PRC', 'TC', 'FFP', 'CRYO', 'LP', 'TCA', 'CP']);
             $table->enum('gol_darah', ['A', 'B', 'AB', 'O']);
-            $table->enum('rhesus', ['Rh+', 'Rh-']);   // <-- Tambahan baru
+            $table->enum('rhesus', ['Rh+', 'Rh-']);
             $table->unsignedInteger('jumlah')->default(0);
 
             $table->date('tgl_masuk');
@@ -20,7 +20,7 @@ return new class extends Migration {
 
             $table->timestamps();
 
-            $table->index(['produk', 'gol_darah', 'rhesus']); // update index
+            $table->index(['produk', 'gol_darah', 'rhesus']);
         });
     }
 

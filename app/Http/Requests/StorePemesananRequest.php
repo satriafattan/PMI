@@ -59,8 +59,8 @@ class StorePemesananRequest extends FormRequest
 
             // STEP 2 – data pemesanan
             // form mengirim 'tanggal_diperlukan' (sudah dipetakan ke tanggal_permintaan di prepareForValidation)
-            'tanggal_diperlukan'=> ['nullable', 'date'],     // tidak disimpan, hanya agar aman bila ikut terkirim
-            'tanggal_permintaan'=> ['required', 'date'],
+            'tanggal_diperlukan' => ['nullable', 'date'],     // tidak disimpan, hanya agar aman bila ikut terkirim
+            'tanggal_permintaan' => ['required', 'date'],
             'pernah_serologi'   => ['required', 'in:Ya,Tidak'],
             'diagnosa_klinik'   => ['required', 'string', 'max:255'],
             'lokasi_serologi'   => ['nullable', 'string', 'max:120'],
@@ -74,7 +74,7 @@ class StorePemesananRequest extends FormRequest
             'riwayat_hemolitik' => ['nullable', 'in:Ya,Tidak'],
 
             // STEP 4 – ringkasan pemesanan
-            'produk'            => ['required', 'in:WB,PRC,TC,FFP,AHF,LP,TCA,PK'],
+            'produk'            => ['required', 'in:WB,PRC,TC,FFP,CRYO,LP,TCA,CP'],
             'jumlah_kantong'    => ['required', 'integer', 'min:1', 'max:99'],
             'alasan_transfusi'  => ['required', 'string'],
 

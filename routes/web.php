@@ -12,7 +12,6 @@ use App\Http\Controllers\Public\StokController;
 use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Admin\BloodUnitController;
-use App\Http\Controllers\Admin\RekapStokController;
 use App\Http\Controllers\Admin\StokDarahController;
 use App\Http\Controllers\Admin\VerifikasiPemesananController;
 use App\Http\Controllers\Admin\RiwayatController;
@@ -82,8 +81,6 @@ Route::middleware('auth:admin')->prefix('admin')->name('admin.')->group(function
 
     // ===== Stok Darah =====
     Route::resource('stok-darah', StokDarahController::class)->except(['show']);
-    Route::get('/stok', [StokDarahController::class, 'index'])->name('stok.index');
-    Route::post('/stok', [StokDarahController::class, 'store'])->name('stok.store');
 
     // ===== Verifikasi Pemesanan =====
     Route::get('verifikasi', [VerifikasiPemesananController::class, 'index'])->name('verifikasi.index');

@@ -14,7 +14,7 @@
     // Kumpulkan opsi komponen dari data nyata; fallback jika kosong
     $kompOpts = collect($rows)->pluck('komponen')->filter()->unique()->values()->all();
     if (empty($kompOpts)) {
-        $kompOpts = ['PRC', 'WB', 'TRC', 'FFP', 'TC', 'AHF', 'LP', 'TCA', 'PK'];
+        $kompOpts = ['WB', 'PRC', 'TC', 'FFP', 'CRYO', 'LP', 'TCA', 'CP'];
     }
   @endphp
 

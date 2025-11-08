@@ -448,20 +448,20 @@
                               @selected(old('produk') === 'PRC')>PRC: Packed Red Cell
                       </option>
                       <option value="TC"
-                              @selected(old('produk') === 'TC')>TC: Trombocyte Concentrate
+                              @selected(old('produk') === 'TC')>TC: Thrombocyte Concentrate
                       </option>
                       <option value="FFP"
                               @selected(old('produk') === 'FFP')>FFP: Fresh Frozen Plasma
                       </option>
-                      <option value="AHF"
-                              @selected(old('produk') === 'AHF')>AHF: Cryoprecipitated AHF
+                      <option value="CRYO"
+                              @selected(old('produk') === 'CRYO')>CRYO: Cryoprecipitated Anti-Hemophilic Factor
                       </option>
                       <option value="LP"
                               @selected(old('produk') === 'LP')>LP: Liquid Plasma</option>
                       <option value="TCA"
-                              @selected(old('produk') === 'TCA')>TC Aferesis</option>
-                      <option value="PK"
-                              @selected(old('produk') === 'PK')>Plasma Konvalesen</option>
+                              @selected(old('produk') === 'TCA')>TCA: Thrombocyte Apheresis</option>
+                      <option value="CP"
+                              @selected(old('produk') === 'CP')>CP: Convalescent Plasma</option>
                     </select>
                     <span class="pointer-events-none absolute bottom-3 right-3 text-slate-400">▾</span>
                   </div>
@@ -559,268 +559,267 @@
       </div>
   </div>
 
-
   {{-- Success Modal --}}
 
   @if (session('success'))
-  {{-- Success Modal (dirender hanya jika ada flash success) --}}
-  @if (session('success'))
-    <div id="successModal"
-         class="fixed inset-0 z-[9999] flex items-center justify-center">
-      <div class="absolute inset-0 bg-black/40"></div>
+    {{-- Success Modal (dirender hanya jika ada flash success) --}}
+    @if (session('success'))
+      <div id="successModal"
+           class="fixed inset-0 z-[9999] flex items-center justify-center">
+        <div class="absolute inset-0 bg-black/40"></div>
 
-      <div class="relative z-10 w-[90%] max-w-lg overflow-hidden rounded-3xl bg-white shadow-2xl">
-        <div class="absolute right-4 top-4">
-          <button type="button"
-                  class="rounded-lg p-2 text-slate-400 hover:bg-slate-50 hover:text-slate-600"
-                  onclick="hideSuccessModal()">
-            <svg class="h-5 w-5"
-                 fill="none"
-                 stroke="currentColor"
-                 viewBox="0 0 24 24">
-              <path stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M6 18L18 6M6 6l12 12"></path>
-            </svg>
-          </button>
-        </div>
-
-        <div class="px-8 pb-10 pt-12 text-center">
-          <div class="mx-auto mb-6 grid h-20 w-20 place-items-center rounded-full bg-emerald-50 text-emerald-500">
-            <svg class="h-10 w-10"
-                 fill="none"
-                 stroke="currentColor"
-                 viewBox="0 0 24 24">
-              <path stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-            </svg>
+        <div class="relative z-10 w-[90%] max-w-lg overflow-hidden rounded-3xl bg-white shadow-2xl">
+          <div class="absolute right-4 top-4">
+            <button type="button"
+                    class="rounded-lg p-2 text-slate-400 hover:bg-slate-50 hover:text-slate-600"
+                    onclick="hideSuccessModal()">
+              <svg class="h-5 w-5"
+                   fill="none"
+                   stroke="currentColor"
+                   viewBox="0 0 24 24">
+                <path stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M6 18L18 6M6 6l12 12"></path>
+              </svg>
+            </button>
           </div>
 
-          <h3 class="text-2xl font-bold text-slate-800">Pemesanan Berhasil!</h3>
-          <p class="mx-auto mt-3 max-w-sm text-slate-600">Kami akan memproses permintaan Anda dan mengirimkan
-            konfirmasi melalui email.</p>
-        </div>
+          <div class="px-8 pb-10 pt-12 text-center">
+            <div class="mx-auto mb-6 grid h-20 w-20 place-items-center rounded-full bg-emerald-50 text-emerald-500">
+              <svg class="h-10 w-10"
+                   fill="none"
+                   stroke="currentColor"
+                   viewBox="0 0 24 24">
+                <path stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+              </svg>
+            </div>
 
-        <div class="grid grid-cols-2 divide-x divide-slate-100 border-t border-slate-100">
-          <button type="button"
-                  class="px-6 py-4 text-sm font-medium text-slate-600 transition hover:bg-slate-50"
-                  onclick="hideSuccessModal()">Tutup</button>
-          <a href="{{ route('pemesanan.create') }}"
-             class="bg-red-600 px-6 py-4 text-center text-sm font-medium text-white transition hover:bg-red-700">Pesan
-            Lagi</a>
+            <h3 class="text-2xl font-bold text-slate-800">Pemesanan Berhasil!</h3>
+            <p class="mx-auto mt-3 max-w-sm text-slate-600">Kami akan memproses permintaan Anda dan mengirimkan
+              konfirmasi melalui email.</p>
+          </div>
+
+          <div class="grid grid-cols-2 divide-x divide-slate-100 border-t border-slate-100">
+            <button type="button"
+                    class="px-6 py-4 text-sm font-medium text-slate-600 transition hover:bg-slate-50"
+                    onclick="hideSuccessModal()">Tutup</button>
+            <a href="{{ route('pemesanan.create') }}"
+               class="bg-red-600 px-6 py-4 text-center text-sm font-medium text-white transition hover:bg-red-700">Pesan
+              Lagi</a>
+          </div>
         </div>
       </div>
+
+      @php
+        // Mencegah session flash message muncul sebagai notifikasi terpisah
+        Session::forget('success');
+      @endphp
+    @endif
+
+    </div>
+    </section>
+
+    <x-footer bg="bg-slate-50" />
     </div>
 
-    @php
-      // Mencegah session flash message muncul sebagai notifikasi terpisah
-      Session::forget('success');
-    @endphp
-  @endif
+    {{-- SCRIPTS --}}
+    <script>
+      let currentStep = 1;
+      const titleMap = {
+        1: 'Data Pasien & Rumah Sakit',
+        2: 'Data Pemesanan',
+        3: 'Data Khusus Pasien Wanita',
+        4: 'Pemesanan'
+      };
 
-  </div>
-  </section>
+      function showStep(n) {
+        document.querySelectorAll('.step').forEach(el => el.classList.add('hidden'));
+        document.getElementById('step-' + n).classList.remove('hidden');
+        currentStep = n;
+        document.getElementById('stepTitle').textContent = titleMap[n];
+        document.getElementById('pageNumber').textContent = n;
+      }
 
-  <x-footer bg="bg-slate-50" />
-  </div>
-
-  {{-- SCRIPTS --}}
-  <script>
-    let currentStep = 1;
-    const titleMap = {
-      1: 'Data Pasien & Rumah Sakit',
-      2: 'Data Pemesanan',
-      3: 'Data Khusus Pasien Wanita',
-      4: 'Pemesanan'
-    };
-
-    function showStep(n) {
-      document.querySelectorAll('.step').forEach(el => el.classList.add('hidden'));
-      document.getElementById('step-' + n).classList.remove('hidden');
-      currentStep = n;
-      document.getElementById('stepTitle').textContent = titleMap[n];
-      document.getElementById('pageNumber').textContent = n;
-    }
-
-    function validateStep1() {
-      const required = ['rs_pemesan', 'jenis_kelamin', 'no_regis_rs', 'nama_dokter', 'nama_pasien', 'nomor_telepon',
-        'email'
-      ];
-      let ok = true;
-      required.forEach(name => {
-        const el = document.querySelector(`[name="${name}"]`);
-        if (!el || !el.value.trim()) {
+      function validateStep1() {
+        const required = ['rs_pemesan', 'jenis_kelamin', 'no_regis_rs', 'nama_dokter', 'nama_pasien', 'nomor_telepon',
+          'email'
+        ];
+        let ok = true;
+        required.forEach(name => {
+          const el = document.querySelector(`[name="${name}"]`);
+          if (!el || !el.value.trim()) {
+            ok = false;
+            if (el) el.style.borderColor = 'red';
+          } else {
+            el.style.borderColor = '';
+          }
+        });
+        const email = document.querySelector('[name="email"]');
+        if (email && email.value && !/^\S+@\S+\.\S+$/.test(email.value)) {
           ok = false;
-          if (el) el.style.borderColor = 'red';
-        } else {
-          el.style.borderColor = '';
+          email.style.borderColor = 'red';
         }
-      });
-      const email = document.querySelector('[name="email"]');
-      if (email && email.value && !/^\S+@\S+\.\S+$/.test(email.value)) {
-        ok = false;
-        email.style.borderColor = 'red';
-      }
-      if (!ok) alert('Harap isi semua field yang wajib diisi dengan benar.');
-      return ok;
-    }
-
-    function validateStep2() {
-      const tanggalDiperlukan = document.querySelector('[name="tanggal_diperlukan"]');
-      const pernahSerologi = document.querySelector('[name="pernah_serologi"]');
-      const diagnosaKlinik = document.querySelector('[name="diagnosa_klinik"]');
-      const lokasiSerologi = document.querySelector('[name="lokasi_serologi"]');
-      const tanggalTransfusi = document.querySelectorAll('[name="tanggal_transfusi"]');
-      const tanggalSerologi = document.querySelectorAll('[name="tanggal_serologi"]');
-      const alasanTransfusi = document.querySelector('[name="alasan_transfusi"]');
-      const hasilSerologi = document.querySelector('[name="hasil_serologi"]');
-
-      let isValid = true;
-
-      if (!tanggalDiperlukan.value.trim()) {
-        tanggalDiperlukan.style.borderColor = 'red';
-        isValid = false;
-      } else {
-        tanggalDiperlukan.style.borderColor = '';
-      }
-      if (!pernahSerologi.value.trim()) {
-        pernahSerologi.style.borderColor = 'red';
-        isValid = false;
-      } else {
-        pernahSerologi.style.borderColor = '';
-      }
-      if (!diagnosaKlinik.value.trim()) {
-        diagnosaKlinik.style.borderColor = 'red';
-        isValid = false;
-      } else {
-        diagnosaKlinik.style.borderColor = '';
+        if (!ok) alert('Harap isi semua field yang wajib diisi dengan benar.');
+        return ok;
       }
 
-      if (pernahSerologi.value === 'Ya') {
-        if (!lokasiSerologi.value.trim()) {
-          lokasiSerologi.style.borderColor = 'red';
+      function validateStep2() {
+        const tanggalDiperlukan = document.querySelector('[name="tanggal_diperlukan"]');
+        const pernahSerologi = document.querySelector('[name="pernah_serologi"]');
+        const diagnosaKlinik = document.querySelector('[name="diagnosa_klinik"]');
+        const lokasiSerologi = document.querySelector('[name="lokasi_serologi"]');
+        const tanggalTransfusi = document.querySelectorAll('[name="tanggal_transfusi"]');
+        const tanggalSerologi = document.querySelectorAll('[name="tanggal_serologi"]');
+        const alasanTransfusi = document.querySelector('[name="alasan_transfusi"]');
+        const hasilSerologi = document.querySelector('[name="hasil_serologi"]');
+
+        let isValid = true;
+
+        if (!tanggalDiperlukan.value.trim()) {
+          tanggalDiperlukan.style.borderColor = 'red';
           isValid = false;
         } else {
+          tanggalDiperlukan.style.borderColor = '';
+        }
+        if (!pernahSerologi.value.trim()) {
+          pernahSerologi.style.borderColor = 'red';
+          isValid = false;
+        } else {
+          pernahSerologi.style.borderColor = '';
+        }
+        if (!diagnosaKlinik.value.trim()) {
+          diagnosaKlinik.style.borderColor = 'red';
+          isValid = false;
+        } else {
+          diagnosaKlinik.style.borderColor = '';
+        }
+
+        if (pernahSerologi.value === 'Ya') {
+          if (!lokasiSerologi.value.trim()) {
+            lokasiSerologi.style.borderColor = 'red';
+            isValid = false;
+          } else {
+            lokasiSerologi.style.borderColor = '';
+          }
+          const tanggalSerologiInput = tanggalSerologi[tanggalSerologi.length - 1];
+          if (!tanggalSerologiInput.value.trim()) {
+            tanggalSerologiInput.style.borderColor = 'red';
+            isValid = false;
+          } else {
+            tanggalSerologiInput.style.borderColor = '';
+          }
+          if (!hasilSerologi.value.trim()) {
+            hasilSerologi.style.borderColor = 'red';
+            isValid = false;
+          } else {
+            hasilSerologi.style.borderColor = '';
+          }
+        } else {
+          // ✅ perbaikan: bersihkan style pada input tanggal serologi (pakai tanggalSerologi, bukan tanggalTransfusi)
+          const tanggalSerologiInput = tanggalSerologi[tanggalSerologi.length - 1];
+          if (tanggalSerologiInput) tanggalSerologiInput.style.borderColor = '';
+          hasilSerologi.style.borderColor = '';
           lokasiSerologi.style.borderColor = '';
         }
-        const tanggalSerologiInput = tanggalSerologi[tanggalSerologi.length - 1];
-        if (!tanggalSerologiInput.value.trim()) {
-          tanggalSerologiInput.style.borderColor = 'red';
+
+        if (!alasanTransfusi.value.trim()) {
+          alasanTransfusi.style.borderColor = 'red';
           isValid = false;
         } else {
-          tanggalSerologiInput.style.borderColor = '';
+          alasanTransfusi.style.borderColor = '';
         }
-        if (!hasilSerologi.value.trim()) {
-          hasilSerologi.style.borderColor = 'red';
+
+        if (!isValid) alert('Harap isi semua field yang wajib diisi sebelum melanjutkan.');
+        return isValid;
+      }
+
+      function validateStep4() {
+        const produkSelect = document.querySelector('[name="produk"]');
+        const jumlahKantong = document.querySelector('[name="jumlah_kantong"]');
+        const alasanTransfusi = document.querySelector('[name="alasan_transfusi"]');
+        const golDarah = document.querySelector('[name="gol_darah"]');
+        const rhesus = document.querySelector('[name="rhesus"]');
+
+        let isValid = true;
+
+        if (!produkSelect.value.trim()) {
+          produkSelect.style.borderColor = 'red';
           isValid = false;
         } else {
-          hasilSerologi.style.borderColor = '';
+          produkSelect.style.borderColor = '';
         }
-      } else {
-        // ✅ perbaikan: bersihkan style pada input tanggal serologi (pakai tanggalSerologi, bukan tanggalTransfusi)
-        const tanggalSerologiInput = tanggalSerologi[tanggalSerologi.length - 1];
-        if (tanggalSerologiInput) tanggalSerologiInput.style.borderColor = '';
-        hasilSerologi.style.borderColor = '';
-        lokasiSerologi.style.borderColor = '';
+        if (!golDarah.value.trim()) {
+          golDarah.style.borderColor = 'red';
+          isValid = false;
+        } else {
+          golDarah.style.borderColor = '';
+        }
+        if (!rhesus.value.trim()) {
+          rhesus.style.borderColor = 'red';
+          isValid = false;
+        } else {
+          rhesus.style.borderColor = '';
+        }
+        if (!jumlahKantong.value.trim()) {
+          jumlahKantong.style.borderColor = 'red';
+          isValid = false;
+        } else {
+          jumlahKantong.style.borderColor = '';
+        }
+        if (!alasanTransfusi.value.trim()) {
+          alasanTransfusi.style.borderColor = 'red';
+          isValid = false;
+        } else {
+          alasanTransfusi.style.borderColor = '';
+        }
+
+        if (!isValid) alert('Harap isi semua field yang wajib diisi sebelum mengirim formulir.');
+        return isValid;
       }
 
-      if (!alasanTransfusi.value.trim()) {
-        alasanTransfusi.style.borderColor = 'red';
-        isValid = false;
-      } else {
-        alasanTransfusi.style.borderColor = '';
+      function nextFromStep1() {
+        if (validateStep1()) showStep(2);
       }
 
-      if (!isValid) alert('Harap isi semua field yang wajib diisi sebelum melanjutkan.');
-      return isValid;
-    }
-
-    function validateStep4() {
-      const produkSelect = document.querySelector('[name="produk"]');
-      const jumlahKantong = document.querySelector('[name="jumlah_kantong"]');
-      const alasanTransfusi = document.querySelector('[name="alasan_transfusi"]');
-      const golDarah = document.querySelector('[name="gol_darah"]');
-      const rhesus = document.querySelector('[name="rhesus"]');
-
-      let isValid = true;
-
-      if (!produkSelect.value.trim()) {
-        produkSelect.style.borderColor = 'red';
-        isValid = false;
-      } else {
-        produkSelect.style.borderColor = '';
-      }
-      if (!golDarah.value.trim()) {
-        golDarah.style.borderColor = 'red';
-        isValid = false;
-      } else {
-        golDarah.style.borderColor = '';
-      }
-      if (!rhesus.value.trim()) {
-        rhesus.style.borderColor = 'red';
-        isValid = false;
-      } else {
-        rhesus.style.borderColor = '';
-      }
-      if (!jumlahKantong.value.trim()) {
-        jumlahKantong.style.borderColor = 'red';
-        isValid = false;
-      } else {
-        jumlahKantong.style.borderColor = '';
-      }
-      if (!alasanTransfusi.value.trim()) {
-        alasanTransfusi.style.borderColor = 'red';
-        isValid = false;
-      } else {
-        alasanTransfusi.style.borderColor = '';
+      function nextAfterStep2() {
+        if (validateStep2()) {
+          const g = document.getElementById('jenis_kelamin').value;
+          if (g === 'P') showStep(3);
+          else showStep(4);
+        }
       }
 
-      if (!isValid) alert('Harap isi semua field yang wajib diisi sebelum mengirim formulir.');
-      return isValid;
-    }
+      function nextFromStep3() {
+        showStep(4);
+      }
 
-    function nextFromStep1() {
-      if (validateStep1()) showStep(2);
-    }
-
-    function nextAfterStep2() {
-      if (validateStep2()) {
+      function backFromStep4() {
         const g = document.getElementById('jenis_kelamin').value;
         if (g === 'P') showStep(3);
-        else showStep(4);
+        else showStep(2);
       }
-    }
 
-    function nextFromStep3() {
-      showStep(4);
-    }
+      function selectSingleJenisDarah(selectedCheckbox) {
+        document.querySelectorAll('input[name="produk_multi[]"]').forEach(cb => {
+          if (cb !== selectedCheckbox) cb.checked = false;
+        });
+      }
 
-    function backFromStep4() {
-      const g = document.getElementById('jenis_kelamin').value;
-      if (g === 'P') showStep(3);
-      else showStep(2);
-    }
-
-    function selectSingleJenisDarah(selectedCheckbox) {
-      document.querySelectorAll('input[name="produk_multi[]"]').forEach(cb => {
-        if (cb !== selectedCheckbox) cb.checked = false;
+      // ===== Modal sukses =====
+      document.addEventListener('DOMContentLoaded', () => {
+        // Selalu mulai di Step 1
+        showStep(1);
       });
-    }
 
-    // ===== Modal sukses =====
-    document.addEventListener('DOMContentLoaded', () => {
-      // Selalu mulai di Step 1
-      showStep(1);
-    });
-
-    function hideSuccessModal() {
-      const modal = document.getElementById('successModal');
-      if (!modal) return;
-      modal.classList.add('hidden');
-      modal.classList.remove('flex');
-    }
-  </script>
-@endsection
+      function hideSuccessModal() {
+        const modal = document.getElementById('successModal');
+        if (!modal) return;
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+      }
+    </script>
+  @endsection

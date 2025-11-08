@@ -194,7 +194,7 @@
 
       <form id="addStockForm"
             class="p-4 sm:p-6"
-            action="{{ route('admin.stok.store') }}"
+            action="{{ route('admin.stok-darah.store') }}"
             method="POST">
         @csrf
         <div class="grid gap-4">
@@ -210,19 +210,21 @@
                       {{ old('produk') ? '' : 'selected' }}>Pilih Produk</option>
               {{-- @foreach (['FFP: Fresh Frozen Plasma', 'AHF: Cryoprecipitated AHF', 'LP: Liquid Plasma', 'TC Aferesis', 'PK'] as $opt) --}}
               <option value="WB"
-                      {{ old('produk') ? 'selected' : '' }}>Whole Blood</option>
+                      {{ old('produk') ? 'selected' : '' }}>WB: Whole Blood</option>
               <option value="PRC"
-                      {{ old('produk') ? 'selected' : '' }}>Packed Red Cell</option>
-              <option value="FFP"
-                      {{ old('produk') ? 'selected' : '' }}>Fresh Frozen Plasma</option>
-              <option value="AHF"
-                      {{ old('produk') ? 'selected' : '' }}>Cryoprecipitated AHF</option>
-              <option value="LP"
-                      {{ old('produk') ? 'selected' : '' }}>Liquid Plasma</option>
+                      {{ old('produk') ? 'selected' : '' }}>PRC: Packed Red Cell</option>
               <option value="TC"
-                      {{ old('produk') ? 'selected' : '' }}>Trombocyte Concentrate</option>
-              <option value="PK"
-                      {{ old('produk') ? 'selected' : '' }}>Plasma Konvalesen</option>
+                      {{ old('produk') ? 'selected' : '' }}>TC: Thrombocyte Concentrate</option>
+              <option value="FFP"
+                      {{ old('produk') ? 'selected' : '' }}>FFP: Fresh Frozen Plasma</option>
+              <option value="CRYO"
+                      {{ old('produk') ? 'selected' : '' }}>CRYO: Cryoprecipitated Anti-Hemophilic Factor</option>
+              <option value="LP"
+                      {{ old('produk') ? 'selected' : '' }}>LP: Liquid Plasma</option>
+              <option value="TCA"
+                      {{ old('produk') ? 'selected' : '' }}>TCA: Thrombocyte Apheresis</option>
+              <option value="CP"
+                      {{ old('produk') ? 'selected' : '' }}>CP: Convalescent Plasma</option>
               {{-- @endforeach --}}
             </select>
             @error('produk')
@@ -527,28 +529,28 @@
                   <span class="text-xs text-neutral-500">(${totalUnits} unit)</span>
                 </div>
                 ${riwayat.length > 0 ? `
-                        <span class="text-xs text-neutral-500 flex items-center gap-1">
-                          ${iconHistory}
-                          ${riwayat.length} riwayat
-                        </span>
-                      ` : ''}
+                            <span class="text-xs text-neutral-500 flex items-center gap-1">
+                              ${iconHistory}
+                              ${riwayat.length} riwayat
+                            </span>
+                          ` : ''}
               </div>
               
               ${riwayat.length > 0 ? `
-                      <div class="rounded-lg border border-neutral-200 overflow-hidden">
-                        <table class="w-full text-xs">
-                          <thead class="bg-neutral-50 text-neutral-600">
-                            <tr>
-                              <th class="px-3 py-2 text-left font-medium">ID</th>
-                              <th class="px-3 py-2 text-left font-medium">Rhesus</th>
-                              <th class="px-3 py-2 text-left font-medium">Jumlah</th>
-                              <th class="px-3 py-2 text-left font-medium">Tgl Masuk</th>
-                              <th class="px-3 py-2 text-left font-medium">Tgl Kadaluarsa</th>
-                              <th class="px-3 py-2 text-left font-medium">Ditambahkan</th>
-                            </tr>
-                          </thead>
-                          <tbody class="divide-y divide-neutral-100 bg-white">
-                            ${riwayat.map(item => `
+                          <div class="rounded-lg border border-neutral-200 overflow-hidden">
+                            <table class="w-full text-xs">
+                              <thead class="bg-neutral-50 text-neutral-600">
+                                <tr>
+                                  <th class="px-3 py-2 text-left font-medium">ID</th>
+                                  <th class="px-3 py-2 text-left font-medium">Rhesus</th>
+                                  <th class="px-3 py-2 text-left font-medium">Jumlah</th>
+                                  <th class="px-3 py-2 text-left font-medium">Tgl Masuk</th>
+                                  <th class="px-3 py-2 text-left font-medium">Tgl Kadaluarsa</th>
+                                  <th class="px-3 py-2 text-left font-medium">Ditambahkan</th>
+                                </tr>
+                              </thead>
+                              <tbody class="divide-y divide-neutral-100 bg-white">
+                                ${riwayat.map(item => `
                         <tr class="hover:bg-blue-50/30 transition-colors">
                           <td class="px-3 py-2 font-medium text-neutral-700">#${item.id}</td>
                           <td class="px-3 py-2">
@@ -562,14 +564,14 @@
                           <td class="px-3 py-2 text-neutral-500 text-xs">${item.created_at}</td>
                         </tr>
                       `).join('')}
-                          </tbody>
-                        </table>
-                      </div>
-                    ` : `
-                      <div class="rounded-lg border border-dashed border-neutral-300 bg-neutral-50 px-4 py-6 text-center">
-                        <p class="text-sm text-neutral-500">Belum ada riwayat penambahan stok untuk golongan ${gol}</p>
-                      </div>
-                    `}
+                              </tbody>
+                            </table>
+                          </div>
+                        ` : `
+                          <div class="rounded-lg border border-dashed border-neutral-300 bg-neutral-50 px-4 py-6 text-center">
+                            <p class="text-sm text-neutral-500">Belum ada riwayat penambahan stok untuk golongan ${gol}</p>
+                          </div>
+                        `}
             </div>
           `;
         }).join('');
@@ -638,8 +640,8 @@
               </div>
               
               ${riwayat.length > 0 ? `
-                      <div class="space-y-2 mt-2">
-                        ${riwayat.slice(0, 3).map(item => `
+                          <div class="space-y-2 mt-2">
+                            ${riwayat.slice(0, 3).map(item => `
                     <div class="rounded-lg border border-neutral-200 bg-white p-2 text-xs">
                       <div class="flex justify-between items-start mb-1">
                         <span class="font-medium text-neutral-700">#${item.id}</span>
@@ -654,13 +656,13 @@
                       </div>
                     </div>
                   `).join('')}
-                        ${riwayat.length > 3 ? `
+                            ${riwayat.length > 3 ? `
                     <p class="text-xs text-center text-neutral-500">+${riwayat.length - 3} lainnya</p>
                   ` : ''}
-                      </div>
-                    ` : `
-                      <p class="text-xs text-neutral-500 text-center py-2">Belum ada riwayat</p>
-                    `}
+                          </div>
+                        ` : `
+                          <p class="text-xs text-neutral-500 text-center py-2">Belum ada riwayat</p>
+                        `}
             </div>
           `;
         }).join('');

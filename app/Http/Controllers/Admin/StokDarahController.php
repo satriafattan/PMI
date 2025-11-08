@@ -71,7 +71,7 @@ class StokDarahController extends Controller
         StokCacheService::clearCache();
 
         return redirect()
-            ->route('admin.stok.index')
+            ->route('admin.stok-darah.index')
             ->with('success', 'Stok berhasil disimpan.');
     }
 

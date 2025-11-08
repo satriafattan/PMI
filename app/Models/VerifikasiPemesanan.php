@@ -19,7 +19,7 @@ class VerifikasiPemesanan extends Model
         'produk',             // <- sudah diganti dari produk_darah
         'tanggal_permintaan',
         'status',             // pending | approved | rejected
-        // 'note',
+        'note',               // Catatan untuk verifikasi
     ];
 
     protected $casts = [

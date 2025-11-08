@@ -15,7 +15,7 @@ class StokDarahRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'produk'          => ['required', 'string', 'in:WB,PRC,TC,TRC,FFP,AHF,LP,TCA,PK'],
+            'produk'          => ['required', 'string', 'in:WB,PRC,TC,FFP,CRYO,LP,TCA,CP'],
             'gol_darah'       => ['required', 'in:A,B,AB,O'],
             'rhesus'          => ['required', 'in:Rh+,Rh-'],
             'jumlah'          => ['required', 'integer', 'min:1'],
@@ -28,7 +28,7 @@ class StokDarahRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'produk.in' => 'Produk harus salah satu dari: WB, PRC, TC, TRC, FFP, AHF, LP, TCA, PK.',
+            'produk.in' => 'Produk harus salah satu dari: WB, PRC, TC, FFP, CRYO, LP, TCA, CP.',
         ];
     }
 }

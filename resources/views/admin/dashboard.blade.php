@@ -223,7 +223,7 @@
           new Chart(ctx, {
             type: 'bar',
             data: {
-              labels: ['WB', 'PRC', 'TC', 'FFP', 'AHF', 'LP'],
+              labels: ['WB', 'PRC', 'TC', 'FFP', 'CRYO', 'LP', 'TCA', 'CP'],
               datasets: [{
                 label: 'Stok Tersedia',
                 data: stokData,

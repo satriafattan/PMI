@@ -434,20 +434,20 @@
                               @selected(old('produk') === 'PRC')>PRC: Packed Red Cell
                       </option>
                       <option value="TC"
-                              @selected(old('produk') === 'TC')>TC: Trombocyte Concentrate
+                              @selected(old('produk') === 'TC')>TC: Thrombocyte Concentrate
                       </option>
                       <option value="FFP"
                               @selected(old('produk') === 'FFP')>FFP: Fresh Frozen Plasma
                       </option>
-                      <option value="AHF"
-                              @selected(old('produk') === 'AHF')>AHF: Cryoprecipitated AHF
+                      <option value="CRYO"
+                              @selected(old('produk') === 'CRYO')>CRYO: Cryoprecipitated Anti-Hemophilic Factor
                       </option>
                       <option value="LP"
                               @selected(old('produk') === 'LP')>LP: Liquid Plasma</option>
                       <option value="TCA"
-                              @selected(old('produk') === 'TCA')>TC Aferesis</option>
-                      <option value="PK"
-                              @selected(old('produk') === 'PK')>Plasma Konvalesen</option>
+                              @selected(old('produk') === 'TCA')>TCA: Thrombocyte Apheresis</option>
+                      <option value="CP"
+                              @selected(old('produk') === 'CP')>CP: Convalescent Plasma</option>
                     </select>
                     <span class="pointer-events-none absolute bottom-3 right-3 text-slate-400">▾</span>
                   </div>
@@ -1019,12 +1019,12 @@
       const produkMap = {
         WB: 'WB: Whole Blood',
         PRC: 'PRC: Packed Red Cell',
-        TC: 'TC: Trombocyte Concentrate',
+        TC: 'TC: Thrombocyte Concentrate',
         FFP: 'FFP: Fresh Frozen Plasma',
-        AHF: 'AHF: Cryoprecipitated AHF',
+        CRYO: 'CRYO: Cryoprecipitated Anti-Hemophilic Factor',
         LP: 'LP: Liquid Plasma',
-        TCA: 'TC Aferesis',
-        PK: 'Plasma Konvalesen'
+        TCA: 'TCA: Thrombocyte Apheresis',
+        CP: 'CP: Convalescent Plasma'
       };
 
       // ——— A. Data Pasien & RS

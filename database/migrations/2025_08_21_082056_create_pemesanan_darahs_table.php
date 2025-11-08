@@ -39,7 +39,7 @@ return new class extends Migration
             // kebutuhan darah
             $t->enum('gol_darah', ['A', 'B', 'AB', 'O']);
             $t->enum('rhesus', ['Rh+', 'Rh-']);
-            $t->enum('produk', ['WB', 'PRC', 'TC', 'FFP', 'AHF', 'LP', 'TCA', 'PK']); // ⬅️ enum, sesuai form
+            $t->enum('produk', ['WB', 'PRC', 'TC', 'FFP', 'CRYO', 'LP', 'TCA', 'CP']); // ⬅️ enum, sesuai form
             $t->unsignedTinyInteger('jumlah_kantong')->default(1);
 
             // alasan & pemeriksaan

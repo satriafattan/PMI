@@ -27,6 +27,7 @@ return new class extends Migration {
             $t->string('produk');
             $t->date('tanggal_permintaan');
             $t->enum('status', ['pending', 'approved', 'rejected'])->default('pending');
+            $t->text('note')->nullable(); // Catatan untuk verifikasi (approve/reject)
 
             $t->timestamps();
 

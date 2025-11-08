@@ -61,8 +61,8 @@ class DashboardController extends Controller
             ->pluck('total', 'produk')
             ->toArray();
 
-        // Urutkan sesuai label chart: WB, PRC, TC, FFP, AHF, LP
-        $produkOrder = ['WB', 'PRC', 'TC', 'FFP', 'AHF', 'LP'];
+        // Urutkan sesuai label chart: WB, PRC, TC, FFP, CRYO, LP, TCA, CP
+        $produkOrder = ['WB', 'PRC', 'TC', 'FFP', 'CRYO', 'LP', 'TCA', 'CP'];
         $stokProduk = array_map(fn($p) => $stokProdukData[$p] ?? 0, $produkOrder);
 
         // OPTIMASI: Gabungkan query statistik tambahan dalam 1 query

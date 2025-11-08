@@ -155,14 +155,9 @@
                 </div>
               </div>
             </div>
-
-        <div class="flex items-center gap-2 sm:gap-3 flex-wrap justify-end">
-          <button class="px-3 py-1.5 rounded-lg border text-xs sm:text-sm hover:bg-slate-50">
-            Export Data
-          </button>
-          <a class="px-3 py-1.5 rounded-lg bg-blue-600 text-white text-xs sm:text-sm hover:bg-blue-700">
-            Tambah Stok
-          </a>
+            
+          {{-- User Avatar --}}  
+            <div class="relative">
           <div class="size-9 grid place-items-center bg-blue-100 text-blue-700 font-semibold rounded-xl">
             {{ Str::of(auth('admin')->user()->name ?? 'A')->substr(0,1)->upper() }}
           </div>
