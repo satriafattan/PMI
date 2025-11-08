@@ -1093,7 +1093,7 @@
             });
 
             // ===== Confirm modal =====
-            const cmTitle = document.getElementById('cm_title');
+            const cmTitle = document.getElementById('confirmModalTitle');
             const cmDesc = document.getElementById('cm_desc');
             const cmOk = document.getElementById('cm_ok');
             const cmCancel = document.getElementById('cm_cancel');

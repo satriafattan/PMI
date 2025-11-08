@@ -44,7 +44,7 @@ Route::get('/pemesanan/konfirmasi/{kode}', [PublicPemesananController::class, 'k
 | Public: Penjadwalan Event & Stok Darah
 |--------------------------------------------------------------------------
 */
-Route::get('/jadwal-event',  [EventScheduleController::class, 'create'])->name('public.event.create');
+Route::get('/jadwal-event', [EventScheduleController::class, 'create'])->name('public.event.create');
 Route::post('/jadwal-event', [EventScheduleController::class, 'store'])->name('public.event.store');
 
 Route::get('/stok', [StokController::class, '__invoke'])->name('stok');
@@ -55,8 +55,8 @@ Route::get('/api/stok-golongan', [StokController::class, 'getStokGolongan'])->na
 | Admin Auth
 |--------------------------------------------------------------------------
 */
-Route::get('/admin/login',   [AuthController::class, 'showLoginForm'])->name('admin.login');
-Route::post('/admin/login',  [AuthController::class, 'login'])->name('admin.login.submit');
+Route::get('/admin/login', [AuthController::class, 'showLoginForm'])->name('admin.login');
+Route::post('/admin/login', [AuthController::class, 'login'])->name('admin.login.submit');
 Route::post('/admin/logout', [AuthController::class, 'logout'])->name('admin.logout');
 
 /*
@@ -82,25 +82,27 @@ Route::middleware('auth:admin')->prefix('admin')->name('admin.')->group(function
 
     // ===== Stok Darah =====
     Route::resource('stok-darah', StokDarahController::class)->except(['show']);
-    Route::get('/stok',  [StokDarahController::class, 'index'])->name('stok.index');
+    Route::get('/stok', [StokDarahController::class, 'index'])->name('stok.index');
     Route::post('/stok', [StokDarahController::class, 'store'])->name('stok.store');
 
     // ===== Verifikasi Pemesanan =====
-    Route::get('verifikasi',                       [VerifikasiPemesananController::class, 'index'])->name('verifikasi.index');
-    Route::post('verifikasi/{pemesanan}',          [VerifikasiPemesananController::class, 'store'])->name('verifikasi.store');
+    Route::get('verifikasi', [VerifikasiPemesananController::class, 'index'])->name('verifikasi.index');
+    Route::post('verifikasi/{pemesanan}', [VerifikasiPemesananController::class, 'store'])->name('verifikasi.store');
     Route::patch('verifikasi/{verifikasi}/status', [VerifikasiPemesananController::class, 'updateStatus'])->name('verifikasi.updateStatus');
 
     // ===== Riwayat =====
     Route::get('riwayat', [RiwayatController::class, 'index'])->name('riwayat.index');
+    Route::delete('riwayat/{id}', [RiwayatController::class, 'destroy'])->name('riwayat.destroy');
+
 
     // ===== Laporan =====
-    Route::get('laporan',              [LaporanController::class, 'index'])->name('laporan.index');
-    Route::get('laporan/export-pdf',   [LaporanController::class, 'exportPdf'])->name('laporan.exportPdf');
+    Route::get('laporan', [LaporanController::class, 'index'])->name('laporan.index');
+    Route::get('laporan/export-pdf', [LaporanController::class, 'exportPdf'])->name('laporan.exportPdf');
     Route::get('laporan/export-excel', [LaporanController::class, 'exportExcel'])->name('laporan.exportExcel');
 
     // ===== Event Verifikasi =====
-    Route::get('event-verifikasi',                   [EventVerificationController::class, 'index'])->name('event-verifikasi.index');
-    Route::get('event-verifikasi/{event}',           [EventVerificationController::class, 'show'])->name('event-verifikasi.show');
-    Route::post('event-verifikasi/{event}/decide',   [EventVerificationController::class, 'decide'])->name('event-verifikasi.decide');
-    Route::get('event-verifikasi/{event}/surat',     [EventVerificationController::class, 'downloadSurat'])->name('event-verifikasi.surat');
+    Route::get('event-verifikasi', [EventVerificationController::class, 'index'])->name('event-verifikasi.index');
+    Route::get('event-verifikasi/{event}', [EventVerificationController::class, 'show'])->name('event-verifikasi.show');
+    Route::post('event-verifikasi/{event}/decide', [EventVerificationController::class, 'decide'])->name('event-verifikasi.decide');
+    Route::get('event-verifikasi/{event}/surat', [EventVerificationController::class, 'downloadSurat'])->name('event-verifikasi.surat');
 });
