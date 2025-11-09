@@ -67,10 +67,16 @@
 
           {{-- Anti-spam fields --}}
           {{-- Honeypot - hidden field yang harus tetap kosong --}}
-          <input type="text" name="website" style="display:none !important" tabindex="-1" autocomplete="off">
-          
+          <input type="text"
+                 name="website"
+                 style="display:none !important"
+                 tabindex="-1"
+                 autocomplete="off">
+
           {{-- Timestamp token untuk time-based validation --}}
-          <input type="hidden" name="form_token" value="{{ base64_encode(time()) }}">
+          <input type="hidden"
+                 name="form_token"
+                 value="{{ base64_encode(time()) }}">
 
           {{-- Header --}}
           <div class="border-b border-slate-100 bg-white p-5 sm:p-6">

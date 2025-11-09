@@ -51,7 +51,7 @@ class StorePemesananRequest extends FormRequest
             // Anti-spam fields
             'website'           => ['nullable', 'max:0'],  // Honeypot - harus kosong
             'form_token'        => ['nullable', 'string'], // Timestamp validation
-            
+
             // STEP 1 – pasien & RS
             'rs_pemesan'        => ['required', 'string', 'max:150'],
             'email'             => ['required', 'email', 'max:150'],
@@ -125,17 +125,17 @@ class StorePemesananRequest extends FormRequest
             if ($formToken) {
                 try {
                     $timestamp = base64_decode($formToken);
-                    
+
                     // Validasi timestamp adalah angka valid
                     if (is_numeric($timestamp)) {
                         $elapsed = time() - (int)$timestamp;
-                        
+
                         // Minimal 2 detik (lebih toleran)
                         if ($elapsed < 2) {
                             $validator->errors()->add('spam', 'Mohon tunggu sebentar sebelum mengirim formulir.');
                             return;
                         }
-                        
+
                         // Maksimal 2 jam (7200 detik) - lebih toleran untuk user yang berpikir lama
                         if ($elapsed > 7200) {
                             $validator->errors()->add('spam', 'Sesi formulir telah berakhir. Silakan refresh halaman.');
