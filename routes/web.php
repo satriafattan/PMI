@@ -34,7 +34,12 @@ Route::get('/about', fn() => view('about'))->name('about');
 |--------------------------------------------------------------------------
 */
 Route::get('/pemesanan', [PublicPemesananController::class, 'create'])->name('pemesanan.create');
-Route::post('/pemesanan', [PublicPemesananController::class, 'store'])->name('pemesanan.store');
+
+// Rate limiting: maksimal 3 submit per 10 menit per IP
+Route::post('/pemesanan', [PublicPemesananController::class, 'store'])
+    ->name('pemesanan.store')
+    ->middleware('throttle:3,10');
+
 Route::get('/pemesanan/konfirmasi/{kode}', [PublicPemesananController::class, 'konfirmasi'])
     ->name('pemesanan.konfirmasi');
 
@@ -44,7 +49,11 @@ Route::get('/pemesanan/konfirmasi/{kode}', [PublicPemesananController::class, 'k
 |--------------------------------------------------------------------------
 */
 Route::get('/jadwal-event', [EventScheduleController::class, 'create'])->name('public.event.create');
-Route::post('/jadwal-event', [EventScheduleController::class, 'store'])->name('public.event.store');
+
+// Rate limiting untuk event scheduling
+Route::post('/jadwal-event', [EventScheduleController::class, 'store'])
+    ->name('public.event.store')
+    ->middleware('throttle:5,10');
 
 Route::get('/stok', [StokController::class, '__invoke'])->name('stok');
 Route::get('/api/stok-golongan', [StokController::class, 'getStokGolongan'])->name('api.stok-golongan');

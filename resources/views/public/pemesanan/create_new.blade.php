@@ -65,6 +65,13 @@
               class="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-lg transition-shadow duration-300 hover:shadow-xl">
           @csrf
 
+          {{-- Anti-spam fields --}}
+          {{-- Honeypot - hidden field yang harus tetap kosong --}}
+          <input type="text" name="website" style="display:none !important" tabindex="-1" autocomplete="off">
+          
+          {{-- Timestamp token untuk time-based validation --}}
+          <input type="hidden" name="form_token" value="{{ base64_encode(time()) }}">
+
           {{-- Header --}}
           <div class="border-b border-slate-100 bg-white p-5 sm:p-6">
             <div class="flex items-center justify-between">

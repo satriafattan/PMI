@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Log;
 
 class StorePemesananRequest extends FormRequest
 {
@@ -47,6 +48,10 @@ class StorePemesananRequest extends FormRequest
     public function rules(): array
     {
         return [
+            // Anti-spam fields
+            'website'           => ['nullable', 'max:0'],  // Honeypot - harus kosong
+            'form_token'        => ['nullable', 'string'], // Timestamp validation
+            
             // STEP 1 – pasien & RS
             'rs_pemesan'        => ['required', 'string', 'max:150'],
             'email'             => ['required', 'email', 'max:150'],
@@ -101,5 +106,48 @@ class StorePemesananRequest extends FormRequest
             'tanggal_permintaan' => 'Tanggal diperlukan',
             'tanggal_serologi'   => 'Tanggal serologi',
         ];
+    }
+
+    /**
+     * Custom validation - Anti-spam checks
+     */
+    public function withValidator($validator): void
+    {
+        $validator->after(function ($validator) {
+            // 1. Honeypot check - field 'website' harus kosong
+            if (!empty($this->input('website'))) {
+                $validator->errors()->add('spam', 'Terdeteksi aktivitas mencurigakan. Silakan coba lagi.');
+                return;
+            }
+
+            // 2. Time-based protection - minimal 3 detik untuk isi form
+            $formToken = $this->input('form_token');
+            if ($formToken) {
+                try {
+                    $timestamp = base64_decode($formToken);
+                    
+                    // Validasi timestamp adalah angka valid
+                    if (is_numeric($timestamp)) {
+                        $elapsed = time() - (int)$timestamp;
+                        
+                        // Minimal 2 detik (lebih toleran)
+                        if ($elapsed < 2) {
+                            $validator->errors()->add('spam', 'Mohon tunggu sebentar sebelum mengirim formulir.');
+                            return;
+                        }
+                        
+                        // Maksimal 2 jam (7200 detik) - lebih toleran untuk user yang berpikir lama
+                        if ($elapsed > 7200) {
+                            $validator->errors()->add('spam', 'Sesi formulir telah berakhir. Silakan refresh halaman.');
+                            return;
+                        }
+                    }
+                } catch (\Exception $e) {
+                    // Jika decode gagal, skip validasi time-based
+                    // Log error tapi tidak block user
+                    Log::warning('Invalid form token: ' . $e->getMessage());
+                }
+            }
+        });
     }
 }
