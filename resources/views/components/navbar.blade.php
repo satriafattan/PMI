@@ -1,54 +1,54 @@
 {{-- resources/views/components/navbar.blade.php --}}
-<header class="sticky top-0 z-40 border-b border-slate-200 bg-white/95 shadow-sm backdrop-blur-md">
-  <div class="mx-auto w-full px-6 lg:px-12">
-    <div class="flex h-20 items-center justify-between">
+<header class="sticky top-0 z-50 border-b border-slate-200 bg-white/95 shadow-sm backdrop-blur-md">
+  <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <div class="flex h-16 items-center justify-between sm:h-20">
 
       {{-- Logo --}}
       <a href="/"
-         class="flex items-center gap-3 transition-transform hover:scale-105">
+         class="flex items-center gap-2 transition-transform hover:scale-105 sm:gap-3">
         <img src="{{ asset('images/LOGO NAV.png') }}"
              alt="Logo PMI"
-             class="h-28 w-28 object-contain md:h-28 md:w-28">
+             class="h-10 w-10 object-contain sm:h-12 sm:w-12 md:h-14 md:w-14">
         <div class="flex flex-col">
-          <span class="text-base font-bold text-slate-900 md:text-lg">Provinsi Lampung</span>
+          <span class="text-sm font-bold text-slate-900 sm:text-base md:text-lg">Provinsi Lampung</span>
           <span class="hidden text-xs text-slate-500 sm:block">Unit Donor Darah</span>
         </div>
       </a>
 
       {{-- Menu desktop --}}
-      <nav class="hidden items-center gap-1 text-sm md:flex">
+      <nav class="hidden items-center gap-1 text-sm lg:flex">
         <a href="{{ url('/') }}"
-           class="{{ request()->is('/') ? 'text-red-600' : 'text-slate-700 hover:text-red-600' }} group relative px-4 py-2 font-semibold transition-colors">
+           class="{{ request()->is('/') ? 'text-red-600' : 'text-slate-700 hover:text-red-600' }} group relative px-3 py-2 font-semibold transition-colors xl:px-4">
           Beranda
           <span
                 class="{{ request()->is('/') ? 'scale-x-100' : '' }} absolute bottom-0 left-0 h-0.5 w-full origin-left scale-x-0 bg-red-600 transition-transform group-hover:scale-x-100"></span>
         </a>
         <a href="{{ url('/pemesanan') }}"
-           class="{{ request()->is('pemesanan*') ? 'text-red-600' : 'text-slate-700 hover:text-red-600' }} group relative px-4 py-2 font-semibold transition-colors">
+           class="{{ request()->is('pemesanan*') ? 'text-red-600' : 'text-slate-700 hover:text-red-600' }} group relative px-3 py-2 font-semibold transition-colors xl:px-4">
           Pemesanan
           <span
                 class="{{ request()->is('pemesanan*') ? 'scale-x-100' : '' }} absolute bottom-0 left-0 h-0.5 w-full origin-left scale-x-0 bg-red-600 transition-transform group-hover:scale-x-100"></span>
         </a>
         <a href="{{ url('/stok') }}"
-           class="{{ request()->is('stok*') ? 'text-red-600' : 'text-slate-700 hover:text-red-600' }} group relative px-4 py-2 font-semibold transition-colors">
+           class="{{ request()->is('stok*') ? 'text-red-600' : 'text-slate-700 hover:text-red-600' }} group relative px-3 py-2 font-semibold transition-colors xl:px-4">
           Stok Darah
           <span
                 class="{{ request()->is('stok*') ? 'scale-x-100' : '' }} absolute bottom-0 left-0 h-0.5 w-full origin-left scale-x-0 bg-red-600 transition-transform group-hover:scale-x-100"></span>
         </a>
         <a href="{{ url('/about') }}"
-           class="{{ request()->is('about*') ? 'text-red-600' : 'text-slate-700 hover:text-red-600' }} group relative px-4 py-2 font-semibold transition-colors">
+           class="{{ request()->is('about*') ? 'text-red-600' : 'text-slate-700 hover:text-red-600' }} group relative px-3 py-2 font-semibold transition-colors xl:px-4">
           Tentang Kami
           <span
                 class="{{ request()->is('about*') ? 'scale-x-100' : '' }} absolute bottom-0 left-0 h-0.5 w-full origin-left scale-x-0 bg-red-600 transition-transform group-hover:scale-x-100"></span>
         </a>
         <a href="{{ url('/jadwal-event') }}"
-           class="{{ request()->is('jadwal-event*') ? 'text-red-600' : 'text-slate-700 hover:text-red-600' }} group relative px-4 py-2 font-semibold transition-colors">
+           class="{{ request()->is('jadwal-event*') ? 'text-red-600' : 'text-slate-700 hover:text-red-600' }} group relative px-3 py-2 font-semibold transition-colors xl:px-4">
           Jadwal Event
           <span
                 class="{{ request()->is('jadwal-event*') ? 'scale-x-100' : '' }} absolute bottom-0 left-0 h-0.5 w-full origin-left scale-x-0 bg-red-600 transition-transform group-hover:scale-x-100"></span>
         </a>
         <a href="{{ route('admin.login') }}"
-           class="ml-2 inline-flex items-center gap-2 rounded-lg bg-red-600 px-5 py-2.5 font-semibold text-white shadow-md transition-all hover:bg-red-700 hover:shadow-lg">
+           class="ml-2 inline-flex items-center gap-2 rounded-lg bg-red-600 px-4 py-2 text-sm font-semibold text-white shadow-md transition-all hover:bg-red-700 hover:shadow-lg xl:px-5 xl:py-2.5">
           <svg class="h-4 w-4"
                fill="none"
                stroke="currentColor"
@@ -63,16 +63,18 @@
       </nav>
 
       {{-- Toggle mobile --}}
-      <button id="menuBtn"
+      <button id="navbarMenuBtn"
               type="button"
-              class="rounded-lg border border-slate-300 p-2.5 transition-colors hover:bg-slate-50 md:hidden">
-        <svg id="menuIcon"
+              aria-label="Toggle Menu"
+              class="rounded-lg border border-slate-300 p-2 transition-colors hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-red-500 lg:hidden">
+        <svg id="navbarMenuIcon"
              xmlns="http://www.w3.org/2000/svg"
-             class="h-6 w-6 transition-transform"
+             class="h-6 w-6 transition-transform duration-300"
              fill="none"
              stroke="currentColor"
              viewBox="0 0 24 24">
-          <path stroke-linecap="round"
+          <path id="navbarMenuIconPath"
+                stroke-linecap="round"
                 stroke-linejoin="round"
                 stroke-width="2"
                 d="M4 6h16M4 12h16m-16 6h16" />
@@ -81,11 +83,11 @@
     </div>
 
     {{-- Menu mobile --}}
-    <div id="mobileMenu"
-         class="hidden overflow-hidden transition-all duration-300 ease-in-out md:hidden">
-      <nav class="space-y-1 py-4">
+    <div id="navbarMobileMenu"
+         class="max-h-0 overflow-hidden transition-all duration-300 ease-in-out lg:hidden">
+      <nav class="space-y-1 pb-4 pt-2">
         <a href="{{ url('/') }}"
-           class="{{ request()->is('/') ? 'bg-red-50 text-red-600 font-semibold border-l-4 border-red-600' : 'text-slate-700 hover:bg-slate-50' }} block rounded-lg px-4 py-3 transition-all">
+           class="{{ request()->is('/') ? 'bg-red-50 text-red-600 font-semibold border-l-4 border-red-600' : 'text-slate-700 hover:bg-slate-50' }} block rounded-lg px-4 py-2.5 text-sm transition-all">
           <div class="flex items-center gap-3">
             <svg class="h-5 w-5"
                  fill="none"
@@ -100,7 +102,7 @@
           </div>
         </a>
         <a href="{{ url('/pemesanan') }}"
-           class="{{ request()->is('pemesanan*') ? 'bg-red-50 text-red-600 font-semibold border-l-4 border-red-600' : 'text-slate-700 hover:bg-slate-50' }} block rounded-lg px-4 py-3 transition-all">
+           class="{{ request()->is('pemesanan*') ? 'bg-red-50 text-red-600 font-semibold border-l-4 border-red-600' : 'text-slate-700 hover:bg-slate-50' }} block rounded-lg px-4 py-2.5 text-sm transition-all">
           <div class="flex items-center gap-3">
             <svg class="h-5 w-5"
                  fill="none"
@@ -115,7 +117,7 @@
           </div>
         </a>
         <a href="{{ url('/stok') }}"
-           class="{{ request()->is('stok*') ? 'bg-red-50 text-red-600 font-semibold border-l-4 border-red-600' : 'text-slate-700 hover:bg-slate-50' }} block rounded-lg px-4 py-3 transition-all">
+           class="{{ request()->is('stok*') ? 'bg-red-50 text-red-600 font-semibold border-l-4 border-red-600' : 'text-slate-700 hover:bg-slate-50' }} block rounded-lg px-4 py-2.5 text-sm transition-all">
           <div class="flex items-center gap-3">
             <svg class="h-5 w-5"
                  fill="none"
@@ -130,7 +132,7 @@
           </div>
         </a>
         <a href="{{ url('/about') }}"
-           class="{{ request()->is('about*') ? 'bg-red-50 text-red-600 font-semibold border-l-4 border-red-600' : 'text-slate-700 hover:bg-slate-50' }} block rounded-lg px-4 py-3 transition-all">
+           class="{{ request()->is('about*') ? 'bg-red-50 text-red-600 font-semibold border-l-4 border-red-600' : 'text-slate-700 hover:bg-slate-50' }} block rounded-lg px-4 py-2.5 text-sm transition-all">
           <div class="flex items-center gap-3">
             <svg class="h-5 w-5"
                  fill="none"
@@ -145,7 +147,7 @@
           </div>
         </a>
         <a href="{{ url('/jadwal-event') }}"
-           class="{{ request()->is('jadwal-event*') ? 'bg-red-50 text-red-600 font-semibold border-l-4 border-red-600' : 'text-slate-700 hover:bg-slate-50' }} block rounded-lg px-4 py-3 transition-all">
+           class="{{ request()->is('jadwal-event*') ? 'bg-red-50 text-red-600 font-semibold border-l-4 border-red-600' : 'text-slate-700 hover:bg-slate-50' }} block rounded-lg px-4 py-2.5 text-sm transition-all">
           <div class="flex items-center gap-3">
             <svg class="h-5 w-5"
                  fill="none"
@@ -160,7 +162,7 @@
           </div>
         </a>
         <a href="{{ route('admin.login') }}"
-           class="mt-2 block rounded-lg bg-red-600 px-4 py-3 text-center font-semibold text-white shadow-md transition-all hover:bg-red-700">
+           class="mt-2 block rounded-lg bg-red-600 px-4 py-2.5 text-center text-sm font-semibold text-white shadow-md transition-all hover:bg-red-700">
           <div class="flex items-center justify-center gap-2">
             <svg class="h-5 w-5"
                  fill="none"
@@ -179,36 +181,53 @@
   </div>
 </header>
 
-<script>
-  // Toggle menu mobile dengan animasi smooth
-  const menuBtn = document.getElementById('menuBtn');
-  const mobileMenu = document.getElementById('mobileMenu');
-  const menuIcon = document.getElementById('menuIcon');
+@push('scripts')
+  <script>
+    (function() {
+      // Toggle menu mobile dengan animasi smooth
+      const menuBtn = document.getElementById('navbarMenuBtn');
+      const mobileMenu = document.getElementById('navbarMobileMenu');
+      const menuIcon = document.getElementById('navbarMenuIcon');
+      const menuIconPath = document.getElementById('navbarMenuIconPath');
 
-  menuBtn.addEventListener('click', () => {
-    mobileMenu.classList.toggle('hidden');
+      if (menuBtn && mobileMenu && menuIcon) {
+        let isOpen = false;
 
-    // Rotate icon saat menu terbuka
-    if (!mobileMenu.classList.contains('hidden')) {
-      menuIcon.style.transform = 'rotate(90deg)';
-    } else {
-      menuIcon.style.transform = 'rotate(0deg)';
-    }
-  });
+        menuBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          isOpen = !isOpen;
 
-  // Tutup menu ketika klik di luar
-  document.addEventListener('click', (e) => {
-    if (!menuBtn.contains(e.target) && !mobileMenu.contains(e.target)) {
-      mobileMenu.classList.add('hidden');
-      menuIcon.style.transform = 'rotate(0deg)';
-    }
-  });
+          if (isOpen) {
+            mobileMenu.style.maxHeight = mobileMenu.scrollHeight + 'px';
+            menuIcon.style.transform = 'rotate(90deg)';
+            menuIconPath.setAttribute('d', 'M6 18L18 6M6 6l12 12'); // X icon
+          } else {
+            mobileMenu.style.maxHeight = '0';
+            menuIcon.style.transform = 'rotate(0deg)';
+            menuIconPath.setAttribute('d', 'M4 6h16M4 12h16m-16 6h16'); // Hamburger icon
+          }
+        });
 
-  // Tutup menu mobile saat resize ke desktop
-  window.addEventListener('resize', () => {
-    if (window.innerWidth >= 768) {
-      mobileMenu.classList.add('hidden');
-      menuIcon.style.transform = 'rotate(0deg)';
-    }
-  });
-</script>
+        // Tutup menu ketika klik di luar
+        document.addEventListener('click', (e) => {
+          if (isOpen && !menuBtn.contains(e.target) && !mobileMenu.contains(e.target)) {
+            isOpen = false;
+            mobileMenu.style.maxHeight = '0';
+            menuIcon.style.transform = 'rotate(0deg)';
+            menuIconPath.setAttribute('d', 'M4 6h16M4 12h16m-16 6h16');
+          }
+        });
+
+        // Tutup menu mobile saat resize ke desktop
+        window.addEventListener('resize', () => {
+          if (window.innerWidth >= 1024) {
+            isOpen = false;
+            mobileMenu.style.maxHeight = '0';
+            menuIcon.style.transform = 'rotate(0deg)';
+            menuIconPath.setAttribute('d', 'M4 6h16M4 12h16m-16 6h16');
+          }
+        });
+      }
+    })();
+  </script>
+@endpush

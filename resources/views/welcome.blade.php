@@ -3,6 +3,88 @@
 
 @section('title', 'UDD PMI Provinsi Lampung – Pemesanan Darah')
 
+@push('styles')
+  <style>
+    /* Hero Image Gallery Styles */
+    .hero-gallery {
+      position: relative;
+    }
+
+    .hero-image {
+      opacity: 0;
+      transition: opacity 0.5s ease-in-out;
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    .hero-image.active {
+      opacity: 1;
+      position: relative;
+    }
+
+    .gallery-nav-btn {
+      width: 35px;
+      height: 35px;
+      background: rgba(220, 38, 38, 0.95);
+      border-radius: 50%;
+      transition: all 0.3s ease;
+      z-index: 10;
+    }
+
+    @media (min-width: 640px) {
+      .gallery-nav-btn {
+        width: 45px;
+        height: 45px;
+      }
+    }
+
+    @media (min-width: 1024px) {
+      .gallery-nav-btn {
+        width: 50px;
+        height: 50px;
+      }
+    }
+
+    .gallery-nav-btn:hover {
+      background: rgba(220, 38, 38, 1);
+      transform: scale(1.1);
+      box-shadow: 0 8px 16px rgba(220, 38, 38, 0.4);
+    }
+
+    .gallery-dot {
+      width: 8px;
+      height: 8px;
+      background: white;
+      opacity: 0.6;
+      border-radius: 50%;
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+
+    @media (min-width: 640px) {
+      .gallery-dot {
+        width: 10px;
+        height: 10px;
+      }
+    }
+
+    .gallery-dot.active {
+      opacity: 1;
+      width: 24px;
+      border-radius: 6px;
+    }
+
+    @media (min-width: 640px) {
+      .gallery-dot.active {
+        width: 32px;
+      }
+    }
+  </style>
+@endpush
+
 @section('content')
   <x-navbar />
 
@@ -18,23 +100,24 @@
            style="animation-delay: 2s;"></div>
     </div>
 
-    <div class="relative mx-auto max-w-7xl px-4 py-12 sm:px-6 sm:py-16 lg:px-8">
-      <div class="grid items-center gap-8 lg:grid-cols-2">
+    <div class="relative mx-auto max-w-7xl px-4 py-10 sm:px-6 sm:py-12 lg:px-8 lg:py-16">
+      <div class="grid items-center gap-6 lg:grid-cols-2 lg:gap-10">
         {{-- Left Content --}}
-        <div class="text-white">
-          <h1 class="mt-4 text-3xl font-extrabold leading-tight tracking-tight sm:text-4xl lg:text-5xl"> Selamatkan Nyawa
+        <div class="order-2 text-white lg:order-1">
+          <h1 class="text-2xl font-extrabold leading-tight tracking-tight sm:text-3xl md:text-4xl lg:text-5xl">
+            Selamatkan Nyawa
             <span class="block bg-gradient-to-r from-white to-red-100 bg-clip-text text-transparent">Bersama Kami</span>
           </h1>
 
-          <p class="mt-4 max-w-2xl text-base leading-relaxed text-white/90 sm:text-lg">
+          <p class="mt-3 text-sm leading-relaxed text-white/90 sm:mt-4 sm:text-base lg:text-lg">
             Bergabunglah dengan misi mulia untuk menyediakan darah berkualitas bagi yang membutuhkan.
             <strong class="font-semibold text-white">Setiap tetes darah dapat menyelamatkan hingga 3 nyawa.</strong>
           </p>
 
           {{-- CTA Buttons --}}
-          <div class="mt-6 flex flex-wrap gap-3">
+          <div class="mt-4 flex flex-col gap-2 sm:mt-6 sm:flex-row sm:flex-wrap sm:gap-3">
             <a href="{{ url('/pemesanan') }}"
-               class="group inline-flex items-center gap-2 rounded-xl bg-white px-5 py-3 text-sm font-semibold text-red-700 shadow-xl transition hover:scale-105 hover:bg-red-50 hover:shadow-2xl">
+               class="group inline-flex items-center justify-center gap-2 rounded-xl bg-white px-4 py-2.5 text-sm font-semibold text-red-700 shadow-xl transition hover:scale-105 hover:bg-red-50 hover:shadow-2xl sm:px-5 sm:py-3">
               <svg class="h-4 w-4 transition group-hover:rotate-12"
                    fill="none"
                    stroke="currentColor"
@@ -47,7 +130,7 @@
               Ajukan Permintaan Darah
             </a>
             <a href="{{ url('/about') }}"
-               class="inline-flex items-center gap-2 rounded-xl border-2 border-white/30 bg-white/5 px-5 py-3 text-sm font-semibold text-white backdrop-blur-sm transition hover:bg-white/10">
+               class="inline-flex items-center justify-center gap-2 rounded-xl border-2 border-white/30 bg-white/5 px-4 py-2.5 text-sm font-semibold text-white backdrop-blur-sm transition hover:bg-white/10 sm:px-5 sm:py-3">
               Pelajari Lebih Lanjut
               <svg class="h-4 w-4"
                    fill="none"
@@ -62,75 +145,134 @@
           </div>
 
           {{-- Stats --}}
-          <div class="mt-8 grid grid-cols-3 gap-4 sm:gap-6">
-            <div class="group">
+          <div class="mt-5 grid grid-cols-3 gap-2 sm:mt-6 sm:gap-3 lg:mt-8 lg:gap-4">
+            <div class="group text-center">
               <div
-                   class="mb-2 inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-white/10 text-xl ring-1 ring-white/20 backdrop-blur-sm transition group-hover:scale-110 group-hover:bg-white/20">
+                   class="mx-auto mb-1.5 inline-flex h-10 w-10 items-center justify-center rounded-xl bg-white/10 text-lg ring-1 ring-white/20 backdrop-blur-sm transition group-hover:scale-110 group-hover:bg-white/20 sm:mb-2 sm:h-12 sm:w-12 sm:rounded-2xl sm:text-xl">
                 🩸
               </div>
-              <div class="text-2xl font-extrabold tracking-tight">15,000+</div>
-              <div class="mt-1 text-xs text-white/80">Donor Aktif</div>
+              <div class="text-base font-extrabold tracking-tight sm:text-lg lg:text-xl xl:text-2xl">15,000+</div>
+              <div class="mt-0.5 text-xs text-white/80">Donor Aktif</div>
             </div>
-            <div class="group">
+            <div class="group text-center">
               <div
-                   class="mb-2 inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-white/10 text-xl ring-1 ring-white/20 backdrop-blur-sm transition group-hover:scale-110 group-hover:bg-white/20">
+                   class="mx-auto mb-1.5 inline-flex h-10 w-10 items-center justify-center rounded-xl bg-white/10 text-lg ring-1 ring-white/20 backdrop-blur-sm transition group-hover:scale-110 group-hover:bg-white/20 sm:mb-2 sm:h-12 sm:w-12 sm:rounded-2xl sm:text-xl">
                 ❤️
               </div>
-              <div class="text-2xl font-extrabold tracking-tight">50,000+</div>
-              <div class="mt-1 text-xs text-white/80">Nyawa Terselamatkan</div>
+              <div class="text-base font-extrabold tracking-tight sm:text-lg lg:text-xl xl:text-2xl">50,000+</div>
+              <div class="mt-0.5 text-xs text-white/80">Nyawa Terselamatkan</div>
             </div>
-            <div class="group">
+            <div class="group text-center">
               <div
-                   class="mb-2 inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-white/10 text-xl ring-1 ring-white/20 backdrop-blur-sm transition group-hover:scale-110 group-hover:bg-white/20">
+                   class="mx-auto mb-1.5 inline-flex h-10 w-10 items-center justify-center rounded-xl bg-white/10 text-lg ring-1 ring-white/20 backdrop-blur-sm transition group-hover:scale-110 group-hover:bg-white/20 sm:mb-2 sm:h-12 sm:w-12 sm:rounded-2xl sm:text-xl">
                 ⏱️
               </div>
-              <div class="text-2xl font-extrabold tracking-tight">24/7</div>
-              <div class="mt-1 text-xs text-white/80">Layanan Darurat</div>
+              <div class="text-base font-extrabold tracking-tight sm:text-lg lg:text-xl xl:text-2xl">24/7</div>
+              <div class="mt-0.5 text-xs text-white/80">Layanan Darurat</div>
             </div>
           </div>
         </div>
 
-        {{-- Right Content - Hero Image --}}
-        <div class="relative">
-          <div class="absolute -inset-4 rounded-3xl bg-gradient-to-r from-white/20 to-rose-300/20 blur-2xl"></div>
-          <div class="overflow-hidden rounded-3xl bg-white/20 shadow-2xl ring-1 ring-white/30 backdrop-blur-xl">
-            <div class="aspect-[4/3] bg-gradient-to-br from-red-100/20 to-rose-200/20">
-              {{-- Hero Banner Image --}}
-              <img src="{{ asset('images/card.jpg') }}"
-                   alt="Profesional Medis Terpercaya - PMI Lampung"
-                   class="h-full w-full object-cover">
+        {{-- Right Content - Hero Image Gallery --}}
+        <div class="relative order-1 lg:order-2">
+          <div
+               class="absolute -inset-1 rounded-2xl bg-gradient-to-r from-white/20 to-rose-300/20 blur-xl sm:-inset-2 sm:blur-2xl lg:-inset-4">
+          </div>
+          <div
+               class="relative overflow-hidden rounded-xl bg-white/20 shadow-2xl ring-1 ring-white/30 backdrop-blur-xl sm:rounded-2xl lg:rounded-3xl">
+            <div class="hero-gallery relative aspect-[16/10] sm:aspect-[4/3]">
+              {{-- Images --}}
+              <img src="{{ asset('images/hero-banner.jpg') }}"
+                   alt="PMI Lampung - Donor Darah"
+                   class="hero-image active h-full w-full object-cover"
+                   data-index="0">
+              <img src="{{ asset('images/hero-banner2.jpg') }}"
+                   alt="PMI Lampung - Pelayanan Kesehatan"
+                   class="hero-image h-full w-full object-cover"
+                   data-index="1">
+              <img src="{{ asset('images/hero-banner3.jpg') }}"
+                   alt="PMI Lampung - Kegiatan Donor"
+                   class="hero-image h-full w-full object-cover"
+                   data-index="2">
+              <img src="{{ asset('images/Card.jpg') }}"
+                   alt="PMI Lampung - Unit Donor Darah"
+                   class="hero-image h-full w-full object-cover"
+                   data-index="3">
+
+              {{-- Navigation Buttons --}}
+              <button id="prevBtn"
+                      class="gallery-nav-btn absolute left-2 top-1/2 flex -translate-y-1/2 items-center justify-center text-white sm:left-4"
+                      aria-label="Previous Image">
+                <svg class="h-5 w-5 sm:h-6 sm:w-6"
+                     fill="none"
+                     stroke="currentColor"
+                     viewBox="0 0 24 24">
+                  <path stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M15 19l-7-7 7-7" />
+                </svg>
+              </button>
+              <button id="nextBtn"
+                      class="gallery-nav-btn absolute right-2 top-1/2 flex -translate-y-1/2 items-center justify-center text-white sm:right-4"
+                      aria-label="Next Image">
+                <svg class="h-5 w-5 sm:h-6 sm:w-6"
+                     fill="none"
+                     stroke="currentColor"
+                     viewBox="0 0 24 24">
+                  <path stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M9 5l7 7-7 7" />
+                </svg>
+              </button>
+
+              {{-- Pagination Dots --}}
+              <div class="absolute bottom-3 left-1/2 z-10 flex -translate-x-1/2 gap-2 sm:bottom-4 sm:gap-3">
+                <button class="gallery-dot active"
+                        data-index="0"
+                        aria-label="Show image 1"></button>
+                <button class="gallery-dot"
+                        data-index="1"
+                        aria-label="Show image 2"></button>
+                <button class="gallery-dot"
+                        data-index="2"
+                        aria-label="Show image 3"></button>
+                <button class="gallery-dot"
+                        data-index="3"
+                        aria-label="Show image 4"></button>
+              </div>
             </div>
           </div>
         </div>
       </div>
     </div>
-    </div>
   </section>
 
   {{-- STOK PRC - Enhanced Design --}}
   <section id="stok"
-           class="relative bg-gradient-to-b from-white to-slate-50 py-16 sm:py-20">
+           class="relative bg-gradient-to-b from-white to-slate-50 py-12 sm:py-16 lg:py-20">
     <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
       {{-- Section Header --}}
-      <div class="mb-10 flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-end">
+      <div class="mb-8 flex flex-col items-start justify-between gap-4 sm:mb-10 sm:flex-row sm:items-end">
         <div class="max-w-2xl">
           <div
-               class="inline-flex items-center gap-2 rounded-full bg-red-100 px-4 py-1.5 text-sm font-semibold text-red-700">
+               class="inline-flex items-center gap-2 rounded-full bg-red-100 px-3 py-1 text-xs font-semibold text-red-700 sm:px-4 sm:py-1.5 sm:text-sm">
             <span class="relative flex h-2 w-2">
               <span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-red-400 opacity-75"></span>
               <span class="relative inline-flex h-2 w-2 rounded-full bg-red-600"></span>
             </span>
             Live Update
           </div>
-          <h2 class="mt-3 text-3xl font-extrabold text-slate-900 sm:text-4xl">
+          <h2 class="mt-2 text-2xl font-extrabold text-slate-900 sm:mt-3 sm:text-3xl lg:text-4xl">
             Persediaan Darah Real-time
           </h2>
-          <p class="mt-2 text-base text-slate-600">
+          <p class="mt-1.5 text-sm text-slate-600 sm:mt-2 sm:text-base">
             Pantau ketersediaan stok darah per golongan dengan update otomatis setiap 30 detik
           </p>
         </div>
         <a href="{{ url('/stok') }}"
-           class="group inline-flex items-center gap-2 rounded-xl border-2 border-red-600 bg-white px-5 py-2.5 text-sm font-semibold text-red-600 shadow-sm transition hover:bg-red-600 hover:text-white hover:shadow-xl">
+           class="group inline-flex w-full items-center justify-center gap-2 rounded-xl border-2 border-red-600 bg-white px-4 py-2 text-sm font-semibold text-red-600 shadow-sm transition hover:bg-red-600 hover:text-white hover:shadow-xl sm:w-auto sm:px-5 sm:py-2.5">
           Lihat Detail Lengkap
           <svg class="h-4 w-4 transition group-hover:translate-x-1"
                fill="none"
@@ -157,19 +299,21 @@
       @endphp
 
       {{-- Total Overview --}}
-      <div class="mb-8 rounded-2xl border border-slate-200 bg-gradient-to-r from-red-50 to-rose-50 p-6 shadow-sm">
-        <div class="flex flex-col items-center justify-between gap-4 sm:flex-row">
-          <div class="flex items-center gap-4">
-            <div class="flex h-16 w-16 items-center justify-center rounded-2xl bg-red-600 text-3xl text-white shadow-lg">
+      <div
+           class="mb-6 rounded-xl border border-slate-200 bg-gradient-to-r from-red-50 to-rose-50 p-4 shadow-sm sm:mb-8 sm:rounded-2xl sm:p-6">
+        <div class="flex flex-col items-center justify-between gap-3 sm:flex-row sm:gap-4">
+          <div class="flex items-center gap-3 sm:gap-4">
+            <div
+                 class="flex h-12 w-12 items-center justify-center rounded-xl bg-red-600 text-2xl text-white shadow-lg sm:h-16 sm:w-16 sm:rounded-2xl sm:text-3xl">
               🩸
             </div>
-            <div>
-              <div class="text-sm font-medium text-slate-600">Total Stok Tersedia (PRC)</div>
-              <div class="text-4xl font-extrabold text-slate-900"
+            <div class="text-center sm:text-left">
+              <div class="text-xs font-medium text-slate-600 sm:text-sm">Total Stok Tersedia (PRC)</div>
+              <div class="text-2xl font-extrabold text-slate-900 sm:text-3xl lg:text-4xl"
                    data-counter>{{ number_format($totalStok) }}</div>
             </div>
           </div>
-          <div class="flex items-center gap-2 text-sm">
+          <div class="flex items-center gap-2 text-xs sm:text-sm">
             <span class="text-slate-500">Terakhir diperbarui:</span>
             <span id="lastUpdated"
                   class="font-semibold text-slate-900">{{ $lastUpdated }}</span>
@@ -178,7 +322,7 @@
       </div>
 
       {{-- Blood Type Grid --}}
-      <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+      <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-6 lg:grid-cols-4">
         @foreach ($stok as $it)
           @php
             [$label, $cls] = StokHelper::badgeStatus($it['jumlah']);
@@ -190,44 +334,45 @@
                data-golongan="{{ $it['gol'] }}">
             {{-- Glow effect --}}
             <div
-                 class="from-{{ $statusColor }}-500/30 to-{{ $statusColor }}-600/20 absolute -inset-0.5 rounded-3xl bg-gradient-to-br opacity-0 blur transition duration-300 group-hover:opacity-100">
+                 class="from-{{ $statusColor }}-500/30 to-{{ $statusColor }}-600/20 absolute -inset-0.5 rounded-2xl bg-gradient-to-br opacity-0 blur transition duration-300 group-hover:opacity-100 sm:rounded-3xl">
             </div>
 
             <div
-                 class="group-hover:border-{{ $statusColor }}-200 relative h-full rounded-3xl border-2 border-slate-200 bg-white p-6 shadow-lg transition duration-300 group-hover:shadow-2xl">
+                 class="group-hover:border-{{ $statusColor }}-200 relative h-full rounded-2xl border-2 border-slate-200 bg-white p-4 shadow-lg transition duration-300 group-hover:shadow-2xl sm:rounded-3xl sm:p-6">
               {{-- Header --}}
               <div class="flex items-start justify-between">
-                <div class="flex items-center gap-3">
+                <div class="flex items-center gap-2 sm:gap-3">
                   <div
-                       class="grid h-14 w-14 place-items-center rounded-2xl bg-gradient-to-br from-red-600 to-red-500 text-2xl text-white shadow-lg ring-4 ring-white">
+                       class="grid h-12 w-12 place-items-center rounded-xl bg-gradient-to-br from-red-600 to-red-500 text-xl text-white shadow-lg ring-4 ring-white sm:h-14 sm:w-14 sm:rounded-2xl sm:text-2xl">
                     🩸
                   </div>
                   <div>
-                    <div class="rounded-lg bg-slate-100 px-2.5 py-1 text-xs font-bold text-slate-700">PRC</div>
-                    <div class="mt-1 text-xs text-slate-500">Packed Red Cell</div>
+                    <div class="rounded-lg bg-slate-100 px-2 py-0.5 text-xs font-bold text-slate-700 sm:px-2.5 sm:py-1">
+                      PRC</div>
+                    <div class="mt-0.5 text-xs text-slate-500 sm:mt-1">Packed Red Cell</div>
                   </div>
                 </div>
                 <span data-status
-                      class="bg-{{ $statusColor }}-100 text-{{ $statusColor }}-700 ring-{{ $statusColor }}-200 rounded-full px-3 py-1.5 text-xs font-bold ring-1">
+                      class="bg-{{ $statusColor }}-100 text-{{ $statusColor }}-700 ring-{{ $statusColor }}-200 rounded-full px-2 py-1 text-xs font-bold ring-1 sm:px-3 sm:py-1.5">
                   {{ $label }}
                 </span>
               </div>
 
               {{-- Counter & Blood Type --}}
-              <div class="mt-6 flex items-end justify-between">
+              <div class="mt-4 flex items-end justify-between sm:mt-6">
                 <div class="flex-1">
-                  <div class="text-5xl font-extrabold tracking-tight text-slate-900"
+                  <div class="text-3xl font-extrabold tracking-tight text-slate-900 sm:text-4xl lg:text-5xl"
                        data-counter>
                     {{ number_format($it['jumlah'], 0, ',', '.') }}
                   </div>
-                  <div class="mt-1 text-sm font-medium text-slate-500">Unit tersedia</div>
+                  <div class="mt-0.5 text-xs font-medium text-slate-500 sm:mt-1 sm:text-sm">Unit tersedia</div>
                 </div>
                 <div class="flex flex-col items-center">
                   <div class="flex items-baseline">
-                    <span class="text-4xl font-black text-red-600">{{ $it['gol'] }}</span>
-                    <span class="ml-1 text-2xl font-bold text-red-500">{{ $it['rhesus'] }}</span>
+                    <span class="text-3xl font-black text-red-600 sm:text-4xl">{{ $it['gol'] }}</span>
+                    <span class="ml-0.5 text-xl font-bold text-red-500 sm:ml-1 sm:text-2xl">{{ $it['rhesus'] }}</span>
                   </div>
-                  <div class="mt-1 text-xs font-medium text-slate-400">Golongan</div>
+                  <div class="mt-0.5 text-xs font-medium text-slate-400 sm:mt-1">Golongan</div>
                 </div>
               </div>
             </div>
@@ -264,7 +409,7 @@
 
   {{-- MENGAPA MEMILIH - Enhanced Design --}}
   <section id="about"
-           class="relative overflow-hidden bg-slate-50 py-16 sm:py-20">
+           class="relative overflow-hidden bg-slate-50 py-12 sm:py-16 lg:py-20">
     {{-- Background Pattern --}}
     <div class="pointer-events-none absolute inset-0 opacity-40">
       <div class="absolute right-0 top-0 h-96 w-96 rounded-full bg-red-100 blur-3xl"></div>
@@ -272,24 +417,24 @@
     </div>
 
     <div class="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-      <div class="grid items-center gap-8 lg:grid-cols-2 lg:gap-12">
+      <div class="grid items-center gap-6 sm:gap-8 lg:grid-cols-2 lg:gap-12">
         {{-- Left Content --}}
-        <div class="pt-16">
-          <h2 class="text-3xl font-extrabold text-slate-900 sm:text-4xl">
+        <div class="lg:pt-0">
+          <h2 class="text-2xl font-extrabold text-slate-900 sm:text-3xl lg:text-4xl">
             Mengapa Memilih
             <span class="bg-gradient-to-r from-red-600 to-rose-500 bg-clip-text text-transparent">UDD PMI</span>
           </h2>
 
-          <p class="mt-3 text-base leading-relaxed text-slate-600">
+          <p class="mt-2 text-sm leading-relaxed text-slate-600 sm:mt-3 sm:text-base">
             Kami berkomitmen memberikan pelayanan terbaik dalam pengelolaan darah dengan standar internasional dan
             teknologi terdepan untuk keselamatan Anda.
           </p>
 
-          <ul class="mt-6 space-y-4">
-            <li class="group flex items-start gap-3">
+          <ul class="mt-4 space-y-3 sm:mt-6 sm:space-y-4">
+            <li class="group flex items-start gap-2 sm:gap-3">
               <div
-                   class="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-red-600 to-red-500 text-white shadow-lg transition group-hover:scale-110">
-                <svg class="h-5 w-5"
+                   class="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-red-600 to-red-500 text-white shadow-lg transition group-hover:scale-110 sm:h-10 sm:w-10 sm:rounded-2xl">
+                <svg class="h-4 w-4 sm:h-5 sm:w-5"
                      fill="none"
                      stroke="currentColor"
                      viewBox="0 0 24 24">
@@ -300,18 +445,18 @@
                 </svg>
               </div>
               <div class="flex-1">
-                <h3 class="text-base font-bold text-slate-900">Standar Keamanan Tinggi</h3>
-                <p class="mt-1 text-sm text-slate-600">
+                <h3 class="text-sm font-bold text-slate-900 sm:text-base">Standar Keamanan Tinggi</h3>
+                <p class="mt-0.5 text-xs text-slate-600 sm:mt-1 sm:text-sm">
                   Seluruh proses screening dan pengolahan darah mengikuti protokol WHO dan standar internasional untuk
                   menjamin keamanan maksimal.
                 </p>
               </div>
             </li>
 
-            <li class="group flex items-start gap-3">
+            <li class="group flex items-start gap-2 sm:gap-3">
               <div
-                   class="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-600 to-blue-500 text-white shadow-lg transition group-hover:scale-110">
-                <svg class="h-5 w-5"
+                   class="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-blue-600 to-blue-500 text-white shadow-lg transition group-hover:scale-110 sm:h-10 sm:w-10 sm:rounded-2xl">
+                <svg class="h-4 w-4 sm:h-5 sm:w-5"
                      fill="none"
                      stroke="currentColor"
                      viewBox="0 0 24 24">
@@ -322,18 +467,18 @@
                 </svg>
               </div>
               <div class="flex-1">
-                <h3 class="text-base font-bold text-slate-900">Teknologi Terdepan</h3>
-                <p class="mt-1 text-sm text-slate-600">
+                <h3 class="text-sm font-bold text-slate-900 sm:text-base">Teknologi Terdepan</h3>
+                <p class="mt-0.5 text-xs text-slate-600 sm:mt-1 sm:text-sm">
                   Sistem manajemen digital dan peralatan medis terkini untuk keandalan, efisiensi, dan traceability yang
                   sempurna.
                 </p>
               </div>
             </li>
 
-            <li class="group flex items-start gap-3">
+            <li class="group flex items-start gap-2 sm:gap-3">
               <div
-                   class="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-green-600 to-green-500 text-white shadow-lg transition group-hover:scale-110">
-                <svg class="h-5 w-5"
+                   class="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-green-600 to-green-500 text-white shadow-lg transition group-hover:scale-110 sm:h-10 sm:w-10 sm:rounded-2xl">
+                <svg class="h-4 w-4 sm:h-5 sm:w-5"
                      fill="none"
                      stroke="currentColor"
                      viewBox="0 0 24 24">
@@ -344,8 +489,8 @@
                 </svg>
               </div>
               <div class="flex-1">
-                <h3 class="text-base font-bold text-slate-900">Layanan 24/7</h3>
-                <p class="mt-1 text-sm text-slate-600">
+                <h3 class="text-sm font-bold text-slate-900 sm:text-base">Layanan 24/7</h3>
+                <p class="mt-0.5 text-xs text-slate-600 sm:mt-1 sm:text-sm">
                   Tim medis profesional dan berpengalaman siap melayani kebutuhan darurat Anda kapan saja, tanpa henti.
                 </p>
               </div>
@@ -357,8 +502,10 @@
         <div class="relative">
           {{-- Main Image Card --}}
           <div class="relative">
-            <div class="absolute -inset-4 rounded-3xl bg-gradient-to-r from-red-200/50 to-rose-200/50 blur-2xl"></div>
-            <div class="relative overflow-hidden rounded-3xl bg-white shadow-2xl ring-1 ring-slate-200">
+            <div
+                 class="absolute -inset-2 rounded-2xl bg-gradient-to-r from-red-200/50 to-rose-200/50 blur-2xl sm:-inset-4 sm:rounded-3xl">
+            </div>
+            <div class="relative overflow-hidden rounded-2xl bg-white shadow-2xl ring-1 ring-slate-200 sm:rounded-3xl">
               <div class="aspect-[4/3] bg-gradient-to-br from-slate-50 to-slate-100">
                 {{-- Google Maps Embed - UDD PMI Provinsi Lampung dengan Marker --}}
                 <iframe src="https://maps.google.com/maps?q=UDD+PMI+Provinsi+Lampung,Jl.+Dr.+Sam+Ratulangi+No.105,+Penengahan,+Kec.+Tj.+Karang+Pusat,+Kota+Bandar+Lampung&t=&z=15&ie=UTF8&iwloc=&output=embed"
@@ -373,19 +520,19 @@
               </div>
 
               {{-- Stats Overlay --}}
-              <div class="border-t border-slate-100 bg-white p-6">
-                <div class="grid grid-cols-3 gap-4 text-center">
+              <div class="border-t border-slate-100 bg-white p-4 sm:p-6">
+                <div class="grid grid-cols-3 gap-2 text-center sm:gap-4">
                   <div>
-                    <div class="text-2xl font-bold text-red-600">15+</div>
-                    <div class="mt-1 text-xs text-slate-600">Tahun Pengalaman</div>
+                    <div class="text-xl font-bold text-red-600 sm:text-2xl">15+</div>
+                    <div class="mt-0.5 text-xs text-slate-600 sm:mt-1">Tahun Pengalaman</div>
                   </div>
                   <div>
-                    <div class="text-2xl font-bold text-red-600">50K+</div>
-                    <div class="mt-1 text-xs text-slate-600">Darah Terkelola</div>
+                    <div class="text-xl font-bold text-red-600 sm:text-2xl">50K+</div>
+                    <div class="mt-0.5 text-xs text-slate-600 sm:mt-1">Darah Terkelola</div>
                   </div>
                   <div>
-                    <div class="text-2xl font-bold text-red-600">100%</div>
-                    <div class="mt-1 text-xs text-slate-600">Tersertifikasi</div>
+                    <div class="text-xl font-bold text-red-600 sm:text-2xl">100%</div>
+                    <div class="mt-0.5 text-xs text-slate-600 sm:mt-1">Tersertifikasi</div>
                   </div>
                 </div>
               </div>
@@ -397,178 +544,209 @@
   </section>
 
   {{-- Enhanced JavaScript with smooth animations --}}
-  <script>
-    // Stock update function
-    async function updateStokDarah() {
-      try {
-        const response = await fetch('/api/stok-golongan');
-        const data = await response.json();
+  @push('scripts')
+    <script>
+      // Hero Image Gallery
+      document.addEventListener('DOMContentLoaded', function() {
+        const images = document.querySelectorAll('.hero-image');
+        const dots = document.querySelectorAll('.gallery-dot');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        let currentIndex = 0;
 
-        // Update each blood type stock with animation
-        Object.entries(data.stok).forEach(([gol, jumlah]) => {
-          const card = document.querySelector(`[data-golongan="${gol}"]`);
-          if (card) {
-            const counter = card.querySelector('[data-counter]');
-            const status = card.querySelector('[data-status]');
-            const progress = card.querySelector('[data-progress]');
+        function showImage(index) {
+          // Remove active class from all images and dots
+          images.forEach(img => img.classList.remove('active'));
+          dots.forEach(dot => dot.classList.remove('active'));
 
-            // Animate counter
-            if (counter) {
-              animateValue(counter, parseInt(counter.textContent.replace(/\D/g, '')), jumlah, 1000);
-            }
-
-            // Update status badge
-            if (status) {
-              const newStatus = jumlah < 300 ? ['Kritis', 'red'] :
-                jumlah < 1000 ? ['Waspada', 'amber'] : ['Aman', 'emerald'];
-              status.textContent = newStatus[0];
-              status.className =
-                `rounded-full px-3 py-1.5 text-xs font-bold ring-1 bg-${newStatus[1]}-100 text-${newStatus[1]}-700 ring-${newStatus[1]}-200`;
-            }
-
-            // Update progress bar
-            if (progress) {
-              const percentage = Math.min(100, (jumlah / 1500) * 100);
-              progress.style.width = percentage + '%';
-              progress.setAttribute('data-progress', percentage);
-            }
-          }
-        });
-
-        // Update last updated time
-        const lastUpdated = document.getElementById('lastUpdated');
-        if (lastUpdated) lastUpdated.textContent = data.lastUpdated;
-
-      } catch (error) {
-        console.error('Error updating stock:', error);
-      }
-    }
-
-    // Animate number counter
-    function animateValue(element, start, end, duration) {
-      const range = end - start;
-      const increment = range / (duration / 16);
-      let current = start;
-      const timer = setInterval(() => {
-        current += increment;
-        if ((increment > 0 && current >= end) || (increment < 0 && current <= end)) {
-          element.textContent = new Intl.NumberFormat('id-ID').format(end);
-          clearInterval(timer);
-        } else {
-          element.textContent = new Intl.NumberFormat('id-ID').format(Math.floor(current));
+          // Add active class to current image and dot
+          images[index].classList.add('active');
+          dots[index].classList.add('active');
+          currentIndex = index;
         }
-      }, 16);
-    }
 
-    document.addEventListener('DOMContentLoaded', () => {
-      // Initial stock update
-      updateStokDarah();
-
-      // Auto-update every 30 seconds
-      setInterval(updateStokDarah, 30000);
-
-      // Counter animation with Intersection Observer
-      const counters = document.querySelectorAll('[data-counter]');
-      const easeOutQuart = t => 1 - Math.pow(1 - t, 4);
-
-      const counterObserver = new IntersectionObserver(entries => {
-        entries.forEach(entry => {
-          if (!entry.isIntersecting) return;
-          const el = entry.target;
-          const numeric = el.textContent.replace(/[^0-9]/g, '');
-          const target = parseInt(numeric, 10) || 0;
-          let start = null;
-
-          const animate = (timestamp) => {
-            if (!start) start = timestamp;
-            const progress = Math.min(1, (timestamp - start) / 1200);
-            const value = Math.floor(easeOutQuart(progress) * target);
-            el.textContent = value.toLocaleString('id-ID');
-            if (progress < 1) requestAnimationFrame(animate);
-          };
-
-          requestAnimationFrame(animate);
-          counterObserver.unobserve(el);
-        });
-      }, {
-        threshold: 0.5
-      });
-
-      counters.forEach(el => counterObserver.observe(el));
-
-      // Progress bar animation
-      const progressBars = document.querySelectorAll('[data-progress]');
-      const progressObserver = new IntersectionObserver(entries => {
-        entries.forEach(entry => {
-          if (!entry.isIntersecting) return;
-          const el = entry.target;
-          const targetWidth = el.getAttribute('data-progress');
-          el.style.width = '0%';
-          setTimeout(() => {
-            el.style.width = targetWidth + '%';
-          }, 100);
-          progressObserver.unobserve(el);
-        });
-      }, {
-        threshold: 0.5
-      });
-
-      progressBars.forEach(el => progressObserver.observe(el));
-
-      // Smooth scroll for anchor links
-      document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener('click', function(e) {
-          const href = this.getAttribute('href');
-          if (href !== '#' && href.length > 1) {
-            e.preventDefault();
-            const target = document.querySelector(href);
-            if (target) {
-              target.scrollIntoView({
-                behavior: 'smooth',
-                block: 'start'
-              });
-            }
-          }
-        });
-      });
-
-      // Add parallax effect to hero background
-      let ticking = false;
-      window.addEventListener('scroll', () => {
-        if (!ticking) {
-          window.requestAnimationFrame(() => {
-            const scrolled = window.pageYOffset;
-            const parallax = document.querySelector('#beranda .pointer-events-none');
-            if (parallax && scrolled < 800) {
-              parallax.style.transform = `translateY(${scrolled * 0.5}px)`;
-            }
-            ticking = false;
+        // Next button
+        if (nextBtn) {
+          nextBtn.addEventListener('click', () => {
+            const nextIndex = (currentIndex + 1) % images.length;
+            showImage(nextIndex);
           });
-          ticking = true;
         }
+
+        // Previous button
+        if (prevBtn) {
+          prevBtn.addEventListener('click', () => {
+            const prevIndex = (currentIndex - 1 + images.length) % images.length;
+            showImage(prevIndex);
+          });
+        }
+
+        // Dots navigation
+        dots.forEach(dot => {
+          dot.addEventListener('click', () => {
+            const index = parseInt(dot.getAttribute('data-index'));
+            showImage(index);
+          });
+        });
       });
 
-      // Add fade-in animation for sections
-      const sections = document.querySelectorAll('section');
-      const sectionObserver = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            entry.target.style.opacity = '1';
-            entry.target.style.transform = 'translateY(0)';
+      // Stock update function
+      async function updateStokDarah() {
+        try {
+          const response = await fetch('/api/stok-golongan');
+
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+
+          const data = await response.json();
+
+          // Update each blood type stock with animation
+          Object.entries(data.stok).forEach(([gol, jumlah]) => {
+            const card = document.querySelector(`[data-golongan="${gol}"]`);
+            if (card) {
+              const counter = card.querySelector('[data-counter]');
+              const status = card.querySelector('[data-status]');
+
+              // Animate counter
+              if (counter) {
+                const currentValue = parseInt(counter.textContent.replace(/\D/g, '')) || 0;
+                animateValue(counter, currentValue, jumlah, 1000);
+              }
+
+              // Update status badge
+              if (status) {
+                const newStatus = jumlah < 300 ? ['Kritis', 'red'] :
+                  jumlah < 1000 ? ['Waspada', 'amber'] : ['Aman', 'emerald'];
+                status.textContent = newStatus[0];
+                status.className =
+                  `rounded-full px-2 sm:px-3 py-1 sm:py-1.5 text-xs font-bold ring-1 bg-${newStatus[1]}-100 text-${newStatus[1]}-700 ring-${newStatus[1]}-200`;
+              }
+            }
+          });
+
+          // Update last updated time
+          const lastUpdated = document.getElementById('lastUpdated');
+          if (lastUpdated && data.lastUpdated) {
+            lastUpdated.textContent = data.lastUpdated;
+          }
+
+        } catch (error) {
+          console.error('Error updating stock:', error);
+        }
+      }
+
+      // Animate number counter
+      function animateValue(element, start, end, duration) {
+        if (!element) return;
+
+        const range = end - start;
+        const increment = range / (duration / 16);
+        let current = start;
+
+        const timer = setInterval(() => {
+          current += increment;
+          if ((increment > 0 && current >= end) || (increment < 0 && current <= end)) {
+            element.textContent = new Intl.NumberFormat('id-ID').format(end);
+            clearInterval(timer);
+          } else {
+            element.textContent = new Intl.NumberFormat('id-ID').format(Math.floor(current));
+          }
+        }, 16);
+      }
+
+      // Stock and animations initialization
+      document.addEventListener('DOMContentLoaded', () => {
+        // Initial stock update
+        updateStokDarah();
+
+        // Counter animation with Intersection Observer
+        const counters = document.querySelectorAll('[data-counter]');
+        const easeOutQuart = t => 1 - Math.pow(1 - t, 4);
+
+        const counterObserver = new IntersectionObserver(entries => {
+          entries.forEach(entry => {
+            if (!entry.isIntersecting) return;
+            const el = entry.target;
+            const numeric = el.textContent.replace(/[^0-9]/g, '');
+            const target = parseInt(numeric, 10) || 0;
+
+            if (target === 0) return;
+
+            let start = null;
+
+            const animate = (timestamp) => {
+              if (!start) start = timestamp;
+              const progress = Math.min(1, (timestamp - start) / 1200);
+              const value = Math.floor(easeOutQuart(progress) * target);
+              el.textContent = value.toLocaleString('id-ID');
+              if (progress < 1) requestAnimationFrame(animate);
+            };
+
+            requestAnimationFrame(animate);
+            counterObserver.unobserve(el);
+          });
+        }, {
+          threshold: 0.5
+        });
+
+        counters.forEach(el => counterObserver.observe(el));
+
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+          anchor.addEventListener('click', function(e) {
+            const href = this.getAttribute('href');
+            if (href !== '#' && href.length > 1) {
+              e.preventDefault();
+              const target = document.querySelector(href);
+              if (target) {
+                target.scrollIntoView({
+                  behavior: 'smooth',
+                  block: 'start'
+                });
+              }
+            }
+          });
+        });
+
+        // Add parallax effect to hero background
+        let ticking = false;
+        window.addEventListener('scroll', () => {
+          if (!ticking) {
+            window.requestAnimationFrame(() => {
+              const scrolled = window.pageYOffset;
+              const parallax = document.querySelector('#beranda .pointer-events-none');
+              if (parallax && scrolled < 800) {
+                parallax.style.transform = `translateY(${scrolled * 0.5}px)`;
+              }
+              ticking = false;
+            });
+            ticking = true;
           }
         });
-      }, {
-        threshold: 0.1
-      });
 
-      sections.forEach(section => {
-        section.style.opacity = '0';
-        section.style.transform = 'translateY(20px)';
-        section.style.transition = 'opacity 0.6s ease-out, transform 0.6s ease-out';
-        sectionObserver.observe(section);
+        // Add fade-in animation for sections
+        const sections = document.querySelectorAll('section');
+        const sectionObserver = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              entry.target.style.opacity = '1';
+              entry.target.style.transform = 'translateY(0)';
+            }
+          });
+        }, {
+          threshold: 0.1
+        });
+
+        sections.forEach(section => {
+          section.style.opacity = '0';
+          section.style.transform = 'translateY(20px)';
+          section.style.transition = 'opacity 0.6s ease-out, transform 0.6s ease-out';
+          sectionObserver.observe(section);
+        });
       });
-    });
-  </script>
+    </script>
+  @endpush
 
   <x-footer bg="bg-slate-50" />
 @endsection

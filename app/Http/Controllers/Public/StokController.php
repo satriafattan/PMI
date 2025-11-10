@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Public;
 use App\Http\Controllers\Controller;
 use App\Models\StokDarah;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 
 class StokController extends Controller
 {
@@ -56,5 +57,30 @@ class StokController extends Controller
             'B'  => (int)$stok->where('gol_darah', 'B')->sum('jumlah'),
             'O'  => (int)$stok->where('gol_darah', 'O')->sum('jumlah'),
         ];
+    }
+
+    /** API endpoint untuk mendapatkan stok per golongan */
+    public function getStokGolongan()
+    {
+        // Ambil stok PRC per golongan darah (sama seperti di WelcomeController)
+        $stok = StokDarah::where('produk', 'PRC')
+            ->select(
+                DB::raw('SUM(CASE WHEN gol_darah = "A" THEN jumlah ELSE 0 END) as stokA'),
+                DB::raw('SUM(CASE WHEN gol_darah = "B" THEN jumlah ELSE 0 END) as stokB'),
+                DB::raw('SUM(CASE WHEN gol_darah = "AB" THEN jumlah ELSE 0 END) as stokAB'),
+                DB::raw('SUM(CASE WHEN gol_darah = "O" THEN jumlah ELSE 0 END) as stokO')
+            )
+            ->first();
+
+        return response()->json([
+            'success' => true,
+            'stok' => [
+                'A'  => (int)($stok->stokA ?? 0),
+                'AB' => (int)($stok->stokAB ?? 0),
+                'B'  => (int)($stok->stokB ?? 0),
+                'O'  => (int)($stok->stokO ?? 0),
+            ],
+            'lastUpdated' => now()->translatedFormat('d M Y, H:i'),
+        ]);
     }
 }

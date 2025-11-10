@@ -16,7 +16,6 @@ class EventVerificationController extends Controller
 {
     public function index(Request $r)
     {
-        // Ambil "Baris" (prioritaskan ?per, fallback ke ?per_page), default 10
         $per = (int) ($r->integer('per') ?? $r->integer('per_page') ?? 10);
 
         $q  = trim((string) $r->input('q', ''));

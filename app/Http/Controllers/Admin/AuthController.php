@@ -22,7 +22,6 @@ class AuthController extends Controller
 
         $remember = $request->filled('remember');
 
-        // guard khusus admin (pastikan sudah ada guard 'admin' di config/auth.php)
         if (Auth::guard('admin')->attempt($credentials, $remember)) {
             $request->session()->regenerate();
             return redirect()->intended('/admin/dashboard')
