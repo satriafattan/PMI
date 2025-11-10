@@ -18,7 +18,7 @@ class EventScheduleRequest extends FormRequest
             // A. Data Pemohon
             'nama'               => ['required', 'string', 'max:150'],
             'institusi_pemohon'  => ['required', 'string', 'max:150'],
-            'nomor_telefon'      => ['required', 'regex:/^[0-9+\s()-]{8,20}$/'],
+            'nomor_telefon'      => ['required', 'string', 'max:30'],
             'email'              => ['required', 'email', 'max:150'],
             'surat_instansi'     => ['required', 'file', 'mimes:pdf,jpg,jpeg,png', 'max:2048'],
 

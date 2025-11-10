@@ -74,37 +74,14 @@
           {{-- Nama --}}
           <div class="group">
             <label class="mb-1.5 flex items-center gap-1 text-sm font-medium text-slate-700">
-              <svg class="h-4 w-4 text-slate-400"
-                   fill="none"
-                   stroke="currentColor"
-                   viewBox="0 0 24 24">
-                <path stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-              </svg>
               Nama
             </label>
-            <div class="relative">
-              <input type="text"
-                     name="nama"
-                     required
-                     value="{{ old('nama') }}"
-                     class="peer w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 pl-10 text-[15px] shadow-sm transition-all duration-200 placeholder:text-slate-300 hover:border-slate-300 focus:border-red-500 focus:shadow-md focus:outline-none focus:ring-2 focus:ring-red-500/20">
-              <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                <span class="text-slate-400 transition-colors duration-200 peer-focus:text-red-500">
-                  <svg class="h-5 w-5"
-                       fill="none"
-                       stroke="currentColor"
-                       viewBox="0 0 24 24">
-                    <path stroke-linecap="round"
-                          stroke-linejoin="round"
-                          stroke-width="1.5"
-                          d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
-                  </svg>
-                </span>
-              </div>
-            </div>
+            <input type="text"
+                   name="nama"
+                   required
+                   placeholder="Nama lengkap pemohon"
+                   value="{{ old('nama') }}"
+                   class="w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-[15px] shadow-sm transition-all duration-200 placeholder:text-slate-300 hover:border-slate-300 focus:border-red-500 focus:shadow-md focus:outline-none focus:ring-2 focus:ring-red-500/20">
             @error('nama')
               <p class="mt-1.5 flex items-center gap-1 text-sm text-red-600">
                 <svg class="h-4 w-4"
@@ -127,6 +104,7 @@
             <input type="text"
                    name="institusi_pemohon"
                    required
+                    placeholder="Nama institusi atau organisasi"
                    value="{{ old('institusi_pemohon') }}"
                    class="mt-1 w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-[15px] shadow-inner focus:border-red-500 focus:outline-none focus:ring-2 focus:ring-red-500/20">
             @error('institusi_pemohon')
@@ -137,9 +115,7 @@
           {{-- Telepon --}}
           <div>
             <div class="flex items-center justify-between">
-              <label class="block text-sm font-medium text-slate-700">Nomor Telepon</label>
-              <span class="text-[11px] text-slate-500">Contoh: 0812xxxxxxx</span>
-            </div>
+              <label class="block text-sm font-medium text-slate-700">Nomor Telepon</label>            </div>
             <input type="text"
                    name="nomor_telefon"
                    required
@@ -157,6 +133,7 @@
             <input type="email"
                    name="email"
                    required
+                   placeholder="nama@email.com"
                    value="{{ old('email') }}"
                    class="mt-1 w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-[15px] shadow-inner focus:border-red-500 focus:outline-none focus:ring-2 focus:ring-red-500/20">
             @error('email')

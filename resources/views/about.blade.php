@@ -98,22 +98,6 @@
           </div>
         </div>
       </div>
-
-      {{-- Scroll Indicator --}}
-      <div class="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce">
-        <div class="flex flex-col items-center gap-2 text-white/70">
-          <span class="text-xs font-medium">Scroll untuk melihat lebih lanjut</span>
-          <svg class="h-6 w-6"
-               fill="none"
-               stroke="currentColor"
-               viewBox="0 0 24 24">
-            <path stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M19 14l-7 7m0 0l-7-7m7 7V3" />
-          </svg>
-        </div>
-      </div>
     </section>
 
     {{-- PROFIL PERUSAHAAN - Enhanced Design --}}
@@ -233,27 +217,6 @@
                     <div class="text-2xl font-bold text-red-600">100%</div>
                     <div class="mt-1 text-xs text-slate-600">Safe</div>
                   </div>
-                </div>
-              </div>
-            </div>
-
-            {{-- Floating Badge --}}
-            <div class="absolute -left-6 top-12 rounded-2xl bg-white p-4 shadow-2xl ring-1 ring-slate-200">
-              <div class="flex items-center gap-3">
-                <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-green-100 text-green-600">
-                  <svg class="h-6 w-6"
-                       fill="none"
-                       stroke="currentColor"
-                       viewBox="0 0 24 24">
-                    <path stroke-linecap="round"
-                          stroke-linejoin="round"
-                          stroke-width="2"
-                          d="M5 13l4 4L19 7" />
-                  </svg>
-                </div>
-                <div>
-                  <div class="text-sm font-bold text-slate-900">Terakreditasi</div>
-                  <div class="text-xs text-slate-500">Standar Nasional</div>
                 </div>
               </div>
             </div>
@@ -687,24 +650,7 @@
       counters.forEach(el => counterObserver.observe(el));
 
       // Parallax effect for hero background
-      let ticking = false;
-      window.addEventListener('scroll', () => {
-        if (!ticking) {
-          window.requestAnimationFrame(() => {
-            const scrolled = window.pageYOffset;
-            const hero = document.querySelector('.bg-gradient-to-br.from-red-700');
-            if (hero && scrolled < 800) {
-              const parallax = hero.querySelector('.pointer-events-none');
-              if (parallax) {
-                parallax.style.transform = `translateY(${scrolled * 0.5}px)`;
-              }
-            }
-            ticking = false;
-          });
-          ticking = true;
-        }
-      });
-
+      
       // Fade-in animation for sections
       const sections = document.querySelectorAll('section');
       const sectionObserver = new IntersectionObserver((entries) => {
