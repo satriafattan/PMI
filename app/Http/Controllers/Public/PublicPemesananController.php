@@ -42,6 +42,10 @@ class PublicPemesananController extends Controller
             $data['tanggal_pemesanan'] = now()->toDateString();
         }
 
+        if (empty($data['tanggal_permintaan'])) {
+            $data['tanggal_permintaan'] = $data['tanggal_pemesanan'];
+        }
+
         // Legacy support: jika UI lama masih kirim checkbox alasan_multi (array),
         // gabungkan ke alasan_transfusi agar tidak hilang informasinya.
         if ($r->has('alasan_multi') && is_array($r->input('alasan_multi'))) {
@@ -53,7 +57,7 @@ class PublicPemesananController extends Controller
         }
 
         // Normalisasi boolean (backup — sudah dilakukan di FormRequest, aman kalau dobel)
-        $data['cek_transfusi'] = (bool)($data['cek_transfusi'] ?? false);
+        $data['cek_transfusi'] = (bool) ($data['cek_transfusi'] ?? false);
 
         // Status default
         $data['status'] = $data['status'] ?? 'pending';
@@ -66,14 +70,14 @@ class PublicPemesananController extends Controller
             // Catat riwayat awal (opsional)
             if (class_exists(RiwayatPemesanan::class)) {
                 RiwayatPemesanan::create([
-                    'pemesanan_id'   => $order->id,
-                    'nama'           => $order->nama_pasien,
-                    'tanggal'        => $order->tanggal_pemesanan,
-                    'gol_darah'      => $order->gol_darah,
-                    'rhesus'         => $order->rhesus,
+                    'pemesanan_id' => $order->id,
+                    'nama' => $order->nama_pasien,
+                    'tanggal' => $order->tanggal_pemesanan,
+                    'gol_darah' => $order->gol_darah,
+                    'rhesus' => $order->rhesus,
                     'jumlah_kantong' => $order->jumlah_kantong,
-                    'produk'         => $order->produk,
-                    'aksi'           => 'dibuat (public)',
+                    'produk' => $order->produk,
+                    'aksi' => 'dibuat (public)',
                 ]);
             }
 

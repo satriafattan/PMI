@@ -215,7 +215,8 @@
                     <div id="pageSizeMenu" role="menu" aria-labelledby="pageSizeBtn"
                         class="absolute right-0 z-20 mt-2 hidden w-40 rounded-2xl border border-neutral-100 bg-white p-1 shadow-xl">
                         @foreach ($sizes as $sz)
-                            <button type="button" role="menuitemradio" aria-checked="{{ $perPage === $sz ? 'true':'false' }}"
+                            <button type="button" role="menuitemradio"
+                                aria-checked="{{ $perPage === $sz ? 'true' : 'false' }}"
                                 class="w-full text-left rounded-xl px-3 py-2 text-sm {{ $perPage === $sz ? 'bg-blue-50 text-blue-800 ring-1 ring-blue-200 cursor-default' : 'text-neutral-700' }}"
                                 data-size="{{ $sz }}">
                                 {{ $sz }} per halaman
@@ -444,797 +445,916 @@
             @endforelse
         </div>
 
-        {{-- Pagination footer --}}
+        {{-- Pagination footer (custom UI seperti Riwayat/Detail) --}}
+        @php
+            $total = $pemesanan->total();
+            $from = $pemesanan->firstItem();
+            $to = $pemesanan->lastItem();
+            $current = $pemesanan->currentPage();
+            $last = $pemesanan->lastPage();
+
+            if (!function_exists('pmi_pagination_range')) {
+                function pmi_pagination_range($last, $current, $max = 5)
+                {
+                    $pages = [];
+                    if ($last <= 1) {
+                        return [1];
+                    }
+
+                    $half = (int) floor($max / 2);
+                    $start = max(1, $current - $half);
+                    $end = min($last, $start + $max - 1);
+
+                    if ($end - $start + 1 < $max) {
+                        $start = max(1, $end - $max + 1);
+                    }
+
+                    if ($start > 1) {
+                        $pages[] = 1;
+                        if ($start > 2) {
+                            $pages[] = '...';
+                        }
+                    }
+
+                    for ($i = $start; $i <= $end; $i++) {
+                        $pages[] = $i;
+                    }
+
+                    if ($end < $last) {
+                        if ($end < $last - 1) {
+                            $pages[] = '...';
+                        }
+                        $pages[] = $last;
+                    }
+
+                    return $pages;
+                }
+            }
+
+            $range = pmi_pagination_range($last, $current, 5);
+
+            $btnBase     = 'inline-flex items-center justify-center min-w-9 h-9 px-3 rounded-2xl border text-sm';
+            $btnActive =
+                'bg-sky-600 text-white border-sky-600 shadow-sm hover:bg-sky-700 focus:outline-none focus:ring-2 focus:ring-sky-200';
+            $btnNormal =
+                'bg-white text-neutral-700 border-neutral-200 hover:bg-neutral-50 hover:border-neutral-300 focus:outline-none focus:ring-2 focus:ring-sky-200';
+            $btnDisabled = 'opacity-50 cursor-not-allowed';
+        @endphp
+
         <div class="flex flex-col justify-between gap-3 sm:flex-row sm:items-center">
             <div class="text-sm text-neutral-600">
-                @if ($pemesanan->total() > 0)
-                    Menampilkan {{ $pemesanan->firstItem() }}–{{ $pemesanan->lastItem() }} dari {{ $pemesanan->total() }}
-                    data
+                @if ($total > 0)
+                    Menampilkan {{ $from }} - {{ $to }} dari {{ $total }} data
                 @else
                     Tidak ada data
                 @endif
             </div>
-            <div>{{ $pemesanan->withQueryString()->links() }}</div>
+
+            @if ($pemesanan->hasPages())
+                <nav class="flex items-center gap-2" role="navigation" aria-label="Pagination">
+                    {{-- Tombol « (previous) --}}
+                    @php
+                        $prevUrl = $current > 1 ? $pemesanan->url($current - 1) : null;
+                    @endphp
+
+                    @if ($prevUrl)
+                        <a href="{{ $prevUrl }}" class="{{ $btnBase }} {{ $btnNormal }}"
+                            aria-label="Halaman sebelumnya">
+                            «
+                        </a>
+                    @else
+                        <span class="{{ $btnBase }} {{ $btnNormal }} {{ $btnDisabled }}" aria-disabled="true"
+                            aria-label="Halaman sebelumnya">
+                            «
+                        </span>
+                    @endif
+
+                    {{-- Angka halaman + "…" --}}
+                    @foreach ($range as $p)
+                        @if ($p === '...')
+                            <span class="px-2 text-neutral-400">…</span>
+                        @else
+                            @php $isActive = ((int) $p === (int) $current); @endphp
+
+                            @if ($isActive)
+                                <span class="{{ $btnBase }} {{ $btnActive }}" aria-current="page">
+                                    {{ $p }}
+                                </span>
+                            @else
+                                <a href="{{ $pemesanan->url($p) }}" class="{{ $btnBase }} {{ $btnNormal }}">
+                                    {{ $p }}
+                                </a>
+                            @endif
+                        @endif
+                    @endforeach
+
+                    {{-- Tombol » (next) --}}
+                    @php
+                        $nextUrl = $current < $last ? $pemesanan->url($current + 1) : null;
+                    @endphp
+
+                    @if ($nextUrl)
+                        <a href="{{ $nextUrl }}" class="{{ $btnBase }} {{ $btnNormal }}"
+                            aria-label="Halaman selanjutnya">
+                            »
+                        </a>
+                    @else
+                        <span class="{{ $btnBase }} {{ $btnNormal }} {{ $btnDisabled }}" aria-disabled="true"
+                            aria-label="Halaman selanjutnya">
+                            »
+                        </span>
+                    @endif
+                </nav>
+            @endif
         </div>
-    </div>
 
-    {{-- =================== Modal: Detail Pemesanan =================== --}}
-    <div id="detailModal"
-        class="fixed inset-0 z-50 hidden items-center justify-center bg-black/30 backdrop-blur-sm p-3 sm:p-4 transition-opacity duration-200"
-        aria-hidden="true">
-        <div id="detailCard"
-            class="w-full max-w-5xl origin-center scale-95 opacity-0 translate-y-2 rounded-2xl sm:rounded-3xl overflow-hidden border border-neutral-200/70 bg-white shadow-2xl transition-all duration-200"
-            role="dialog" aria-modal="true" aria-labelledby="detailModalTitle" tabindex="-1">
 
-            {{-- Header --}}
-            <div
-                class="sticky top-0 z-10 flex items-center justify-between gap-4 border-b border-neutral-100/80 px-4 py-3 sm:px-6 sm:py-4 bg-white/80 backdrop-blur">
-                <div class="min-w-0">
-                    <h3 id="detailModalTitle" class="truncate text-lg sm:text-xl font-semibold tracking-tight text-neutral-900">
-                        Detail Pemesanan
-                    </h3>
-                    <p class="mt-0.5 text-xs text-neutral-500">Ringkasan identitas & kebutuhan darah</p>
-                </div>
-                <div class="flex items-center gap-2">
-                    <span id="dm_status"
-                        class="inline-flex items-center gap-1 rounded-full border px-2.5 py-1 text-xs font-medium border-neutral-200 bg-neutral-50 text-neutral-700">-</span>
-                    <button type="button"
-                        class="dm-close inline-flex items-center justify-center rounded-xl p-2 text-neutral-500 ring-1 ring-transparent transition hover:bg-neutral-100 focus:outline-none focus:ring-navy-300"
-                        aria-label="Tutup modal">
-                        <svg class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                            aria-hidden="true">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6"
-                                d="M6 18 18 6M6 6l12 12" />
-                        </svg>
-                    </button>
-                </div>
-            </div>
+        {{-- =================== Modal: Detail Pemesanan =================== --}}
+        <div id="detailModal"
+            class="fixed inset-0 z-50 hidden items-center justify-center bg-black/30 backdrop-blur-sm p-3 sm:p-4 transition-opacity duration-200"
+            aria-hidden="true">
+            <div id="detailCard"
+                class="w-full max-w-5xl origin-center scale-95 opacity-0 translate-y-2 rounded-2xl sm:rounded-3xl overflow-hidden border border-neutral-200/70 bg-white shadow-2xl transition-all duration-200"
+                role="dialog" aria-modal="true" aria-labelledby="detailModalTitle" tabindex="-1">
 
-            {{-- Body --}}
-            <div class="px-4 py-4 sm:px-6 sm:py-5">
-                <div class="grid max-h-[70vh] grid-cols-1 gap-4 sm:gap-6 overflow-auto pr-1 md:grid-cols-2">
-                    {{-- A. Pasien & RS --}}
-                    <section class="rounded-2xl border border-neutral-100 bg-neutral-50/60 p-3 sm:p-4">
-                        <div class="mb-3 flex items-center gap-2">
-                            <span
-                                class="inline-flex size-6 items-center justify-center rounded-lg border border-neutral-200 bg-white">
-                                <svg class="size-3.5 text-neutral-700" viewBox="0 0 24 24" fill="none"
-                                    stroke="currentColor" aria-hidden="true">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6"
-                                        d="M16 7a4 4 0 1 1-8 0 4 4 0 0 1 8 0M12 14c-4.418 0-8 2.239-8 5v1h16v-1c0-2.761-3.582-5-8-5z" />
-                                </svg>
-                            </span>
-                            <h4 class="text-sm font-semibold tracking-wide text-neutral-800">A. Pasien & RS</h4>
-                        </div>
-                        <dl class="two-col-dl">
-                            <dt>Rumah Sakit</dt>
-                            <dd id="dm_rs">-</dd>
-                            <dt>Jenis Kelamin</dt>
-                            <dd id="dm_jk">-</dd>
-                            <dt>No. Registrasi</dt>
-                            <dd id="dm_no_regis">-</dd>
-                            <dt>Nama Dokter</dt>
-                            <dd id="dm_dokter">-</dd>
-                            <dt>Nama Pasien</dt>
-                            <dd id="dm_nama">-</dd>
-                            <dt>Suami/Istri</dt>
-                            <dd id="dm_suami_istri">-</dd>
-                            <dt>Telepon</dt>
-                            <dd id="dm_telp">-</dd>
-                            <dt>Email</dt>
-                            <dd id="dm_email" class="break-all">-</dd>
-                        </dl>
-                    </section>
-
-                    {{-- B. Detail Klinis --}}
-                    <section class="rounded-2xl border border-neutral-100 bg-neutral-50/60 p-3 sm:p-4">
-                        <div class="mb-3 flex items-center gap-2">
-                            <span
-                                class="inline-flex size-6 items-center justify-center rounded-lg border border-neutral-200 bg-white">
-                                <svg class="size-3.5 text-neutral-700" viewBox="0 0 24 24" fill="none"
-                                    stroke="currentColor" aria-hidden="true">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6"
-                                        d="M12 8v8M8 12h8M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0z" />
-                                </svg>
-                            </span>
-                            <h4 class="text-sm font-semibold tracking-wide text-neutral-800">B. Detail Klinis</h4>
-                        </div>
-                        <dl class="two-col-dl">
-                            <dt>Tgl Diperlukan</dt>
-                            <dd id="dm_tgl_minta">-</dd>
-                            <dt>Pernah Serologi</dt>
-                            <dd id="dm_pernah_serologi">-</dd>
-                            <dt>Diagnosa</dt>
-                            <dd id="dm_diagnosa">-</dd>
-                            <dt>Lokasi Serologi</dt>
-                            <dd id="dm_lokasi_serologi">-</dd>
-                            <dt>Tgl Serologi</dt>
-                            <dd id="dm_tgl_serologi">-</dd>
-                            <dt>Tgl Transfusi</dt>
-                            <dd id="dm_tgl_transfusi">-</dd>
-                            <dt>Alasan Transfusi</dt>
-                            <dd id="dm_alasan">-</dd>
-                            <dt>Hasil Serologi</dt>
-                            <dd id="dm_hasil_serologi">-</dd>
-                        </dl>
-                    </section>
-
-                    {{-- C. Permintaan Darah --}}
-                    <section class="rounded-2xl border border-neutral-100 bg-neutral-50/60 p-3 sm:p-4 md:col-span-2">
-                        <div class="mb-3 flex items-center gap-2">
-                            <span
-                                class="inline-flex size-6 items-center justify-center rounded-lg border border-neutral-200 bg-white">
-                                <svg class="size-3.5 text-neutral-700" viewBox="0 0 24 24" fill="none"
-                                    stroke="currentColor" aria-hidden="true">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6"
-                                        d="M12 21s-6-4.35-6-10a6 6 0 1 1 12 0c0 5.65-6 10-6 10z" />
-                                </svg>
-                            </span>
-                            <h4 class="text-sm font-semibold tracking-wide text-neutral-800">C. Permintaan Darah</h4>
-                        </div>
-                        <dl class="two-col-dl">
-                            <dt>Jenis Darah</dt>
-                            <dd id="dm_produk">-</dd>
-                            <dt>Golongan Darah</dt>
-                            <dd id="dm_gol">-</dd>
-                            <dt>Rhesus</dt>
-                            <dd id="dm_rhesus">-</dd>
-                            <dt>Jumlah Kantong</dt>
-                            <dd id="dm_jumlah">-</dd>
-                            <dt>Alasan Tambahan</dt>
-                            <dd id="dm_gejala">—</dd>
-                        </dl>
-
-                        <div
-                            class="mt-4 grid grid-cols-1 gap-3 rounded-xl border border-neutral-100 bg-white/60 p-3 sm:grid-cols-2">
-                            <div
-                                class="flex items-center justify-between rounded-lg border border-neutral-100 bg-white px-3 py-2">
-                                <span class="text-xs text-neutral-500">Tgl. Pemesanan</span>
-                                <span id="dm_tgl_pesan" class="text-sm font-medium text-neutral-900">-</span>
-                            </div>
-                            <div
-                                class="flex items-center justify-between rounded-lg border border-neutral-100 bg-white px-3 py-2">
-                                <span class="text-xs text-neutral-500">Status Saat Ini</span>
-                                <span class="text-sm font-semibold text-neutral-900" id="dm_status_clone">-</span>
-                            </div>
-                        </div>
-
-                        {{-- Form POST (hidden) --}}
-                        <form id="dm_form" method="POST" action="#" class="hidden">
-                            @csrf
-                            <input type="hidden" name="status" id="dm_status_input" value="">
-                            <input type="hidden" name="tanggal_permintaan" id="dm_tanggal_input" value="">
-                        </form>
-                    </section>
-                </div>
-            </div>
-
-            {{-- Footer --}}
-            <div
-                class="sticky bottom-0 z-10 flex items-center justify-between gap-3 border-t border-neutral-100/80 bg-white/80 px-4 py-3 sm:px-6 sm:py-4 backdrop-blur">
-                <button type="button"
-                    class="dm-close rounded-lg border border-neutral-200 bg-white px-3 py-2 text-sm text-neutral-700 transition hover:bg-neutral-50 focus:outline-none focus:ring-2 focus:ring-navy-300">Tutup</button>
-                <div id="dm_action_buttons" class="flex items-center gap-2">
-                    <button type="button" id="dm_reject"
-                        class="min-h-10 rounded-lg border border-rose-200 bg-rose-50 px-3 py-2 text-sm font-medium text-rose-700 transition hover:bg-rose-100 focus:outline-none focus:ring-2 focus:ring-rose-200">Tolak</button>
-                    <button type="button" id="dm_approve"
-                        class="min-h-10 rounded-lg border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm font-medium text-emerald-700 transition hover:bg-emerald-100 focus:outline-none focus:ring-2 focus:ring-emerald-200">Setuju</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    {{-- =================== Modal: Konfirmasi =================== --}}
-    <div id="confirmModal"
-        class="fixed inset-0 z-[60] hidden items-center justify-center bg-black/40 backdrop-blur-sm p-3 sm:p-4 transition-opacity duration-150"
-        aria-hidden="true">
-        <div id="confirmCard"
-            class="w-full max-w-md overflow-hidden rounded-2xl border border-neutral-200 bg-white shadow-2xl"
-            role="dialog" aria-modal="true" aria-labelledby="confirmModalTitle" tabindex="-1">
-            <div class="px-4 pt-4 sm:px-5 sm:pt-5">
-                <div class="flex items-start gap-3">
-                    <span id="cm_icon"
-                        class="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-neutral-200 bg-neutral-50 text-neutral-700">
-                        <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                            aria-hidden="true">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"
-                                d="M12 9v4m0 4h.01M12 22a10 10 0 1 1 0-20 10 10 0 0 1 0 20z" />
-                        </svg>
-                    </span>
+                {{-- Header --}}
+                <div
+                    class="sticky top-0 z-10 flex items-center justify-between gap-4 border-b border-neutral-100/80 px-4 py-3 sm:px-6 sm:py-4 bg-white/80 backdrop-blur">
                     <div class="min-w-0">
-                        <h4 id="confirmModalTitle" class="text-base font-semibold text-neutral-900">Konfirmasi</h4>
-                        <p id="cm_desc" class="mt-0.5 text-sm text-neutral-600">Apakah Anda yakin?</p>
+                        <h3 id="detailModalTitle"
+                            class="truncate text-lg sm:text-xl font-semibold tracking-tight text-neutral-900">
+                            Detail Pemesanan
+                        </h3>
+                        <p class="mt-0.5 text-xs text-neutral-500">Ringkasan identitas & kebutuhan darah</p>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <span id="dm_status"
+                            class="inline-flex items-center gap-1 rounded-full border px-2.5 py-1 text-xs font-medium border-neutral-200 bg-neutral-50 text-neutral-700">-</span>
+                        <button type="button"
+                            class="dm-close inline-flex items-center justify-center rounded-xl p-2 text-neutral-500 ring-1 ring-transparent transition hover:bg-neutral-100 focus:outline-none focus:ring-navy-300"
+                            aria-label="Tutup modal">
+                            <svg class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                aria-hidden="true">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6"
+                                    d="M6 18 18 6M6 6l12 12" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+
+                {{-- Body --}}
+                <div class="px-4 py-4 sm:px-6 sm:py-5">
+                    <div class="grid max-h-[70vh] grid-cols-1 gap-4 sm:gap-6 overflow-auto pr-1 md:grid-cols-2">
+                        {{-- A. Pasien & RS --}}
+                        <section class="rounded-2xl border border-neutral-100 bg-neutral-50/60 p-3 sm:p-4">
+                            <div class="mb-3 flex items-center gap-2">
+                                <span
+                                    class="inline-flex size-6 items-center justify-center rounded-lg border border-neutral-200 bg-white">
+                                    <svg class="size-3.5 text-neutral-700" viewBox="0 0 24 24" fill="none"
+                                        stroke="currentColor" aria-hidden="true">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6"
+                                            d="M16 7a4 4 0 1 1-8 0 4 4 0 0 1 8 0M12 14c-4.418 0-8 2.239-8 5v1h16v-1c0-2.761-3.582-5-8-5z" />
+                                    </svg>
+                                </span>
+                                <h4 class="text-sm font-semibold tracking-wide text-neutral-800">A. Pasien & RS</h4>
+                            </div>
+                            <dl class="two-col-dl">
+                                <dt>Rumah Sakit</dt>
+                                <dd id="dm_rs">-</dd>
+                                <dt>Jenis Kelamin</dt>
+                                <dd id="dm_jk">-</dd>
+                                <dt>No. Registrasi</dt>
+                                <dd id="dm_no_regis">-</dd>
+                                <dt>Nama Dokter</dt>
+                                <dd id="dm_dokter">-</dd>
+                                <dt>Nama Pasien</dt>
+                                <dd id="dm_nama">-</dd>
+                                <dt>Suami/Istri</dt>
+                                <dd id="dm_suami_istri">-</dd>
+                                <dt>Telepon</dt>
+                                <dd id="dm_telp">-</dd>
+                                <dt>Email</dt>
+                                <dd id="dm_email" class="break-all">-</dd>
+                            </dl>
+                        </section>
+
+                        {{-- B. Detail Klinis --}}
+                        <section class="rounded-2xl border border-neutral-100 bg-neutral-50/60 p-3 sm:p-4">
+                            <div class="mb-3 flex items-center gap-2">
+                                <span
+                                    class="inline-flex size-6 items-center justify-center rounded-lg border border-neutral-200 bg-white">
+                                    <svg class="size-3.5 text-neutral-700" viewBox="0 0 24 24" fill="none"
+                                        stroke="currentColor" aria-hidden="true">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6"
+                                            d="M12 8v8M8 12h8M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0z" />
+                                    </svg>
+                                </span>
+                                <h4 class="text-sm font-semibold tracking-wide text-neutral-800">B. Detail Klinis</h4>
+                            </div>
+                            <dl class="two-col-dl">
+                                <dt>Tgl Diperlukan</dt>
+                                <dd id="dm_tgl_minta">-</dd>
+                                <dt>Pernah Serologi</dt>
+                                <dd id="dm_pernah_serologi">-</dd>
+                                <dt>Diagnosa</dt>
+                                <dd id="dm_diagnosa">-</dd>
+                                <dt>Lokasi Serologi</dt>
+                                <dd id="dm_lokasi_serologi">-</dd>
+                                <dt>Tgl Serologi</dt>
+                                <dd id="dm_tgl_serologi">-</dd>
+                                <dt>Tgl Transfusi</dt>
+                                <dd id="dm_tgl_transfusi">-</dd>
+                                <dt>Alasan Transfusi</dt>
+                                <dd id="dm_alasan">-</dd>
+                                <dt>Hasil Serologi</dt>
+                                <dd id="dm_hasil_serologi">-</dd>
+                            </dl>
+                        </section>
+
+                        {{-- C. Permintaan Darah --}}
+                        <section class="rounded-2xl border border-neutral-100 bg-neutral-50/60 p-3 sm:p-4 md:col-span-2">
+                            <div class="mb-3 flex items-center gap-2">
+                                <span
+                                    class="inline-flex size-6 items-center justify-center rounded-lg border border-neutral-200 bg-white">
+                                    <svg class="size-3.5 text-neutral-700" viewBox="0 0 24 24" fill="none"
+                                        stroke="currentColor" aria-hidden="true">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6"
+                                            d="M12 21s-6-4.35-6-10a6 6 0 1 1 12 0c0 5.65-6 10-6 10z" />
+                                    </svg>
+                                </span>
+                                <h4 class="text-sm font-semibold tracking-wide text-neutral-800">C. Permintaan Darah</h4>
+                            </div>
+                            <dl class="two-col-dl">
+                                <dt>Jenis Darah</dt>
+                                <dd id="dm_produk">-</dd>
+                                <dt>Golongan Darah</dt>
+                                <dd id="dm_gol">-</dd>
+                                <dt>Rhesus</dt>
+                                <dd id="dm_rhesus">-</dd>
+                                <dt>Jumlah Kantong</dt>
+                                <dd id="dm_jumlah">-</dd>
+                                <dt>Alasan Tambahan</dt>
+                                <dd id="dm_gejala">—</dd>
+                            </dl>
+
+                            <div
+                                class="mt-4 grid grid-cols-1 gap-3 rounded-xl border border-neutral-100 bg-white/60 p-3 sm:grid-cols-2">
+                                <div
+                                    class="flex items-center justify-between rounded-lg border border-neutral-100 bg-white px-3 py-2">
+                                    <span class="text-xs text-neutral-500">Tgl. Pemesanan</span>
+                                    <span id="dm_tgl_pesan" class="text-sm font-medium text-neutral-900">-</span>
+                                </div>
+                                <div
+                                    class="flex items-center justify-between rounded-lg border border-neutral-100 bg-white px-3 py-2">
+                                    <span class="text-xs text-neutral-500">Status Saat Ini</span>
+                                    <span class="text-sm font-semibold text-neutral-900" id="dm_status_clone">-</span>
+                                </div>
+                            </div>
+
+                            {{-- Form POST (hidden) --}}
+                            <form id="dm_form" method="POST" action="#" class="hidden">
+                                @csrf
+                                <input type="hidden" name="status" id="dm_status_input" value="">
+                                <input type="hidden" name="tanggal_permintaan" id="dm_tanggal_input" value="">
+                            </form>
+                        </section>
+                    </div>
+                </div>
+
+                {{-- Footer --}}
+                <div
+                    class="sticky bottom-0 z-10 flex items-center justify-between gap-3 border-t border-neutral-100/80 bg-white/80 px-4 py-3 sm:px-6 sm:py-4 backdrop-blur">
+                    <button type="button"
+                        class="dm-close rounded-lg border border-neutral-200 bg-white px-3 py-2 text-sm text-neutral-700 transition hover:bg-neutral-50 focus:outline-none focus:ring-2 focus:ring-navy-300">Tutup</button>
+                    <div id="dm_action_buttons" class="flex items-center gap-2">
+                        <button type="button" id="dm_reject"
+                            class="min-h-10 rounded-lg border border-rose-200 bg-rose-50 px-3 py-2 text-sm font-medium text-rose-700 transition hover:bg-rose-100 focus:outline-none focus:ring-2 focus:ring-rose-200">Tolak</button>
+                        <button type="button" id="dm_approve"
+                            class="min-h-10 rounded-lg border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm font-medium text-emerald-700 transition hover:bg-emerald-100 focus:outline-none focus:ring-2 focus:ring-emerald-200">Setuju</button>
                     </div>
                 </div>
             </div>
-            <div class="mt-4 flex items-center justify-end gap-2 border-t border-neutral-100 px-4 py-3 sm:px-5 sm:py-3.5">
-                <button type="button" id="cm_cancel"
-                    class="min-h-10 rounded-lg border border-neutral-200 bg-white px-3 py-2 text-sm text-neutral-700 transition hover:bg-neutral-50 focus:outline-none focus:ring-2 focus:ring-emerald-300">Batal</button>
-                <button type="button" id="cm_ok"
-                    class="min-h-10 rounded-lg px-3 py-2 text-sm font-medium text-white bg-emerald-600 hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-300">Ya,
-                    lanjutkan</button>
+        </div>
+
+        {{-- =================== Modal: Konfirmasi =================== --}}
+        <div id="confirmModal"
+            class="fixed inset-0 z-[60] hidden items-center justify-center bg-black/40 backdrop-blur-sm p-3 sm:p-4 transition-opacity duration-150"
+            aria-hidden="true">
+            <div id="confirmCard"
+                class="w-full max-w-md overflow-hidden rounded-2xl border border-neutral-200 bg-white shadow-2xl"
+                role="dialog" aria-modal="true" aria-labelledby="confirmModalTitle" tabindex="-1">
+                <div class="px-4 pt-4 sm:px-5 sm:pt-5">
+                    <div class="flex items-start gap-3">
+                        <span id="cm_icon"
+                            class="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-neutral-200 bg-neutral-50 text-neutral-700">
+                            <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                aria-hidden="true">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"
+                                    d="M12 9v4m0 4h.01M12 22a10 10 0 1 1 0-20 10 10 0 0 1 0 20z" />
+                            </svg>
+                        </span>
+                        <div class="min-w-0">
+                            <h4 id="confirmModalTitle" class="text-base font-semibold text-neutral-900">Konfirmasi</h4>
+                            <p id="cm_desc" class="mt-0.5 text-sm text-neutral-600">Apakah Anda yakin?</p>
+                        </div>
+                    </div>
+                </div>
+                <div
+                    class="mt-4 flex items-center justify-end gap-2 border-t border-neutral-100 px-4 py-3 sm:px-5 sm:py-3.5">
+                    <button type="button" id="cm_cancel"
+                        class="min-h-10 rounded-lg border border-neutral-200 bg-white px-3 py-2 text-sm text-neutral-700 transition hover:bg-neutral-50 focus:outline-none focus:ring-2 focus:ring-emerald-300">Batal</button>
+                    <button type="button" id="cm_ok"
+                        class="min-h-10 rounded-lg px-3 py-2 text-sm font-medium text-white bg-emerald-600 hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-300">Ya,
+                        lanjutkan</button>
+                </div>
             </div>
         </div>
-    </div>
 
-    {{-- =================== JS =================== --}}
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            /* ====== UTIL: Focus helpers (POIN 2 & 3) ====== */
-            const FOCUSABLE_SELECTOR = [
-                'a[href]',
-                'area[href]',
-                'button:not([disabled])',
-                'input:not([disabled]):not([type="hidden"])',
-                'select:not([disabled])',
-                'textarea:not([disabled])',
-                'details',
-                '[contenteditable="true"]',
-                '[tabindex]:not([tabindex="-1"])'
-            ].join(',');
+        {{-- =================== JS =================== --}}
+        <script>
+            document.addEventListener('DOMContentLoaded', () => {
+                /* ====== UTIL: Focus helpers (POIN 2 & 3) ====== */
+                const FOCUSABLE_SELECTOR = [
+                    'a[href]',
+                    'area[href]',
+                    'button:not([disabled])',
+                    'input:not([disabled]):not([type="hidden"])',
+                    'select:not([disabled])',
+                    'textarea:not([disabled])',
+                    'details',
+                    '[contenteditable="true"]',
+                    '[tabindex]:not([tabindex="-1"])'
+                ].join(',');
 
-            function getFocusable(container) {
-                return Array.from(container.querySelectorAll(FOCUSABLE_SELECTOR))
-                    .filter(el => el.offsetParent !== null || el === document.activeElement);
-            }
-
-            function trapTabKey(e, container) {
-                if (e.key !== 'Tab') return;
-                const nodes = getFocusable(container);
-                if (!nodes.length) {
-                    // kalau tidak ada fokusable, tahan tab, tetap fokus di dialog
-                    e.preventDefault();
-                    container.focus();
-                    return;
-                }
-                const first = nodes[0];
-                const last = nodes[nodes.length - 1];
-                if (e.shiftKey && document.activeElement === first) {
-                    e.preventDefault();
-                    last.focus();
-                } else if (!e.shiftKey && document.activeElement === last) {
-                    e.preventDefault();
-                    first.focus();
-                }
-            }
-
-            function openModal(overlayEl, dialogEl, firstFocusEl, lastActiveStore) {
-                // simpan pemicu fokus
-                lastActiveStore.el = document.activeElement;
-                overlayEl.classList.remove('hidden');
-                overlayEl.classList.add('flex');
-                overlayEl.setAttribute('aria-hidden', 'false');
-                document.documentElement.classList.add('overflow-hidden'); // lock scroll page
-
-                // fokus awal
-                const target = firstFocusEl || getFocusable(dialogEl)[0] || dialogEl;
-                requestAnimationFrame(() => (target && target.focus()));
-
-                // pasang trap
-                dialogEl.__trapHandler = (e) => trapTabKey(e, dialogEl);
-                dialogEl.addEventListener('keydown', dialogEl.__trapHandler);
-            }
-
-            function closeModal(overlayEl, dialogEl, lastActiveStore) {
-                overlayEl.classList.add('hidden');
-                overlayEl.classList.remove('flex');
-                overlayEl.setAttribute('aria-hidden', 'true');
-                document.documentElement.classList.remove('overflow-hidden');
-
-                // lepas trap
-                if (dialogEl.__trapHandler) {
-                    dialogEl.removeEventListener('keydown', dialogEl.__trapHandler);
-                    delete dialogEl.__trapHandler;
+                function getFocusable(container) {
+                    return Array.from(container.querySelectorAll(FOCUSABLE_SELECTOR))
+                        .filter(el => el.offsetParent !== null || el === document.activeElement);
                 }
 
-                // restore fokus ke pemicu
-                if (lastActiveStore.el && typeof lastActiveStore.el.focus === 'function') {
-                    lastActiveStore.el.focus();
-                }
-            }
-
-            /* ====== FILTER & PAGE SIZE ====== */
-            const form = document.getElementById('filterForm');
-
-            const filterBtn = document.getElementById('filterBtn');
-            const pageSizeBtn = document.getElementById('pageSizeBtn');
-            const produkBtn = document.getElementById('produkBtn');
-            const golBtn = document.getElementById('golBtn');
-
-            const filterMenu = document.getElementById('filterMenu');
-            const pageSizeMenu = document.getElementById('pageSizeMenu');
-            const produkMenu = document.getElementById('produkMenu');
-            const golMenu = document.getElementById('golMenu');
-
-            const produkLabel = document.getElementById('produkLabel');
-            const produkInput = document.getElementById('produkInput');
-            const golLabel = document.getElementById('golLabel');
-            const golInput = document.getElementById('golInput');
-
-            const apply = document.getElementById('applyBtn');
-            const reset = document.getElementById('resetBtn');
-
-            let produkSelected = @json($produkQ);
-            let golSelected = @json($golQ);
-
-            const MENUS = [filterMenu, pageSizeMenu, produkMenu, golMenu];
-            const isOpen = el => el && !el.classList.contains('hidden');
-            const open = el => el && el.classList.remove('hidden');
-            const close = el => el && el.classList.add('hidden');
-            const setExpanded = (btn, val) => btn && btn.setAttribute('aria-expanded', val ? 'true' : 'false');
-
-            function closeAll(excepts = []) {
-                MENUS.forEach(m => {
-                    if (m && !excepts.includes(m)) close(m);
-                });
-                setExpanded(filterBtn, excepts.includes(filterMenu) && isOpen(filterMenu));
-                setExpanded(pageSizeBtn, excepts.includes(pageSizeMenu) && isOpen(pageSizeMenu));
-                setExpanded(produkBtn, excepts.includes(produkMenu) && isOpen(produkMenu));
-                setExpanded(golBtn, excepts.includes(golMenu) && isOpen(golMenu));
-            }
-
-            // Filter panel
-            filterBtn.addEventListener('click', (e) => {
-                e.stopPropagation();
-                const willOpen = !isOpen(filterMenu);
-                closeAll();
-                if (willOpen) {
-                    open(filterMenu);
-                    setExpanded(filterBtn, true);
-                }
-            });
-
-            // Page size
-            pageSizeBtn.addEventListener('click', (e) => {
-                e.stopPropagation();
-                const willOpen = !isOpen(pageSizeMenu);
-                closeAll();
-                if (willOpen) {
-                    open(pageSizeMenu);
-                    setExpanded(pageSizeBtn, true);
-                }
-            });
-
-            // Produk
-            function updateProdukActive(value) {
-                produkMenu.querySelectorAll('.produk-item').forEach(el => {
-                    const active = el.getAttribute('data-value') === (value ?? '');
-                    el.setAttribute('aria-checked', active ? 'true' : 'false');
-                    el.classList.toggle('bg-blue-50', active);
-                    el.classList.toggle('text-blue-800', active);
-                    el.classList.toggle('ring-1', active);
-                    el.classList.toggle('ring-blue-200', active);
-                    el.classList.toggle('cursor-default', active);
-                });
-            }
-            produkBtn.addEventListener('click', (e) => {
-                e.stopPropagation();
-                const willOpen = !isOpen(produkMenu);
-                closeAll([filterMenu]);
-                if (willOpen) {
-                    open(produkMenu);
-                    setExpanded(produkBtn, true);
-                    updateProdukActive(produkSelected || '');
-                }
-            });
-            produkMenu.querySelectorAll('.produk-item').forEach(item => {
-                item.addEventListener('click', () => {
-                    const val = item.getAttribute('data-value') ?? '';
-                    const label = item.querySelector('span')?.textContent?.trim() || 'Semua Produk';
-                    produkSelected = val;
-                    produkLabel.textContent = label;
-                    updateProdukActive(val);
-                    close(produkMenu);
-                    setExpanded(produkBtn, false);
-                });
-            });
-
-            // Gol
-            function updateGolActive(value) {
-                golMenu.querySelectorAll('.gol-item').forEach(el => {
-                    const active = el.getAttribute('data-value') === (value ?? '');
-                    el.setAttribute('aria-checked', active ? 'true' : 'false');
-                    el.classList.toggle('bg-blue-50', active);
-                    el.classList.toggle('text-blue-800', active);
-                    el.classList.toggle('ring-1', active);
-                    el.classList.toggle('ring-blue-200', active);
-                    el.classList.toggle('cursor-default', active);
-                });
-            }
-            golBtn.addEventListener('click', (e) => {
-                e.stopPropagation();
-                const willOpen = !isOpen(golMenu);
-                closeAll([filterMenu]);
-                if (willOpen) {
-                    open(golMenu);
-                    setExpanded(golBtn, true);
-                    updateGolActive(golSelected || '');
-                }
-            });
-            golMenu.querySelectorAll('.gol-item').forEach(item => {
-                item.addEventListener('click', () => {
-                    const val = item.getAttribute('data-value') ?? '';
-                    const label = item.querySelector('span')?.textContent?.trim() || 'Semua';
-                    golSelected = val;
-                    golLabel.textContent = label;
-                    updateGolActive(val);
-                    close(golMenu);
-                    setExpanded(golBtn, false);
-                });
-            });
-
-            // Apply & Reset
-            apply.addEventListener('click', () => {
-                produkInput.value = produkSelected || '';
-                golInput.value = golSelected || '';
-                closeAll();
-                form.submit();
-            });
-            reset.addEventListener('click', () => {
-                produkSelected = '';
-                golSelected = '';
-                produkLabel.textContent = 'Semua Produk';
-                golLabel.textContent = 'Semua';
-                produkInput.value = '';
-                golInput.value = '';
-                const q = form.querySelector('input[name="q"]');
-                if (q) q.value = '';
-                closeAll();
-                form.submit();
-            });
-
-            /* ===== Hapus chip & Bersihkan semua ===== */
-            const clearAllBtn = document.getElementById('clearAllBtn');
-
-            // tombol "x" di setiap chip
-            document.querySelectorAll('.remove-chip').forEach(btn => {
-                btn.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    const target = btn.dataset.target;
-                    if (target === 'produk') {
-                        produkSelected = '';
-                        produkInput.value = '';
-                    } else if (target === 'gol') {
-                        golSelected = '';
-                        golInput.value = '';
-                    } else if (target === 'q') {
-                        const q = form.querySelector('input[name="q"]');
-                        if (q) q.value = '';
+                function trapTabKey(e, container) {
+                    if (e.key !== 'Tab') return;
+                    const nodes = getFocusable(container);
+                    if (!nodes.length) {
+                        // kalau tidak ada fokusable, tahan tab, tetap fokus di dialog
+                        e.preventDefault();
+                        container.focus();
+                        return;
                     }
-                    if (typeof closeAll === 'function') closeAll();
-                    form.submit();
-                });
-            });
+                    const first = nodes[0];
+                    const last = nodes[nodes.length - 1];
+                    if (e.shiftKey && document.activeElement === first) {
+                        e.preventDefault();
+                        last.focus();
+                    } else if (!e.shiftKey && document.activeElement === last) {
+                        e.preventDefault();
+                        first.focus();
+                    }
+                }
 
-            // tombol "Bersihkan semua"
-            if (clearAllBtn) {
-                clearAllBtn.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    const q = form.querySelector('input[name="q"]');
-                    if (q) q.value = '';
-                    produkSelected = '';
-                    golSelected = '';
-                    produkInput.value = '';
-                    golInput.value = '';
-                    if (typeof closeAll === 'function') closeAll();
-                    form.submit();
-                });
-            }
+                function openModal(overlayEl, dialogEl, firstFocusEl, lastActiveStore) {
+                    // simpan pemicu fokus
+                    lastActiveStore.el = document.activeElement;
+                    overlayEl.classList.remove('hidden');
+                    overlayEl.classList.add('flex');
+                    overlayEl.setAttribute('aria-hidden', 'false');
+                    document.documentElement.classList.add('overflow-hidden'); // lock scroll page
 
-            // Page size choose
-            pageSizeMenu.querySelectorAll('button[data-size]').forEach(item => {
-                item.addEventListener('click', () => {
-                    document.getElementById('perPageInput').value = item.getAttribute('data-size');
-                    // update aria-checked juga
-                    pageSizeMenu.querySelectorAll('button[role="menuitemradio"]').forEach(b => {
-                        b.setAttribute('aria-checked', b === item ? 'true' : 'false');
+                    // fokus awal
+                    const target = firstFocusEl || getFocusable(dialogEl)[0] || dialogEl;
+                    requestAnimationFrame(() => (target && target.focus()));
+
+                    // pasang trap
+                    dialogEl.__trapHandler = (e) => trapTabKey(e, dialogEl);
+                    dialogEl.addEventListener('keydown', dialogEl.__trapHandler);
+                }
+
+                function closeModal(overlayEl, dialogEl, lastActiveStore) {
+                    overlayEl.classList.add('hidden');
+                    overlayEl.classList.remove('flex');
+                    overlayEl.setAttribute('aria-hidden', 'true');
+                    document.documentElement.classList.remove('overflow-hidden');
+
+                    // lepas trap
+                    if (dialogEl.__trapHandler) {
+                        dialogEl.removeEventListener('keydown', dialogEl.__trapHandler);
+                        delete dialogEl.__trapHandler;
+                    }
+
+                    // restore fokus ke pemicu
+                    if (lastActiveStore.el && typeof lastActiveStore.el.focus === 'function') {
+                        lastActiveStore.el.focus();
+                    }
+                }
+
+                /* ====== FILTER & PAGE SIZE ====== */
+                const form = document.getElementById('filterForm');
+
+                const filterBtn = document.getElementById('filterBtn');
+                const pageSizeBtn = document.getElementById('pageSizeBtn');
+                const produkBtn = document.getElementById('produkBtn');
+                const golBtn = document.getElementById('golBtn');
+
+                const filterMenu = document.getElementById('filterMenu');
+                const pageSizeMenu = document.getElementById('pageSizeMenu');
+                const produkMenu = document.getElementById('produkMenu');
+                const golMenu = document.getElementById('golMenu');
+
+                const produkLabel = document.getElementById('produkLabel');
+                const produkInput = document.getElementById('produkInput');
+                const golLabel = document.getElementById('golLabel');
+                const golInput = document.getElementById('golInput');
+
+                const apply = document.getElementById('applyBtn');
+                const reset = document.getElementById('resetBtn');
+
+                let produkSelected = @json($produkQ);
+                let golSelected = @json($golQ);
+
+                const MENUS = [filterMenu, pageSizeMenu, produkMenu, golMenu];
+                const isOpen = el => el && !el.classList.contains('hidden');
+                const open = el => el && el.classList.remove('hidden');
+                const close = el => el && el.classList.add('hidden');
+                const setExpanded = (btn, val) => btn && btn.setAttribute('aria-expanded', val ? 'true' : 'false');
+
+                function closeAll(excepts = []) {
+                    MENUS.forEach(m => {
+                        if (m && !excepts.includes(m)) close(m);
                     });
+                    setExpanded(filterBtn, excepts.includes(filterMenu) && isOpen(filterMenu));
+                    setExpanded(pageSizeBtn, excepts.includes(pageSizeMenu) && isOpen(pageSizeMenu));
+                    setExpanded(produkBtn, excepts.includes(produkMenu) && isOpen(produkMenu));
+                    setExpanded(golBtn, excepts.includes(golMenu) && isOpen(golMenu));
+                }
+
+                // Filter panel
+                filterBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const willOpen = !isOpen(filterMenu);
+                    closeAll();
+                    if (willOpen) {
+                        open(filterMenu);
+                        setExpanded(filterBtn, true);
+                    }
+                });
+
+                // Page size
+                pageSizeBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const willOpen = !isOpen(pageSizeMenu);
+                    closeAll();
+                    if (willOpen) {
+                        open(pageSizeMenu);
+                        setExpanded(pageSizeBtn, true);
+                    }
+                });
+
+                // Produk
+                function updateProdukActive(value) {
+                    produkMenu.querySelectorAll('.produk-item').forEach(el => {
+                        const active = el.getAttribute('data-value') === (value ?? '');
+                        el.setAttribute('aria-checked', active ? 'true' : 'false');
+                        el.classList.toggle('bg-blue-50', active);
+                        el.classList.toggle('text-blue-800', active);
+                        el.classList.toggle('ring-1', active);
+                        el.classList.toggle('ring-blue-200', active);
+                        el.classList.toggle('cursor-default', active);
+                    });
+                }
+                produkBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const willOpen = !isOpen(produkMenu);
+                    closeAll([filterMenu]);
+                    if (willOpen) {
+                        open(produkMenu);
+                        setExpanded(produkBtn, true);
+                        updateProdukActive(produkSelected || '');
+                    }
+                });
+                produkMenu.querySelectorAll('.produk-item').forEach(item => {
+                    item.addEventListener('click', () => {
+                        const val = item.getAttribute('data-value') ?? '';
+                        const label = item.querySelector('span')?.textContent?.trim() || 'Semua Produk';
+                        produkSelected = val;
+                        produkLabel.textContent = label;
+                        updateProdukActive(val);
+                        close(produkMenu);
+                        setExpanded(produkBtn, false);
+                    });
+                });
+
+                // Gol
+                function updateGolActive(value) {
+                    golMenu.querySelectorAll('.gol-item').forEach(el => {
+                        const active = el.getAttribute('data-value') === (value ?? '');
+                        el.setAttribute('aria-checked', active ? 'true' : 'false');
+                        el.classList.toggle('bg-blue-50', active);
+                        el.classList.toggle('text-blue-800', active);
+                        el.classList.toggle('ring-1', active);
+                        el.classList.toggle('ring-blue-200', active);
+                        el.classList.toggle('cursor-default', active);
+                    });
+                }
+                golBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const willOpen = !isOpen(golMenu);
+                    closeAll([filterMenu]);
+                    if (willOpen) {
+                        open(golMenu);
+                        setExpanded(golBtn, true);
+                        updateGolActive(golSelected || '');
+                    }
+                });
+                golMenu.querySelectorAll('.gol-item').forEach(item => {
+                    item.addEventListener('click', () => {
+                        const val = item.getAttribute('data-value') ?? '';
+                        const label = item.querySelector('span')?.textContent?.trim() || 'Semua';
+                        golSelected = val;
+                        golLabel.textContent = label;
+                        updateGolActive(val);
+                        close(golMenu);
+                        setExpanded(golBtn, false);
+                    });
+                });
+
+                // Apply & Reset
+                apply.addEventListener('click', () => {
+                    produkInput.value = produkSelected || '';
+                    golInput.value = golSelected || '';
                     closeAll();
                     form.submit();
                 });
-            });
+                reset.addEventListener('click', () => {
+                    produkSelected = '';
+                    golSelected = '';
+                    produkLabel.textContent = 'Semua Produk';
+                    golLabel.textContent = 'Semua';
+                    produkInput.value = '';
+                    golInput.value = '';
+                    const q = form.querySelector('input[name="q"]');
+                    if (q) q.value = '';
+                    closeAll();
+                    form.submit();
+                });
 
-            // Click outside to close menus
-            document.addEventListener('click', (e) => {
-                const safe = e.target.closest(
-                    '#filterMenu, #pageSizeMenu, #produkMenu, #golMenu, #filterBtn, #pageSizeBtn, #produkBtn, #golBtn'
-                );
-                if (!safe) closeAll();
-            });
-            // ESC (tutup menu)
-            document.addEventListener('keydown', (e) => {
-                if (e.key === 'Escape') closeAll();
-            });
+                /* ===== Hapus chip & Bersihkan semua ===== */
+                const clearAllBtn = document.getElementById('clearAllBtn');
 
-            /* ====== DETAIL MODAL & CONFIRM MODAL (POIN 2 & 3) ====== */
-            const pageRoot = document.getElementById('pageRoot');
-
-            // Detail
-            const detailModal = document.getElementById('detailModal');
-            const detailCard = document.getElementById('detailCard');
-            const dmActionBtns = document.getElementById('dm_action_buttons');
-            const dmForm = document.getElementById('dm_form');
-            const dmStatusInput = document.getElementById('dm_status_input');
-            const dmTanggalInput = document.getElementById('dm_tanggal_input');
-            const lastFocusDetail = { el: null };
-
-            const dm = {
-                status: document.getElementById('dm_status'),
-                tglPesan: document.getElementById('dm_tgl_pesan'),
-                tglMinta: document.getElementById('dm_tgl_minta'),
-                nama: document.getElementById('dm_nama'),
-                rs: document.getElementById('dm_rs'),
-                jk: document.getElementById('dm_jk'),
-                dokter: document.getElementById('dm_dokter'),
-                noRegis: document.getElementById('dm_no_regis'),
-                email: document.getElementById('dm_email'),
-                telp: document.getElementById('dm_telp'),
-                gol: document.getElementById('dm_gol'),
-                rhesus: document.getElementById('dm_rhesus'),
-                produk: document.getElementById('dm_produk'),
-                jumlah: document.getElementById('dm_jumlah'),
-                alasan: document.getElementById('dm_alasan'),
-                gejala: document.getElementById('dm_gejala'),
-                suamiIstri: document.getElementById('dm_suami_istri'),
-                diagnosa: document.getElementById('dm_diagnosa'),
-                pernahSerologi: document.getElementById('dm_pernah_serologi'),
-                lokasiSerologi: document.getElementById('dm_lokasi_serologi'),
-                tglSerologi: document.getElementById('dm_tgl_serologi'),
-                tglTransfusi: document.getElementById('dm_tgl_transfusi'),
-                hasilSerologi: document.getElementById('dm_hasil_serologi'),
-            };
-
-            const fmt = v => v ? v : '-';
-            const yaTidak = v => (v === true ? 'Ya' : (v === false ? 'Tidak' : (['ya', 'tidak'].includes(String(v || '').toLowerCase()) ? (String(v).toLowerCase() === 'ya' ? 'Ya' : 'Tidak') : '-')));
-            const labelJK = v => !v ? '-' : (v === 'L' ? 'Laki-laki' : (v === 'P' ? 'Perempuan' : v));
-            const productLabel = c => ({
-                WB: 'WB: Whole Blood',
-                PRC: 'PRC: Packed Red Cell',
-                TC: 'TC: Thrombocyte Concentrate',
-                FFP: 'FFP: Fresh Frozen Plasma',
-                CRYO: 'CRYO: Cryoprecipitated Anti-Hemophilic Factor',
-                LP: 'LP: Liquid Plasma',
-                TCA: 'TCA: Thrombocyte Apheresis',
-                CP: 'CP: Convalescent Plasma'
-            })[c] || c || '-';
-            const jumlahLabel = v => (Number(v || 0) > 0 ? `${Number(v)} kantong` : '-');
-
-            function colorStatusChip(s) {
-                const base = 'inline-flex items-center gap-1 rounded-full border px-2.5 py-1 text-xs font-medium ';
-                let tone = s === 'approved' ? 'border-emerald-200 bg-emerald-50 text-emerald-700'
-                    : s === 'rejected' ? 'border-rose-200 bg-rose-50 text-rose-700'
-                        : s === 'pending' ? 'border-amber-200 bg-amber-50 text-amber-700'
-                            : 'border-neutral-200 bg-neutral-50 text-neutral-700';
-                dm.status.className = base + tone;
-            }
-
-            function openDetail(payload, actionUrl) {
-                try {
-                    const statusCap = (payload.status ?? '-').toString().replace(/^./, c => c.toUpperCase());
-                    dm.status.textContent = statusCap;
-                    const clone = document.getElementById('dm_status_clone');
-                    if (clone) clone.textContent = statusCap;
-
-                    dm.tglPesan.textContent = fmt(payload.tanggal_pemesanan ?? payload.tanggal);
-                    dm.tglMinta.textContent = fmt(payload.tanggal_permintaan ?? payload.tanggal);
-                    dm.nama.textContent = payload.nama_pasien ?? '-';
-                    dm.rs.textContent = payload.rs_pemesan ?? '-';
-                    dm.jk.textContent = labelJK(payload.jenis_kelamin);
-                    dm.dokter.textContent = payload.nama_dokter ?? '-';
-                    dm.noRegis.textContent = payload.no_regis_rs ?? '-';
-                    dm.email.textContent = payload.email ?? '-';
-                    dm.telp.textContent = payload.nomor_telepon ?? '-';
-                    dm.gol.textContent = payload.gol_darah ?? '-';
-                    dm.rhesus.textContent = payload.rhesus ?? '-';
-                    dm.produk.textContent = productLabel(payload.produk);
-                    dm.jumlah.textContent = jumlahLabel(payload.jumlah_kantong);
-                    dm.alasan.textContent = payload.alasan_transfusi ?? '-';
-                    dm.gejala.textContent = (payload.alasan_tambahan ?? '').toString().trim() || '—';
-                    dm.suamiIstri.textContent = payload.nama_suami_istri ?? '-';
-                    dm.diagnosa.textContent = payload.diagnosa_klinik ?? '-';
-                    dm.pernahSerologi.textContent = yaTidak(payload.pernah_serologi);
-                    dm.lokasiSerologi.textContent = payload.lokasi_serologi ?? '-';
-                    dm.tglSerologi.textContent = fmt(payload.tanggal_serologi);
-                    dm.tglTransfusi.textContent = fmt(payload.tanggal_transfusi);
-                    dm.hasilSerologi.textContent = payload.hasil_serologi ?? '-';
-
-                    dmForm.action = actionUrl || '#';
-                    dmTanggalInput.value = (payload.tanggal_permintaan ?? payload.tanggal ?? new Date().toISOString().slice(0, 10));
-
-                    const currentStatus = (payload.status || '').toLowerCase();
-                    if (currentStatus === 'approved' || currentStatus === 'rejected') dmActionBtns.classList.add('hidden');
-                    else dmActionBtns.classList.remove('hidden');
-                    colorStatusChip(currentStatus);
-
-                    // OPEN with focus management + tab trap
-                    openModal(detailModal, detailCard, detailCard, lastFocusDetail);
-                    // animasi
-                    requestAnimationFrame(() => {
-                        detailModal.classList.add('modal-show');
-                        detailCard.classList.add('card-show');
-                        pageRoot.setAttribute('aria-hidden', 'true'); // bantu SR fokus ke dialog
+                // tombol "x" di setiap chip
+                document.querySelectorAll('.remove-chip').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        const target = btn.dataset.target;
+                        if (target === 'produk') {
+                            produkSelected = '';
+                            produkInput.value = '';
+                        } else if (target === 'gol') {
+                            golSelected = '';
+                            golInput.value = '';
+                        } else if (target === 'q') {
+                            const q = form.querySelector('input[name="q"]');
+                            if (q) q.value = '';
+                        }
+                        if (typeof closeAll === 'function') closeAll();
+                        form.submit();
                     });
-                } catch (e) {
-                    console.error('Gagal membuka modal detail:', e);
-                    alert('Terjadi kesalahan saat membuka detail.');
+                });
+
+                // tombol "Bersihkan semua"
+                if (clearAllBtn) {
+                    clearAllBtn.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        const q = form.querySelector('input[name="q"]');
+                        if (q) q.value = '';
+                        produkSelected = '';
+                        golSelected = '';
+                        produkInput.value = '';
+                        golInput.value = '';
+                        if (typeof closeAll === 'function') closeAll();
+                        form.submit();
+                    });
                 }
-            }
 
-            function closeDetail() {
-                detailCard.classList.remove('card-show');
-                detailModal.classList.remove('modal-show');
-                setTimeout(() => {
-                    closeModal(detailModal, detailCard, lastFocusDetail);
-                    pageRoot.removeAttribute('aria-hidden');
-                }, 200);
-            }
+                // Page size choose
+                pageSizeMenu.querySelectorAll('button[data-size]').forEach(item => {
+                    item.addEventListener('click', () => {
+                        document.getElementById('perPageInput').value = item.getAttribute('data-size');
+                        // update aria-checked juga
+                        pageSizeMenu.querySelectorAll('button[role="menuitemradio"]').forEach(b => {
+                            b.setAttribute('aria-checked', b === item ? 'true' : 'false');
+                        });
+                        closeAll();
+                        form.submit();
+                    });
+                });
 
-            detailModal.querySelectorAll('.dm-close').forEach(b => b.addEventListener('click', closeDetail));
-            detailModal.addEventListener('click', (e) => {
-                if (e.target === detailModal) closeDetail();
-            });
-            // ESC untuk modal detail
-            detailCard.addEventListener('keydown', (e) => {
-                if (e.key === 'Escape') {
-                    e.preventDefault();
-                    closeDetail();
+                // Click outside to close menus
+                document.addEventListener('click', (e) => {
+                    const safe = e.target.closest(
+                        '#filterMenu, #pageSizeMenu, #produkMenu, #golMenu, #filterBtn, #pageSizeBtn, #produkBtn, #golBtn'
+                    );
+                    if (!safe) closeAll();
+                });
+                // ESC (tutup menu)
+                document.addEventListener('keydown', (e) => {
+                    if (e.key === 'Escape') closeAll();
+                });
+
+                /* ====== DETAIL MODAL & CONFIRM MODAL (POIN 2 & 3) ====== */
+                const pageRoot = document.getElementById('pageRoot');
+
+                // Detail
+                const detailModal = document.getElementById('detailModal');
+                const detailCard = document.getElementById('detailCard');
+                const dmActionBtns = document.getElementById('dm_action_buttons');
+                const dmForm = document.getElementById('dm_form');
+                const dmStatusInput = document.getElementById('dm_status_input');
+                const dmTanggalInput = document.getElementById('dm_tanggal_input');
+                const lastFocusDetail = {
+                    el: null
+                };
+
+                const dm = {
+                    status: document.getElementById('dm_status'),
+                    tglPesan: document.getElementById('dm_tgl_pesan'),
+                    tglMinta: document.getElementById('dm_tgl_minta'),
+                    nama: document.getElementById('dm_nama'),
+                    rs: document.getElementById('dm_rs'),
+                    jk: document.getElementById('dm_jk'),
+                    dokter: document.getElementById('dm_dokter'),
+                    noRegis: document.getElementById('dm_no_regis'),
+                    email: document.getElementById('dm_email'),
+                    telp: document.getElementById('dm_telp'),
+                    gol: document.getElementById('dm_gol'),
+                    rhesus: document.getElementById('dm_rhesus'),
+                    produk: document.getElementById('dm_produk'),
+                    jumlah: document.getElementById('dm_jumlah'),
+                    alasan: document.getElementById('dm_alasan'),
+                    gejala: document.getElementById('dm_gejala'),
+                    suamiIstri: document.getElementById('dm_suami_istri'),
+                    diagnosa: document.getElementById('dm_diagnosa'),
+                    pernahSerologi: document.getElementById('dm_pernah_serologi'),
+                    lokasiSerologi: document.getElementById('dm_lokasi_serologi'),
+                    tglSerologi: document.getElementById('dm_tgl_serologi'),
+                    tglTransfusi: document.getElementById('dm_tgl_transfusi'),
+                    hasilSerologi: document.getElementById('dm_hasil_serologi'),
+                };
+
+                const fmt = v => v ? v : '-';
+                const yaTidak = v => (v === true ? 'Ya' : (v === false ? 'Tidak' : (['ya', 'tidak'].includes(String(v ||
+                    '').toLowerCase()) ? (String(v).toLowerCase() === 'ya' ? 'Ya' : 'Tidak') : '-')));
+                const labelJK = v => !v ? '-' : (v === 'L' ? 'Laki-laki' : (v === 'P' ? 'Perempuan' : v));
+                const productLabel = c => ({
+                    WB: 'WB: Whole Blood',
+                    PRC: 'PRC: Packed Red Cell',
+                    TC: 'TC: Thrombocyte Concentrate',
+                    FFP: 'FFP: Fresh Frozen Plasma',
+                    CRYO: 'CRYO: Cryoprecipitated Anti-Hemophilic Factor',
+                    LP: 'LP: Liquid Plasma',
+                    TCA: 'TCA: Thrombocyte Apheresis',
+                    CP: 'CP: Convalescent Plasma'
+                })[c] || c || '-';
+                const jumlahLabel = v => (Number(v || 0) > 0 ? `${Number(v)} kantong` : '-');
+
+                function colorStatusChip(s) {
+                    const base = 'inline-flex items-center gap-1 rounded-full border px-2.5 py-1 text-xs font-medium ';
+                    let tone = s === 'approved' ? 'border-emerald-200 bg-emerald-50 text-emerald-700' :
+                        s === 'rejected' ? 'border-rose-200 bg-rose-50 text-rose-700' :
+                        s === 'pending' ? 'border-amber-200 bg-amber-50 text-amber-700' :
+                        'border-neutral-200 bg-neutral-50 text-neutral-700';
+                    dm.status.className = base + tone;
                 }
-            });
 
-            document.addEventListener('click', (e) => {
-                const b = e.target.closest('.lihat-detail-btn');
-                if (!b) return;
-                try {
-                    openDetail(JSON.parse(b.dataset.payload || '{}'), b.dataset.action || '#');
-                } catch (err) {
-                    console.error('Payload tidak valid:', err);
-                    alert('Gagal membuka detail. Data tidak valid.');
+                function openDetail(payload, actionUrl) {
+                    try {
+                        const statusCap = (payload.status ?? '-').toString().replace(/^./, c => c.toUpperCase());
+                        dm.status.textContent = statusCap;
+                        const clone = document.getElementById('dm_status_clone');
+                        if (clone) clone.textContent = statusCap;
+
+                        dm.tglPesan.textContent = fmt(payload.tanggal_pemesanan ?? payload.tanggal);
+                        dm.tglMinta.textContent = fmt(payload.tanggal_permintaan ?? payload.tanggal);
+                        dm.nama.textContent = payload.nama_pasien ?? '-';
+                        dm.rs.textContent = payload.rs_pemesan ?? '-';
+                        dm.jk.textContent = labelJK(payload.jenis_kelamin);
+                        dm.dokter.textContent = payload.nama_dokter ?? '-';
+                        dm.noRegis.textContent = payload.no_regis_rs ?? '-';
+                        dm.email.textContent = payload.email ?? '-';
+                        dm.telp.textContent = payload.nomor_telepon ?? '-';
+                        dm.gol.textContent = payload.gol_darah ?? '-';
+                        dm.rhesus.textContent = payload.rhesus ?? '-';
+                        dm.produk.textContent = productLabel(payload.produk);
+                        dm.jumlah.textContent = jumlahLabel(payload.jumlah_kantong);
+                        dm.alasan.textContent = payload.alasan_transfusi ?? '-';
+                        dm.gejala.textContent = (payload.alasan_tambahan ?? '').toString().trim() || '—';
+                        dm.suamiIstri.textContent = payload.nama_suami_istri ?? '-';
+                        dm.diagnosa.textContent = payload.diagnosa_klinik ?? '-';
+                        dm.pernahSerologi.textContent = yaTidak(payload.pernah_serologi);
+                        dm.lokasiSerologi.textContent = payload.lokasi_serologi ?? '-';
+                        dm.tglSerologi.textContent = fmt(payload.tanggal_serologi);
+                        dm.tglTransfusi.textContent = fmt(payload.tanggal_transfusi);
+                        dm.hasilSerologi.textContent = payload.hasil_serologi ?? '-';
+
+                        dmForm.action = actionUrl || '#';
+                        dmTanggalInput.value = (payload.tanggal_permintaan ?? payload.tanggal ?? new Date()
+                        .toISOString().slice(0, 10));
+
+                        const currentStatus = (payload.status || '').toLowerCase();
+                        if (currentStatus === 'approved' || currentStatus === 'rejected') dmActionBtns.classList.add(
+                            'hidden');
+                        else dmActionBtns.classList.remove('hidden');
+                        colorStatusChip(currentStatus);
+
+                        // OPEN with focus management + tab trap
+                        openModal(detailModal, detailCard, detailCard, lastFocusDetail);
+                        // animasi
+                        requestAnimationFrame(() => {
+                            detailModal.classList.add('modal-show');
+                            detailCard.classList.add('card-show');
+                            pageRoot.setAttribute('aria-hidden', 'true'); // bantu SR fokus ke dialog
+                        });
+                    } catch (e) {
+                        console.error('Gagal membuka modal detail:', e);
+                        alert('Terjadi kesalahan saat membuka detail.');
+                    }
                 }
-            });
 
-            // ===== Confirm modal =====
-            const cmTitle = document.getElementById('confirmModalTitle');
-            const cmDesc = document.getElementById('cm_desc');
-            const cmOk = document.getElementById('cm_ok');
-            const cmCancel = document.getElementById('cm_cancel');
-            const cmIcon = document.getElementById('cm_icon');
-            const confirmModal = document.getElementById('confirmModal');
-            const confirmCard = document.getElementById('confirmCard');
-            const lastFocusConfirm = { el: null };
-            let cmNext = null;
-
-            function setConfirmAppearance(variant) {
-                const base = 'inline-flex h-9 w-9 items-center justify-center rounded-lg border ';
-                if (variant === 'approve') {
-                    cmIcon.className = base + 'border-emerald-200 bg-emerald-50 text-emerald-700';
-                    cmIcon.innerHTML =
-                        `<svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M5 13l4 4L19 7"/></svg>`;
-                    cmOk.className =
-                        'min-h-10 rounded-lg px-3 py-2 text-sm font-medium text-white bg-emerald-600 hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-300';
-                    cmOk.textContent = 'Setuju';
-                } else if (variant === 'reject') {
-                    cmIcon.className = base + 'border-rose-200 bg-rose-50 text-rose-700';
-                    cmIcon.innerHTML =
-                        `<svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M6 18L18 6M6 6l12 12"/></svg>`;
-                    cmOk.className =
-                        'min-h-10 rounded-lg px-3 py-2 text-sm font-medium text-white bg-rose-600 hover:bg-rose-700 focus:outline-none focus:ring-2 focus:ring-rose-300';
-                    cmOk.textContent = 'Tolak';
-                } else {
-                    cmIcon.className = base + 'border-neutral-200 bg-neutral-50 text-neutral-700';
-                    cmIcon.innerHTML =
-                        `<svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 9v4m0 4h.01M12 22a10 10 0 1 1 0-20 10 10 0 0 1 0 20z"/></svg>`;
-                    cmOk.className =
-                        'min-h-10 rounded-lg px-3 py-2 text-sm font-medium text-white bg-emerald-600 hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-300';
-                    cmOk.textContent = 'Lanjutkan';
+                function closeDetail() {
+                    detailCard.classList.remove('card-show');
+                    detailModal.classList.remove('modal-show');
+                    setTimeout(() => {
+                        closeModal(detailModal, detailCard, lastFocusDetail);
+                        pageRoot.removeAttribute('aria-hidden');
+                    }, 200);
                 }
-            }
 
-            function openConfirm(title, desc, onOk, variant = 'neutral') {
-                cmTitle.textContent = title || 'Konfirmasi';
-                cmDesc.innerHTML = desc || 'Apakah Anda yakin?';
-                cmNext = onOk || null;
-                setConfirmAppearance(variant);
-                // buka + fokus ke tombol OK (firstFocusEl)
-                openModal(confirmModal, confirmCard, cmOk, lastFocusConfirm);
-            }
+                detailModal.querySelectorAll('.dm-close').forEach(b => b.addEventListener('click', closeDetail));
+                detailModal.addEventListener('click', (e) => {
+                    if (e.target === detailModal) closeDetail();
+                });
+                // ESC untuk modal detail
+                detailCard.addEventListener('keydown', (e) => {
+                    if (e.key === 'Escape') {
+                        e.preventDefault();
+                        closeDetail();
+                    }
+                });
 
-            function closeConfirm() {
-                closeModal(confirmModal, confirmCard, lastFocusConfirm);
-            }
+                document.addEventListener('click', (e) => {
+                    const b = e.target.closest('.lihat-detail-btn');
+                    if (!b) return;
+                    try {
+                        openDetail(JSON.parse(b.dataset.payload || '{}'), b.dataset.action || '#');
+                    } catch (err) {
+                        console.error('Payload tidak valid:', err);
+                        alert('Gagal membuka detail. Data tidak valid.');
+                    }
+                });
 
-            cmCancel.addEventListener('click', closeConfirm);
-            confirmModal.addEventListener('click', (e) => {
-                if (e.target === confirmModal) closeConfirm();
-            });
-            // ESC untuk confirm
-            confirmCard.addEventListener('keydown', (e) => {
-                if (e.key === 'Escape') {
-                    e.preventDefault();
+                // ===== Confirm modal =====
+                const cmTitle = document.getElementById('confirmModalTitle');
+                const cmDesc = document.getElementById('cm_desc');
+                const cmOk = document.getElementById('cm_ok');
+                const cmCancel = document.getElementById('cm_cancel');
+                const cmIcon = document.getElementById('cm_icon');
+                const confirmModal = document.getElementById('confirmModal');
+                const confirmCard = document.getElementById('confirmCard');
+                const lastFocusConfirm = {
+                    el: null
+                };
+                let cmNext = null;
+
+                function setConfirmAppearance(variant) {
+                    const base = 'inline-flex h-9 w-9 items-center justify-center rounded-lg border ';
+                    if (variant === 'approve') {
+                        cmIcon.className = base + 'border-emerald-200 bg-emerald-50 text-emerald-700';
+                        cmIcon.innerHTML =
+                            `<svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M5 13l4 4L19 7"/></svg>`;
+                        cmOk.className =
+                            'min-h-10 rounded-lg px-3 py-2 text-sm font-medium text-white bg-emerald-600 hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-300';
+                        cmOk.textContent = 'Setuju';
+                    } else if (variant === 'reject') {
+                        cmIcon.className = base + 'border-rose-200 bg-rose-50 text-rose-700';
+                        cmIcon.innerHTML =
+                            `<svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M6 18L18 6M6 6l12 12"/></svg>`;
+                        cmOk.className =
+                            'min-h-10 rounded-lg px-3 py-2 text-sm font-medium text-white bg-rose-600 hover:bg-rose-700 focus:outline-none focus:ring-2 focus:ring-rose-300';
+                        cmOk.textContent = 'Tolak';
+                    } else {
+                        cmIcon.className = base + 'border-neutral-200 bg-neutral-50 text-neutral-700';
+                        cmIcon.innerHTML =
+                            `<svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 9v4m0 4h.01M12 22a10 10 0 1 1 0-20 10 10 0 0 1 0 20z"/></svg>`;
+                        cmOk.className =
+                            'min-h-10 rounded-lg px-3 py-2 text-sm font-medium text-white bg-emerald-600 hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-300';
+                        cmOk.textContent = 'Lanjutkan';
+                    }
+                }
+
+                function openConfirm(title, desc, onOk, variant = 'neutral') {
+                    cmTitle.textContent = title || 'Konfirmasi';
+                    cmDesc.innerHTML = desc || 'Apakah Anda yakin?';
+                    cmNext = onOk || null;
+                    setConfirmAppearance(variant);
+                    // buka + fokus ke tombol OK (firstFocusEl)
+                    openModal(confirmModal, confirmCard, cmOk, lastFocusConfirm);
+                }
+
+                function closeConfirm() {
+                    closeModal(confirmModal, confirmCard, lastFocusConfirm);
+                }
+
+                cmCancel.addEventListener('click', closeConfirm);
+                confirmModal.addEventListener('click', (e) => {
+                    if (e.target === confirmModal) closeConfirm();
+                });
+                // ESC untuk confirm
+                confirmCard.addEventListener('keydown', (e) => {
+                    if (e.key === 'Escape') {
+                        e.preventDefault();
+                        closeConfirm();
+                    }
+                });
+
+                cmOk.addEventListener('click', () => {
+                    if (typeof cmNext === 'function') cmNext();
                     closeConfirm();
-                }
+                });
+
+                document.getElementById('dm_approve').addEventListener('click', () => openConfirm(
+                    'Setujui Pemesanan',
+                    'Anda akan <strong>MENYETUJUI</strong> pemesanan ini. Lanjutkan?',
+                    () => {
+                        dmStatusInput.value = 'approved';
+                        dmForm.submit();
+                    },
+                    'approve'
+                ));
+                document.getElementById('dm_reject').addEventListener('click', () => openConfirm(
+                    'Tolak Pemesanan',
+                    'Anda akan <strong>MENOLAK</strong> pemesanan ini. Lanjutkan?',
+                    () => {
+                        dmStatusInput.value = 'rejected';
+                        dmForm.submit();
+                    },
+                    'reject'
+                ));
             });
+        </script>
 
-            cmOk.addEventListener('click', () => {
-                if (typeof cmNext === 'function') cmNext();
-                closeConfirm();
-            });
-
-            document.getElementById('dm_approve').addEventListener('click', () => openConfirm(
-                'Setujui Pemesanan',
-                'Anda akan <strong>MENYETUJUI</strong> pemesanan ini. Lanjutkan?',
-                () => {
-                    dmStatusInput.value = 'approved';
-                    dmForm.submit();
-                },
-                'approve'
-            ));
-            document.getElementById('dm_reject').addEventListener('click', () => openConfirm(
-                'Tolak Pemesanan',
-                'Anda akan <strong>MENOLAK</strong> pemesanan ini. Lanjutkan?',
-                () => {
-                    dmStatusInput.value = 'rejected';
-                    dmForm.submit();
-                },
-                'reject'
-            ));
-        });
-    </script>
-
-    <style>
-        th.sortable:hover {
-            background-color: rgba(0, 0, 0, .02);
-        }
-
-        .two-col-dl {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: .5rem 1.25rem;
-            font-size: .875rem;
-        }
-
-        .two-col-dl dt {
-            color: rgb(115 115 115);
-        }
-
-        .two-col-dl dd {
-            color: rgb(23 23 23);
-        }
-
-        @media (min-width:768px) {
-            .two-col-dl {
-                grid-template-columns: 1fr 1.2fr;
-                gap: .5rem 2rem;
+        <style>
+            th.sortable:hover {
+                background-color: rgba(0, 0, 0, .02);
             }
-        }
 
-        #detailModal.modal-show {
-            opacity: 1;
-        }
+            .two-col-dl {
+                display: grid;
+                grid-template-columns: 1fr;
+                gap: .5rem 1.25rem;
+                font-size: .875rem;
+            }
 
-        #detailModal:not(.modal-show) {
-            opacity: 0;
-        }
+            .two-col-dl dt {
+                color: rgb(115 115 115);
+            }
 
-        #detailCard.card-show {
-            transform: translateY(0) scale(1);
-            opacity: 1;
-        }
+            .two-col-dl dd {
+                color: rgb(23 23 23);
+            }
 
-        #detailCard:not(.card-show) {
-            transform: translateY(.5rem) scale(.97);
-            opacity: 0;
-        }
+            @media (min-width:768px) {
+                .two-col-dl {
+                    grid-template-columns: 1fr 1.2fr;
+                    gap: .5rem 2rem;
+                }
+            }
 
-        #confirmModal {
-            opacity: 1;
-        }
+            #detailModal.modal-show {
+                opacity: 1;
+            }
 
-        #confirmModal.hidden {
-            opacity: 0;
-        }
+            #detailModal:not(.modal-show) {
+                opacity: 0;
+            }
 
-        .check-icon {
-            transition: opacity .12s ease;
-        }
-    </style>
-@endsection
+            #detailCard.card-show {
+                transform: translateY(0) scale(1);
+                opacity: 1;
+            }
+
+            #detailCard:not(.card-show) {
+                transform: translateY(.5rem) scale(.97);
+                opacity: 0;
+            }
+
+            #confirmModal {
+                opacity: 1;
+            }
+
+            #confirmModal.hidden {
+                opacity: 0;
+            }
+
+            .check-icon {
+                transition: opacity .12s ease;
+            }
+        </style>
+    @endsection
