@@ -12,24 +12,23 @@ use App\Models\PemesananDarah;
 try {
     // Ambil pemesanan terakhir untuk test
     $pemesanan = PemesananDarah::latest()->first();
-    
+
     if (!$pemesanan) {
         echo "❌ Tidak ada data pemesanan untuk di-test\n";
         exit(1);
     }
-    
+
     echo "📧 Testing email untuk pemesanan ID: {$pemesanan->id}\n";
     echo "📬 Email tujuan: {$pemesanan->email}\n";
     echo "📝 Status: approved\n\n";
-    
+
     echo "Mengirim email...\n";
-    
+
     Mail::to($pemesanan->email)
         ->send(new VerifikasiPemesananMail($pemesanan, 'approved'));
-    
+
     echo "✅ Email berhasil dikirim!\n";
     echo "Silakan cek inbox atau folder spam: {$pemesanan->email}\n";
-    
 } catch (\Symfony\Component\Mailer\Exception\TransportException $e) {
     echo "❌ SMTP Transport Error:\n";
     echo "   " . $e->getMessage() . "\n";

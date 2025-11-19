@@ -19,7 +19,7 @@ return new class extends Migration
             // Drop index lama yang kurang optimal
             $table->dropIndex(['produk', 'gol_darah', 'rhesus']);
             $table->dropIndex(['tgl_kadaluarsa']);
-            
+
             // Composite index optimal untuk FEFO query
             // Covering index: produk + gol_darah + rhesus + status + tgl_kadaluarsa
             // Urutan sesuai WHERE clause dan ORDER BY
@@ -27,10 +27,10 @@ return new class extends Migration
                 ['produk', 'gol_darah', 'rhesus', 'status', 'tgl_kadaluarsa'],
                 'idx_blood_units_fefo_allocation'
             );
-            
+
             // Index untuk query by pemesanan_id (saat cek alokasi)
             $table->index('pemesanan_id', 'idx_blood_units_pemesanan');
-            
+
             // Index untuk query by stok_id (saat sync batch)
             $table->index('stok_id', 'idx_blood_units_stok');
         });
@@ -38,7 +38,7 @@ return new class extends Migration
         Schema::table('pemesanan_darah', function (Blueprint $table) {
             // Composite index untuk filter admin (status + produk + gol_darah)
             $table->index(['status', 'produk', 'gol_darah'], 'idx_pemesanan_admin_filter');
-            
+
             // Index untuk search by nama & RS
             $table->index('nama_pasien', 'idx_pemesanan_nama');
             $table->index('rs_pemesan', 'idx_pemesanan_rs');
@@ -47,7 +47,7 @@ return new class extends Migration
         Schema::table('stok_darah', function (Blueprint $table) {
             // Index untuk lookup by ID (saat update batch)
             // Note: id sudah auto-index sebagai primary key, tapi pastikan ada
-            
+
             // Tambah index untuk tgl_kadaluarsa (untuk filter expired)
             $table->index('tgl_kadaluarsa', 'idx_stok_kadaluarsa');
         });
@@ -62,7 +62,7 @@ return new class extends Migration
             $table->dropIndex('idx_blood_units_fefo_allocation');
             $table->dropIndex('idx_blood_units_pemesanan');
             $table->dropIndex('idx_blood_units_stok');
-            
+
             // Restore original indexes
             $table->index(['produk', 'gol_darah', 'rhesus']);
             $table->index(['tgl_kadaluarsa']);

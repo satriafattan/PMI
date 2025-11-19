@@ -56,7 +56,7 @@ class VerifikasiPemesananController extends Controller
      * - Batch operations where possible
      * - Async email sending (non-blocking)
      */
-    
+
     public function store(Request $request, PemesananDarah $pemesanan)
     {
         $data = $request->validate([
@@ -104,7 +104,7 @@ class VerifikasiPemesananController extends Controller
                 Mail::to($pemesanan->email)
                     ->send(new VerifikasiPemesananMail($pemesanan, $data['status']));
                 $emailSent = true;
-                
+
                 Log::info('Email verifikasi berhasil dikirim', [
                     'pemesanan_id' => $pemesanan->id,
                     'email' => $pemesanan->email,
@@ -196,21 +196,21 @@ class VerifikasiPemesananController extends Controller
             // 3) OPTIMASI: Sinkron stok_darah dengan batch decrement
             // Group by stok_id untuk hitung jumlah per batch
             $byBatch = $units->groupBy('stok_id')->map->count();
-            
+
             // Batch update menggunakan CASE WHEN untuk efisiensi
             if ($byBatch->isNotEmpty()) {
                 $stokIds = $byBatch->keys()->all();
-                
+
                 // Lock semua batch yang terpengaruh sekaligus
                 $batches = StokDarah::whereIn('id', $stokIds)
                     ->lockForUpdate()
                     ->get(['id', 'jumlah']);
-                
+
                 // Update dengan single query menggunakan raw SQL
                 foreach ($batches as $batch) {
                     $count = $byBatch[$batch->id] ?? 0;
                     $newVal = max(0, (int) $batch->jumlah - (int) $count);
-                    
+
                     // Direct update tanpa re-fetch
                     DB::table('stok_darah')
                         ->where('id', $batch->id)
