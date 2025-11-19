@@ -42,6 +42,11 @@ class PublicPemesananController extends Controller
             $data['tanggal_pemesanan'] = now()->toDateString();
         }
 
+        // Default tanggal_permintaan bila kosong
+        if (empty($data['tanggal_permintaan'])) {
+            $data['tanggal_permintaan'] = now()->toDateString();
+        }
+
         // Legacy support: jika UI lama masih kirim checkbox alasan_multi (array),
         // gabungkan ke alasan_transfusi agar tidak hilang informasinya.
         if ($r->has('alasan_multi') && is_array($r->input('alasan_multi'))) {

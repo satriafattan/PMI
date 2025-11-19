@@ -80,38 +80,20 @@
       line-height: 1.7;
       text-align: justify;
     }
-
-    .stamp {
-      position: fixed;
-      right: 80px;
-      bottom: 150px;
-      width: 140px;
-      opacity: .22;
-    }
-
-    .footer {
-      border-top: 1px solid #e5e7eb;
-      margin-top: 18px;
-      padding-top: 12px;
-      font-size: 11px;
-      color: #6b7280;
-      display: flex;
-      justify-content: space-between;
-    }
   </style>
 </head>
 
 <body>
 
   <div class="header">
-    <img src="{{ public_path('images/LOGO NAV.png') }}"
-         alt="PMI">
+    <img src="{{ public_path('images/Logo Nav New.png') }}"
+         alt="SIMPHONY">
     <div>
-      <div style="font-weight:700;color:#dc2626;">PALANG MERAH INDONESIA</div>
-      <div style="font-weight:700;">UNIT DONOR DARAH PROVINSI LAMPUNG</div>
+      <div style="font-weight:700;color:#dc2626;">SIMPHONY</div>
+      <div style="font-weight:700;">SISTEM INFORMASI PEMESANAN DAN INVENTORI</div>
       <div style="font-size:11px;color:#6b7280;">
         Jl. Sam Ratulangi No.105, Penengahan, Kec. Tj. Karang Bar., Kota Bandar Lampung, Lampung 35118 ·
-        Telp: 0721 703020 · Email: lampung@pmi.ac.id
+        Telp: 0721 703020 · Email: info@simphony.id
       </div>
     </div>
   </div>
@@ -119,7 +101,7 @@
   <table width="100%">
     <tr>
       <td style="font-size:12px;">
-        <strong>Nomor</strong><br>{{ $idShort }}/UDD-PMI-LAMP/{{ date('Y') }}
+        <strong>Nomor</strong><br>{{ $idShort }}/SIMPHONY/{{ date('Y') }}
       </td>
       <td style="font-size:12px;text-align:right;">
         Bandar Lampung, {{ $tanggal }}
@@ -177,7 +159,7 @@
       Berdasarkan hasil verifikasi dan pengecekan ketersediaan stok, permohonan pemesanan darah Bapak/Ibu telah
       <strong>DISETUJUI</strong>.
       Dimohon untuk melakukan <strong>pengambilan darah paling lambat 2 × 24 jam</strong> sejak surat ini diterbitkan.
-      Apabila terdapat kendala, silakan menghubungi petugas Unit Donor Darah.
+      Apabila terdapat kendala, silakan menghubungi petugas kami.
     </p>
   @elseif ($statusKey === 'rejected')
     <p class="note"
@@ -193,30 +175,6 @@
       selesai.
     </p>
   @endif
-
-  <!-- Tanda tangan -->
-  <div style="margin-top:24px; text-align:center; width:50%; margin-left:auto;">
-    <div style="font-size:12px;">Hormat kami,</div>
-    <div style="font-size:12px; font-weight:700; margin-bottom:56px;">Unit Donor Darah PMI Provinsi Lampung</div>
-
-    <!-- Cap overlay -->
-    <img src="{{ public_path('images/cap-pmi.png') }}"
-         class="stamp"
-         alt="Cap PMI">
-
-    <div style="display:inline-block;border-bottom:1px solid #374151;padding-bottom:2px;font-size:12px;">
-      <strong>Kepala Unit Donor Darah</strong>
-    </div>
-  </div>
-
-  <div class="footer">
-    <div>
-      <strong style="color:#111827;">UDD PMI Provinsi Lampung</strong><br>
-      Jl. Sam Ratulangi No.105, Penengahan, Tj. Karang Bar., Kota Bandar Lampung 35118 ·
-      Telp: 0721 703020 · Email: lampung@pmi.ac.id
-    </div>
-    <div>© {{ date('Y') }} PMI Lampung</div>
-  </div>
 
 </body>
 

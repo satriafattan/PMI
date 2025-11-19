@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', 'Stok Darah – UDD PMI Provinsi Lampung')
+@section('title', 'Stok Darah – SIMPHONY')
 
 @section('content')
   <div class="min-h-screen bg-white text-slate-800">
@@ -31,7 +31,7 @@
             Stok Darah Real-time
           </h1>
           <p class="mt-3 text-lg text-slate-600">
-            Pantau ketersediaan darah di UDD PMI Provinsi Lampung
+            Pantau ketersediaan darah melalui SIMPHONY
           </p>
           <div class="mt-6 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
             <div class="flex items-center gap-2 text-sm text-slate-600">

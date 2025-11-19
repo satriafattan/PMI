@@ -26,8 +26,8 @@
            aria-label="Sidebar">
       <div class="flex items-center justify-between border-b border-slate-800 px-5 py-5">
         <div>
-          <div class="text-xs uppercase tracking-wide text-slate-400 md:text-sm">PMI Lampung</div>
-          <div class="text-base font-semibold md:text-lg">Blood Management</div>
+          <div class="text-xs uppercase tracking-wide text-slate-400 md:text-sm">SIMPHONY</div>
+          <div class="text-base font-semibold md:text-lg">Dashboard Admin</div>
         </div>
 
         {{-- Close button (mobile) --}}
@@ -112,7 +112,7 @@
 
             <div class="min-w-0">
               <div class="truncate text-lg font-bold md:text-xl">{{ $title ?? 'Dashboard Admin' }}</div>
-              <div class="truncate text-xs text-slate-500 md:text-sm">Sistem Manajemen Stok Darah</div>
+              <div class="truncate text-xs text-slate-500 md:text-sm">SIMPHONY - Sistem Informasi Pemesanan & Inventori</div>
             </div>
           </div>
           <div class="flex flex-wrap items-center justify-end gap-2 sm:gap-3">

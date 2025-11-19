@@ -1,7 +1,7 @@
 {{-- resources/views/welcome.blade.php --}}
 @extends('layouts.app')
 
-@section('title', 'UDD PMI Provinsi Lampung – Pemesanan Darah')
+@section('title', 'SIMPHONY – Sistem Informasi Pemesanan dan Inventori')
 
 @push('styles')
   <style>
@@ -183,19 +183,19 @@
             <div class="hero-gallery relative aspect-[16/10] sm:aspect-[4/3]">
               {{-- Images --}}
               <img src="{{ asset('images/hero-banner.jpg') }}"
-                   alt="PMI Lampung - Donor Darah"
+                   alt="SIMPHONY - Donor Darah"
                    class="hero-image active h-full w-full object-cover"
                    data-index="0">
               <img src="{{ asset('images/hero-banner2.jpg') }}"
-                   alt="PMI Lampung - Pelayanan Kesehatan"
+                   alt="SIMPHONY - Pelayanan Kesehatan"
                    class="hero-image h-full w-full object-cover"
                    data-index="1">
               <img src="{{ asset('images/hero-banner3.jpg') }}"
-                   alt="PMI Lampung - Kegiatan Donor"
+                   alt="SIMPHONY - Kegiatan Donor"
                    class="hero-image h-full w-full object-cover"
                    data-index="2">
               <img src="{{ asset('images/Card.jpg') }}"
-                   alt="PMI Lampung - Unit Donor Darah"
+                   alt="SIMPHONY - Unit Donor Darah"
                    class="hero-image h-full w-full object-cover"
                    data-index="3">
 
@@ -290,7 +290,7 @@
       @php
         use App\Helpers\StokHelper;
         $stok = [
-            ['gol' => 'A', 'jumlah' => $stokA, 'rhesus' => '+'],
+            ['gol' => 'A', 'jumlah' => $stokA,  'rhesus' => '+'],
             ['gol' => 'B', 'jumlah' => $stokB, 'rhesus' => '+'],
             ['gol' => 'O', 'jumlah' => $stokO, 'rhesus' => '+'],
             ['gol' => 'AB', 'jumlah' => $stokAB, 'rhesus' => '+'],
@@ -422,12 +422,12 @@
         <div class="lg:pt-0">
           <h2 class="text-2xl font-extrabold text-slate-900 sm:text-3xl lg:text-4xl">
             Mengapa Memilih
-            <span class="bg-gradient-to-r from-red-600 to-rose-500 bg-clip-text text-transparent">UDD PMI</span>
+            <span class="bg-gradient-to-r from-red-600 to-rose-500 bg-clip-text text-transparent">SIMPHONY</span>
           </h2>
 
           <p class="mt-2 text-sm leading-relaxed text-slate-600 sm:mt-3 sm:text-base">
-            Kami berkomitmen memberikan pelayanan terbaik dalam pengelolaan darah dengan standar internasional dan
-            teknologi terdepan untuk keselamatan Anda.
+            Sistem Informasi Pemesanan dan Inventori yang dirancang untuk menyelaraskan proses pemesanan darah,
+            pengelolaan stok, dan verifikasi dengan standar internasional untuk keselamatan Anda.
           </p>
 
           <ul class="mt-4 space-y-3 sm:mt-6 sm:space-y-4">
@@ -507,7 +507,7 @@
             </div>
             <div class="relative overflow-hidden rounded-2xl bg-white shadow-2xl ring-1 ring-slate-200 sm:rounded-3xl">
               <div class="aspect-[4/3] bg-gradient-to-br from-slate-50 to-slate-100">
-                {{-- Google Maps Embed - UDD PMI Provinsi Lampung dengan Marker --}}
+                {{-- Google Maps Embed - SIMPHONY Unit Donor Darah --}}
                 <iframe src="https://maps.google.com/maps?q=UDD+PMI+Provinsi+Lampung,Jl.+Dr.+Sam+Ratulangi+No.105,+Penengahan,+Kec.+Tj.+Karang+Pusat,+Kota+Bandar+Lampung&t=&z=15&ie=UTF8&iwloc=&output=embed"
                         width="100%"
                         height="100%"

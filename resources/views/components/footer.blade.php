@@ -35,13 +35,13 @@
       <div class="flex flex-col gap-4">
         <a href="{{ url('/') }}"
            class="flex items-center gap-3 text-slate-800 transition-opacity duration-200 hover:opacity-80">
-          <img src="{{ asset('images/LOGO NAV.png') }}"
-               alt="Logo PMI"
+          <img src="{{ asset('images/Logo Nav New.png') }}"
+               alt="Logo SIMPHONY"
                class="h-32 w-32 object-contain">
-          <span class="text-lg font-semibold tracking-tight">PMI Provinsi Lampung</span>
+          <span class="text-lg font-semibold tracking-tight">SIMPHONY</span>
         </a>
-        <p class="mt-2 text-sm text-slate-600">Unit Donor Darah PMI Provinsi Lampung berkomitmen untuk memberikan
-          pelayanan terbaik dalam penyediaan darah yang aman dan berkualitas.</p>
+        <p class="mt-2 text-sm text-slate-600">Sistem Informasi Pemesanan dan Inventori - Platform terpadu untuk
+          mengelola pemesanan darah, stok, dan verifikasi dengan efisien.</p>
       </div>
 
       {{-- Column 2: Quick Links --}}
@@ -116,7 +116,7 @@
 
     {{-- Copyright & Additional Info --}}
     <div class="mt-8 text-center text-sm text-slate-500">
-      <p>© {{ date('Y') }} UDD PMI Provinsi Lampung. All rights reserved.</p>
+      <p>© {{ date('Y') }} SIMPHONY - Sistem Informasi Pemesanan dan Inventori. All rights reserved.</p>
     </div>
   </div>
 </footer>

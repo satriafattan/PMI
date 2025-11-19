@@ -10,51 +10,68 @@ class BloodUnitController extends Controller
 {
     public function index(Request $r)
     {
-        // PERBAIKAN: Batasi jumlah data yang di-load, gunakan pagination
-        // Tab 1: Tersedia (belum exp)
-        $avail = BloodUnit::available()
-            ->select('kode_unit as id_darah', 'gol_darah', 'rhesus', 'produk as komponen', 'tgl_masuk', 'tgl_kadaluarsa')
-            ->orderBy('tgl_kadaluarsa') // FEFO
-            ->limit(500) // Batasi untuk performa
-            ->get();
+        // Default per_page
+        $perPage = $r->integer('per_page', 100); // Default 100 item per halaman
 
-        // Tab 2: Keluar/riwayat - OPTIMASI: gunakan chunk atau pagination
-        $riwayat = BloodUnit::query()
+        // Tab 1: Tersedia (belum exp) - dengan pagination
+        $availQuery = BloodUnit::available()
+            ->select('kode_unit as id_darah', 'gol_darah', 'rhesus', 'produk as komponen', 'tgl_masuk', 'tgl_kadaluarsa')
+            ->orderBy('tgl_kadaluarsa'); // FEFO
+
+        // Untuk client-side filtering, ambil semua data tapi batasi jika terlalu banyak
+        $totalAvailable = $availQuery->count();
+        $avail = $totalAvailable > 5000
+            ? $availQuery->limit(5000)->get()
+            : $availQuery->get();
+
+        // Tab 2: Keluar/riwayat - dengan limit yang lebih reasonable
+        $riwayatQuery = BloodUnit::query()
             ->select('kode_unit', 'gol_darah', 'rhesus', 'produk', 'tgl_masuk', 'tgl_kadaluarsa', 'penerima', 'status', 'updated_at')
             ->whereIn('status', ['dispensed', 'reserved', 'discarded'])
-            ->orderByDesc('updated_at')
-            ->limit(500) // Batasi untuk performa
-            ->get()
-            ->map(fn($u) => [
-                'id'       => $u->kode_unit,
-                'gol'      => $u->gol_darah,
-                'rh'       => $u->rhesus,
-                'produk'   => $u->produk,
-                'masuk'    => $u->tgl_masuk?->toDateString(),
-                'exp'      => $u->tgl_kadaluarsa?->toDateString(),
-                'penerima' => $u->penerima ?? '-',
-                'status'   => ucfirst($u->status),
-            ]);
+            ->orderByDesc('updated_at');
 
-        // Tab 3: Kedaluwarsa - OPTIMASI: select only needed columns
-        $expired = BloodUnit::expired()
+        $totalRiwayat = $riwayatQuery->count();
+        $riwayat = ($totalRiwayat > 5000
+            ? $riwayatQuery->limit(5000)->get()
+            : $riwayatQuery->get()
+        )->map(fn($u) => [
+            'id'       => $u->kode_unit,
+            'gol'      => $u->gol_darah,
+            'rh'       => $u->rhesus,
+            'produk'   => $u->produk,
+            'masuk'    => $u->tgl_masuk?->toDateString(),
+            'exp'      => $u->tgl_kadaluarsa?->toDateString(),
+            'penerima' => $u->penerima ?? '-',
+            'status'   => ucfirst($u->status),
+        ]);
+
+        // Tab 3: Kedaluwarsa
+        $expiredQuery = BloodUnit::expired()
             ->select('kode_unit', 'gol_darah', 'rhesus', 'produk', 'tgl_masuk', 'tgl_kadaluarsa')
-            ->orderBy('tgl_kadaluarsa')
-            ->limit(500) // Batasi untuk performa
-            ->get()
-            ->map(fn($u) => [
-                'id'     => $u->kode_unit,
-                'gol'    => $u->gol_darah,
-                'rh'     => $u->rhesus,
-                'produk' => $u->produk,
-                'masuk'  => $u->tgl_masuk?->toDateString(),
-                'exp'    => $u->tgl_kadaluarsa?->toDateString(),
-            ]);
+            ->orderBy('tgl_kadaluarsa');
+
+        $totalExpired = $expiredQuery->count();
+        $expired = ($totalExpired > 5000
+            ? $expiredQuery->limit(5000)->get()
+            : $expiredQuery->get()
+        )->map(fn($u) => [
+            'id'     => $u->kode_unit,
+            'gol'    => $u->gol_darah,
+            'rh'     => $u->rhesus,
+            'produk' => $u->produk,
+            'masuk'  => $u->tgl_masuk?->toDateString(),
+            'exp'    => $u->tgl_kadaluarsa?->toDateString(),
+        ]);
 
         return view('admin.detail.index', [
             'rows'        => $avail,
             'historyRows' => $riwayat,
             'expiredRows' => $expired,
+            'totals' => [
+                'available' => $totalAvailable,
+                'riwayat'   => $totalRiwayat,
+                'expired'   => $totalExpired,
+            ],
         ]);
     }
 

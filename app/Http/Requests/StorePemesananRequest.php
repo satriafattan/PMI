@@ -22,11 +22,19 @@ class StorePemesananRequest extends FormRequest
 
         $tanggal_permintaan = $this->input('tanggal_permintaan') ?: $this->input('tanggal_diperlukan');
 
+        // Normalisasi rhesus: konversi '+' atau '-' menjadi 'Rh+' atau 'Rh-'
+        $rhesus = $this->rhesus ? trim($this->rhesus) : null;
+        if ($rhesus === '+') {
+            $rhesus = 'Rh+';
+        } elseif ($rhesus === '-') {
+            $rhesus = 'Rh-';
+        }
+
         $this->merge([
             'cek_transfusi'      => filter_var($this->cek_transfusi, FILTER_VALIDATE_BOOLEAN),
             'produk'             => $this->produk ? strtoupper(trim($this->produk)) : null,
             'gol_darah'          => $this->gol_darah ? strtoupper(trim($this->gol_darah)) : null,
-            'rhesus'             => $this->rhesus ? trim($this->rhesus) : null,
+            'rhesus'             => $rhesus,
             'tanggal_pemesanan'  => $fixDate($this->input('tanggal_pemesanan')),
             'tanggal_permintaan' => $fixDate($tanggal_permintaan),
             'tanggal_serologi'   => $fixDate($this->input('tanggal_serologi')),

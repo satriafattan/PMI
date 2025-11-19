@@ -9,6 +9,7 @@ use Barryvdh\DomPDF\Facade\Pdf;
 use App\Exports\PemesananExport;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Log;
 
 class LaporanController extends Controller
 {
@@ -40,55 +41,77 @@ class LaporanController extends Controller
 
     public function exportPdf(Request $r)
     {
-        [$q, $summary] = $this->buildQueryAndSummary($r);
+        try {
+            [$q, $summary] = $this->buildQueryAndSummary($r);
 
-        $rows = $q->select([
-            'id',
-            'created_at',
-            'tanggal_pemesanan',
-            'rs_pemesan',
-            'nama_pasien',
-            'produk',
-            'gol_darah',
-            'rhesus',
-            'jumlah_kantong',
-            'status',
-        ])
-            ->orderBy('created_at')
-            ->get();
+            $rows = $q->select([
+                'id',
+                'created_at',
+                'tanggal_pemesanan',
+                'rs_pemesan',
+                'nama_pasien',
+                'produk',
+                'gol_darah',
+                'rhesus',
+                'jumlah_kantong',
+                'status',
+            ])
+                ->orderBy('created_at')
+                ->get();
 
-        $pdf = Pdf::loadView('admin.laporan.pdf', [
-            'rows'    => $rows,
-            'summary' => $summary,
-            'periode' => $this->periodeLabel($r),
-            'filters' => $r->all(),
-        ])->setPaper('a4', 'portrait');
+            $pdf = Pdf::loadView('admin.laporan.pdf', [
+                'rows'    => $rows,
+                'summary' => $summary,
+                'periode' => $this->periodeLabel($r),
+                'filters' => $r->all(),
+            ])->setPaper('a4', 'portrait');
 
-        return $pdf->download('laporan-pemesanan-' . now()->format('Ymd_His') . '.pdf');
+            return $pdf->download('laporan-pemesanan-' . now()->format('Ymd_His') . '.pdf');
+        } catch (\Exception $e) {
+            Log::error('Export PDF error: ' . $e->getMessage(), [
+                'user' => auth('admin')->id(),
+                'filters' => $r->all(),
+            ]);
+
+            return redirect()
+                ->route('admin.laporan.index')
+                ->with('error', 'Gagal membuat file PDF. Silakan coba lagi atau hubungi administrator.');
+        }
     }
 
     public function exportExcel(Request $r)
     {
-        [$q] = $this->buildQueryAndSummary($r);
+        try {
+            [$q] = $this->buildQueryAndSummary($r);
 
-        $rows = $q->select([
-            'id',
-            'created_at',
-            'tanggal_pemesanan',
-            'rs_pemesan',
-            'nama_pasien',
-            'produk',
-            'gol_darah',
-            'rhesus',
-            'jumlah_kantong',
-            'status',
-        ])
-            ->orderBy('created_at')
-            ->get();
+            $rows = $q->select([
+                'id',
+                'created_at',
+                'tanggal_pemesanan',
+                'rs_pemesan',
+                'nama_pasien',
+                'produk',
+                'gol_darah',
+                'rhesus',
+                'jumlah_kantong',
+                'status',
+            ])
+                ->orderBy('created_at')
+                ->get();
 
-        $export = new \App\Exports\PemesananExport($rows, $this->periodeLabel($r));
+            $export = new \App\Exports\PemesananExport($rows, $this->periodeLabel($r));
 
-        return Excel::download($export, 'laporan-pemesanan-' . now()->format('Ymd_His') . '.xlsx');
+            return Excel::download($export, 'laporan-pemesanan-' . now()->format('Ymd_His') . '.xlsx');
+        } catch (\Exception $e) {
+            Log::error('Export Excel error: ' . $e->getMessage(), [
+                'user' => auth('admin')->id(),
+                'filters' => $r->all(),
+            ]);
+
+            return redirect()
+                ->route('admin.laporan.index')
+                ->with('error', 'Gagal membuat file Excel. Silakan coba lagi atau hubungi administrator.');
+        }
     }
 
     private function buildQueryAndSummary(Request $r): array

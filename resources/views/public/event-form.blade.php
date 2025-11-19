@@ -16,10 +16,10 @@
                 stroke-width="2"
                 d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
         </svg>
-        Jadwalkan Event Donor Darah Anda
+        Jadwalkan Event Anda
       </div>
       <h1 class="mt-3 text-4xl font-bold tracking-tight text-slate-900 sm:text-5xl">
-        Ajukan Event Donor Darah
+        Ajukan Event Anda
       </h1>
       <p class="mx-auto mt-4 max-w-2xl text-lg text-slate-600">
         Lengkapi data pemohon dan detail kegiatan. Tim kami akan meninjau & menghubungi Anda melalui email/telepon.
@@ -104,7 +104,7 @@
             <input type="text"
                    name="institusi_pemohon"
                    required
-                    placeholder="Nama institusi atau organisasi"
+                   placeholder="Nama institusi atau organisasi"
                    value="{{ old('institusi_pemohon') }}"
                    class="mt-1 w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-[15px] shadow-inner focus:border-red-500 focus:outline-none focus:ring-2 focus:ring-red-500/20">
             @error('institusi_pemohon')
@@ -115,7 +115,8 @@
           {{-- Telepon --}}
           <div>
             <div class="flex items-center justify-between">
-              <label class="block text-sm font-medium text-slate-700">Nomor Telepon</label>            </div>
+              <label class="block text-sm font-medium text-slate-700">Nomor Telepon</label>
+            </div>
             <input type="text"
                    name="nomor_telefon"
                    required
@@ -143,13 +144,19 @@
 
           {{-- Surat Instansi --}}
           <div class="md:col-span-1">
-            <label class="block text-sm font-medium text-slate-700">Surat Instansi (PDF/JPG/PNG)</label>
+            <label class="block text-sm font-medium text-slate-700">
+              Surat Instansi (PDF/JPG/PNG) <span class="text-red-600">*</span>
+            </label>
             <div class="mt-1 rounded-xl border-2 border-dashed border-slate-200 bg-slate-50/60 p-4">
               <input type="file"
                      name="surat_instansi"
+                     required
                      accept=".pdf,.jpg,.jpeg,.png"
                      class="block w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-[15px] file:mr-4 file:rounded-md file:border-0 file:bg-red-600 file:px-3 file:py-2 file:text-sm file:font-medium file:text-white hover:file:bg-red-700 focus:border-red-500 focus:outline-none focus:ring-2 focus:ring-red-500/20">
               <p class="mt-2 text-xs text-slate-500">Maksimal 2 MB. Contoh: surat permohonan kegiatan dari institusi.</p>
+              @error('surat_instansi')
+                <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
+              @enderror
 
               @isset($event)
                 @if ($event->surat_instansi_path)
@@ -585,11 +592,19 @@
 
     function allRequiredFilled() {
       let ok = true;
+      // Cek semua field required
       form.querySelectorAll(
         '[name="nama"],[name="institusi_pemohon"],[name="nomor_telefon"],[name="email"],[name="tanggal_event"],[name="jenis_event"]'
       ).forEach(el => {
         if (!el.value) ok = false;
       });
+
+      // Cek file surat_instansi juga
+      const fileInput = form.querySelector('[name="surat_instansi"]');
+      if (fileInput && !fileInput.files.length) {
+        ok = false;
+      }
+
       return ok;
     }
 
@@ -600,6 +615,7 @@
     }
 
     form.addEventListener('input', toggleSubmit);
+    form.addEventListener('change', toggleSubmit); // Untuk file input
     document.addEventListener('DOMContentLoaded', toggleSubmit);
 
     function showSuccessModal(message) {

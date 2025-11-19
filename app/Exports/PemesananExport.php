@@ -58,10 +58,10 @@ class PemesananExport implements FromCollection, WithHeadings, WithMapping, With
             'title'       => 'Laporan Pemesanan Darah',
             'description' => 'Periode: ' . $this->periode,
             'subject'     => 'Laporan',
-            'keywords'    => 'pemesanan, darah, pmi, laporan',
+            'keywords'    => 'pemesanan, darah, simphony, laporan',
             'category'    => 'Laporan',
-            'manager'     => 'UDD PMI',
-            'company'     => 'UDD PMI Provinsi Lampung',
+            'manager'     => 'SIMPHONY',
+            'company'     => 'SIMPHONY - Sistem Informasi Pemesanan dan Inventori',
         ];
     }
 }

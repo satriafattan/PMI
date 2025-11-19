@@ -89,6 +89,7 @@ class EventVerificationController extends Controller
             $fresh->forceFill(['status' => $data['status']])->save();
 
             // Kirim email notifikasi ke pengaju event
+            $emailSent = false;
             if ($fresh->email) {
                 try {
                     Mail::to($fresh->email)->send(
@@ -98,6 +99,7 @@ class EventVerificationController extends Controller
                             $data['catatan'] ?? null
                         )
                     );
+                    $emailSent = true;
                 } catch (\Exception $e) {
                     // Log error tapi tidak menggagalkan transaksi
                     Log::error('Gagal mengirim email verifikasi event', [
@@ -107,12 +109,22 @@ class EventVerificationController extends Controller
                     ]);
                 }
             }
+
+            // Simpan status email ke session untuk notifikasi
+            session()->flash('email_sent', $emailSent);
         });
 
         // Pakai id supaya re-binding dari DB (fresh)
+        $successMessage = 'Keputusan verifikasi berhasil disimpan.';
+        if (session('email_sent')) {
+            $successMessage .= ' Email notifikasi telah dikirim ke pemohon.';
+        } else {
+            $successMessage .= ' Namun email notifikasi gagal dikirim. Silakan hubungi pemohon secara manual.';
+        }
+
         return redirect()
             ->route('admin.event-verifikasi.show', $event->id)
-            ->with('success', 'Keputusan verifikasi berhasil disimpan dan notifikasi email telah dikirim.');
+            ->with('success', $successMessage);
     }
 
     public function downloadSurat(EventSchedule $event)

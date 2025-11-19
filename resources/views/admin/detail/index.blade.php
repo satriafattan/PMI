@@ -194,8 +194,118 @@
   {{-- ========================= --}}
   <section id="secUnavail"
            class="mt-6 hidden space-y-6">
-    {{-- (toolbar & tabel sama seperti sebelumnya) --}}
-    {{-- ... potongan toolbar Tabel 2 tidak diubah ... --}}
+    <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+      <div class="flex w-full items-center gap-2 sm:flex-1">
+        <div class="relative flex-1">
+          <span class="pointer-events-none absolute inset-y-0 left-3 flex items-center">
+            <svg class="size-5 text-neutral-400"
+                 viewBox="0 0 24 24"
+                 fill="none"
+                 stroke="currentColor">
+              <path stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="1.6"
+                    d="m21 21-4.3-4.3M10 18a8 8 0 1 1 0-16 8 8 0 0 1 0 16z" />
+            </svg>
+          </span>
+          <input id="hkSearchInput"
+                 type="text"
+                 class="w-full rounded-xl border border-neutral-200 bg-white py-2.5 pl-11 pr-3 text-sm placeholder-neutral-400 focus:border-neutral-300 focus:outline-none focus:ring-2 focus:ring-neutral-900/10"
+                 placeholder="Cari ID darah atau penerima…">
+        </div>
+
+        <div class="relative">
+          <button id="hkFilterBtn"
+                  type="button"
+                  class="inline-flex items-center justify-center rounded-xl border border-neutral-200 bg-white px-3 py-2 text-sm shadow-sm hover:bg-neutral-50">
+            <svg class="size-5 text-neutral-600"
+                 viewBox="0 0 24 24"
+                 fill="none"
+                 stroke="currentColor">
+              <path stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="1.6"
+                    d="M3 6h18M6 12h12M10 18h4" />
+            </svg>
+          </button>
+          <div id="hkFilterMenu"
+               class="absolute right-0 z-20 mt-2 hidden w-[22rem] rounded-xl border border-neutral-200 bg-white p-3 shadow-lg">
+            <div class="grid gap-3 sm:grid-cols-2">
+              <div>
+                <label class="text-xs font-medium text-neutral-500">Golongan</label>
+                <select id="hkGolSelect"
+                        class="mt-1 w-full rounded-lg border border-neutral-200 bg-white px-3 py-2 text-sm">
+                  <option value="">Semua</option>
+                  @foreach (['A', 'B', 'AB', 'O'] as $g)
+                    <option value="{{ $g }}">{{ $g }}</option>
+                  @endforeach
+                </select>
+              </div>
+              <div>
+                <label class="text-xs font-medium text-neutral-500">Rhesus</label>
+                <select id="hkRhesusSelect"
+                        class="mt-1 w-full rounded-lg border border-neutral-200 bg-white px-3 py-2 text-sm">
+                  <option value="">Semua</option>
+                  <option value="Rh+">Rh+</option>
+                  <option value="Rh-">Rh-</option>
+                </select>
+              </div>
+              <div>
+                <label class="text-xs font-medium text-neutral-500">Produk</label>
+                <select id="hkProdukSelect"
+                        class="mt-1 w-full rounded-lg border border-neutral-200 bg-white px-3 py-2 text-sm">
+                  <option value="">Semua</option>
+                  @foreach ($kompOpts as $opt)
+                    <option value="{{ $opt }}">{{ $opt }}</option>
+                  @endforeach
+                </select>
+              </div>
+              <div>
+                <label class="text-xs font-medium text-neutral-500">Status</label>
+                <select id="hkStatusSelect"
+                        class="mt-1 w-full rounded-lg border border-neutral-200 bg-white px-3 py-2 text-sm">
+                  <option value="">Semua</option>
+                  <option value="Approved">Approved</option>
+                  <option value="Pending">Pending</option>
+                  <option value="Rejected">Rejected</option>
+                </select>
+              </div>
+              <div>
+                <label class="text-xs font-medium text-neutral-500">Tgl Masuk (dari)</label>
+                <input type="date"
+                       id="hkMasukFrom"
+                       class="mt-1 w-full rounded-lg border border-neutral-200 bg-white px-3 py-2 text-sm">
+              </div>
+              <div>
+                <label class="text-xs font-medium text-neutral-500">Tgl Masuk (hingga)</label>
+                <input type="date"
+                       id="hkMasukTo"
+                       class="mt-1 w-full rounded-lg border border-neutral-200 bg-white px-3 py-2 text-sm">
+              </div>
+              <div class="flex items-center justify-between sm:col-span-2">
+                <button type="button"
+                        id="hkResetBtn"
+                        class="text-sm text-neutral-600 hover:underline">Reset</button>
+                <button type="button"
+                        id="hkApplyBtn"
+                        class="rounded-lg bg-neutral-900 px-3 py-1.5 text-sm text-white hover:bg-neutral-800">Terapkan</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <label for="hkPageSize"
+               class="text-sm text-neutral-600">Baris:</label>
+        <select id="hkPageSize"
+                class="rounded-xl border border-neutral-200 bg-white px-2 py-2 text-sm">
+          <option>5</option>
+          <option selected>10</option>
+          <option>20</option>
+        </select>
+      </div>
+    </div>
 
     <div class="overflow-hidden rounded-2xl border border-neutral-200 bg-white">
       <div class="overflow-x-auto">
@@ -236,7 +346,109 @@
   <!-- SECTION: TABEL 3 (Kadaluwarsa) -->
   <section id="secExpired"
            class="mt-6 hidden space-y-6">
-    <!-- (toolbar) -->
+    <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+      <div class="flex w-full items-center gap-2 sm:flex-1">
+        <div class="relative flex-1">
+          <span class="pointer-events-none absolute inset-y-0 left-3 flex items-center">
+            <svg class="size-5 text-neutral-400"
+                 viewBox="0 0 24 24"
+                 fill="none"
+                 stroke="currentColor">
+              <path stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="1.6"
+                    d="m21 21-4.3-4.3M10 18a8 8 0 1 1 0-16 8 8 0 0 1 0 16z" />
+            </svg>
+          </span>
+          <input id="exSearchInput"
+                 type="text"
+                 class="w-full rounded-xl border border-neutral-200 bg-white py-2.5 pl-11 pr-3 text-sm placeholder-neutral-400 focus:border-neutral-300 focus:outline-none focus:ring-2 focus:ring-neutral-900/10"
+                 placeholder="Cari ID darah atau produk…">
+        </div>
+
+        <div class="relative">
+          <button id="exFilterBtn"
+                  type="button"
+                  class="inline-flex items-center justify-center rounded-xl border border-neutral-200 bg-white px-3 py-2 text-sm shadow-sm hover:bg-neutral-50">
+            <svg class="size-5 text-neutral-600"
+                 viewBox="0 0 24 24"
+                 fill="none"
+                 stroke="currentColor">
+              <path stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="1.6"
+                    d="M3 6h18M6 12h12M10 18h4" />
+            </svg>
+          </button>
+          <div id="exFilterMenu"
+               class="absolute right-0 z-20 mt-2 hidden w-[22rem] rounded-xl border border-neutral-200 bg-white p-3 shadow-lg">
+            <div class="grid gap-3 sm:grid-cols-2">
+              <div>
+                <label class="text-xs font-medium text-neutral-500">Golongan</label>
+                <select id="exGolSelect"
+                        class="mt-1 w-full rounded-lg border border-neutral-200 bg-white px-3 py-2 text-sm">
+                  <option value="">Semua</option>
+                  @foreach (['A', 'B', 'AB', 'O'] as $g)
+                    <option value="{{ $g }}">{{ $g }}</option>
+                  @endforeach
+                </select>
+              </div>
+              <div>
+                <label class="text-xs font-medium text-neutral-500">Rhesus</label>
+                <select id="exRhesusSelect"
+                        class="mt-1 w-full rounded-lg border border-neutral-200 bg-white px-3 py-2 text-sm">
+                  <option value="">Semua</option>
+                  <option value="Rh+">Rh+</option>
+                  <option value="Rh-">Rh-</option>
+                </select>
+              </div>
+              <div class="sm:col-span-2">
+                <label class="text-xs font-medium text-neutral-500">Produk</label>
+                <select id="exProdukSelect"
+                        class="mt-1 w-full rounded-lg border border-neutral-200 bg-white px-3 py-2 text-sm">
+                  <option value="">Semua</option>
+                  @foreach ($kompOpts as $opt)
+                    <option value="{{ $opt }}">{{ $opt }}</option>
+                  @endforeach
+                </select>
+              </div>
+              <div>
+                <label class="text-xs font-medium text-neutral-500">Tgl Masuk (dari)</label>
+                <input type="date"
+                       id="exMasukFrom"
+                       class="mt-1 w-full rounded-lg border border-neutral-200 bg-white px-3 py-2 text-sm">
+              </div>
+              <div>
+                <label class="text-xs font-medium text-neutral-500">Tgl Masuk (hingga)</label>
+                <input type="date"
+                       id="exMasukTo"
+                       class="mt-1 w-full rounded-lg border border-neutral-200 bg-white px-3 py-2 text-sm">
+              </div>
+              <div class="flex items-center justify-between sm:col-span-2">
+                <button type="button"
+                        id="exResetBtn"
+                        class="text-sm text-neutral-600 hover:underline">Reset</button>
+                <button type="button"
+                        id="exApplyBtn"
+                        class="rounded-lg bg-neutral-900 px-3 py-1.5 text-sm text-white hover:bg-neutral-800">Terapkan</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <label for="exPageSize"
+               class="text-sm text-neutral-600">Baris:</label>
+        <select id="exPageSize"
+                class="rounded-xl border border-neutral-200 bg-white px-2 py-2 text-sm">
+          <option>5</option>
+          <option selected>10</option>
+          <option>20</option>
+        </select>
+      </div>
+    </div>
+
     <div class="overflow-hidden rounded-2xl border border-neutral-200 bg-white">
       <div class="overflow-x-auto">
         <table class="min-w-full text-sm">
@@ -318,6 +530,7 @@
     /* ====== DATA dari Controller (fallback ke array kosong) ====== */
     const rows = Array.isArray(@json($rows ?? [])) ? @json($rows ?? []) : [];
     const hkRows = Array.isArray(@json($historyRows ?? [])) ? @json($historyRows ?? []) : [];
+    const expiredRows = Array.isArray(@json($expiredRows ?? [])) ? @json($expiredRows ?? []) : [];
 
     /* ====== TABEL 1 (Tersedia) ====== */
     let sortKey = 'id_darah',
@@ -637,9 +850,8 @@
     }
 
     /* ====== TABEL 3 (Kadaluwarsa) ====== */
-    // Ambil dari hkRows lalu filter yang exp < hari ini
-    const todayYmd = new Date().toISOString().slice(0, 10);
-    const exRows = hkRows.filter(r => String(r.exp || '') < todayYmd);
+    // Ambil data expired yang sudah dikirim dari controller
+    const exRows = expiredRows;
 
     let exSortKey = 'id',
       exSortDir = 'asc',

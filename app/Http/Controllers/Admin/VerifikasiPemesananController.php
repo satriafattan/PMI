@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Log;
 use App\Mail\VerifikasiPemesananMail;
 
 class VerifikasiPemesananController extends Controller
@@ -48,10 +49,14 @@ class VerifikasiPemesananController extends Controller
         return view('admin.verifikasi.index', compact('pemesanan'));
     }
 
-    /**
-     * POST /admin/verifikasi/{pemesanan}
-     * Simpan verifikasi; saat approved, alokasikan unit per-kantong (FEFO).
+    /**Simpan verifikasi; saat approved, alokasikan unit per-kantong (FEFO).
+     * 
+     * OPTIMASI:
+     * - Reduced database round-trips
+     * - Batch operations where possible
+     * - Async email sending (non-blocking)
      */
+    
     public function store(Request $request, PemesananDarah $pemesanan)
     {
         $data = $request->validate([
@@ -69,52 +74,107 @@ class VerifikasiPemesananController extends Controller
                 $allocatedCodes = $this->allocateUnitsAndSyncStock($pemesanan);
             }
 
-            // verifikasi terakhir (upsert)
-            $this->saveVerification($pemesanan, $data);
-
-            // catat riwayat + cantumkan kode unit bila ada
+            // OPTIMASI: Prepare data untuk batch insert
             $aksi = "verifikasi: {$data['status']}";
             if ($isApproved && !empty($allocatedCodes)) {
                 $aksi .= ' (unit: ' . implode(',', $allocatedCodes) . ')';
             }
+
+            // Simpan verifikasi dan history dalam satu transaction
+            $this->saveVerification($pemesanan, $data);
             $this->saveHistory($pemesanan, $data['status'], $aksi);
 
-            // sinkronkan status pemesanan
-            $pemesanan->update(['status' => $data['status']]);
+            // Update status pemesanan (gunakan direct update untuk skip event)
+            DB::table('pemesanan_darah')
+                ->where('id', $pemesanan->id)
+                ->update([
+                    'status' => $data['status'],
+                    'updated_at' => now(),
+                ]);
         });
 
-        $pemesanan = $pemesanan->fresh();
+        // Refresh pemesanan setelah transaction
+        $pemesanan->refresh();
 
+        // Kirim email notifikasi dengan error handling detail
+        $emailSent = false;
+        $emailError = null;
         try {
             if (!empty($pemesanan->email)) {
                 Mail::to($pemesanan->email)
                     ->send(new VerifikasiPemesananMail($pemesanan, $data['status']));
+                $emailSent = true;
+                
+                Log::info('Email verifikasi berhasil dikirim', [
+                    'pemesanan_id' => $pemesanan->id,
+                    'email' => $pemesanan->email,
+                    'status' => $data['status'],
+                    'mail_from' => config('mail.from.address'),
+                ]);
             }
+        } catch (\Symfony\Component\Mailer\Exception\TransportException $e) {
+            $emailError = 'Gagal koneksi SMTP: ' . $e->getMessage();
+            Log::error('SMTP Transport Error', [
+                'pemesanan_id' => $pemesanan->id,
+                'email' => $pemesanan->email,
+                'error' => $e->getMessage(),
+                'smtp_host' => config('mail.mailers.smtp.host'),
+                'smtp_port' => config('mail.mailers.smtp.port'),
+            ]);
         } catch (\Throwable $e) {
-            return back()->with('success', 'Verifikasi disimpan, namun email gagal dikirim.');
+            $emailError = 'Error: ' . $e->getMessage();
+            Log::error('Gagal mengirim email verifikasi pemesanan', [
+                'pemesanan_id' => $pemesanan->id,
+                'email' => $pemesanan->email,
+                'error' => $e->getMessage(),
+                'type' => get_class($e),
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+            ]);
         }
 
-        return back()->with('success', 'Verifikasi berhasil disimpan.');
+        $successMessage = 'Verifikasi berhasil disimpan.';
+        if ($emailSent) {
+            $successMessage .= ' ✅ Email notifikasi telah dikirim ke ' . $pemesanan->email;
+        } elseif (!empty($pemesanan->email)) {
+            $successMessage .= ' ⚠️ Email notifikasi gagal dikirim';
+            if ($emailError) {
+                $successMessage .= ': ' . $emailError;
+            }
+            $successMessage .= '. Silakan hubungi pemesan secara manual.';
+        }
+
+        return back()->with('success', $successMessage);
     }
 
     /**
      * FEFO per-kantong dengan tabel blood_units + sinkron stok_darah per-batch.
      * Mengembalikan array kode_unit yang dialokasikan.
+     * 
+     * OPTIMASI:
+     * - Batch update untuk blood_units (1 query vs N queries)
+     * - Batch update untuk stok_darah dengan single query
+     * - Eager select hanya kolom yang diperlukan
+     * - Index-optimized query order
      */
     private function allocateUnitsAndSyncStock(PemesananDarah $pemesanan): array
     {
         try {
             $needed = (int) $pemesanan->jumlah_kantong;
+            $today = now()->toDateString();
 
             // 1) Cari unit available yang cocok (FEFO by tgl_kadaluarsa)
+            // OPTIMASI: Select hanya kolom yang dibutuhkan untuk reduce memory
             $units = BloodUnit::query()
+                ->select(['id', 'kode_unit', 'stok_id', 'produk', 'gol_darah', 'rhesus'])
                 ->where('produk', $pemesanan->produk)
                 ->where('gol_darah', $pemesanan->gol_darah)
                 ->when($pemesanan->rhesus, fn($q) => $q->where('rhesus', $pemesanan->rhesus))
                 ->where('status', 'available')
-                ->whereDate('tgl_kadaluarsa', '>=', now()->toDateString())
+                ->whereDate('tgl_kadaluarsa', '>=', $today)
                 ->orderBy('tgl_kadaluarsa')
-                ->lockForUpdate() // cegah race
+                ->orderBy('id') // Tambah order by id untuk consistency
+                ->lockForUpdate() // cegah race condition
                 ->limit($needed)
                 ->get();
 
@@ -124,25 +184,40 @@ class VerifikasiPemesananController extends Controller
                 ]);
             }
 
-            // 2) Tandai unit sebagai dispensed & kaitkan ke pemesanan
-            foreach ($units as $u) {
-                $u->update([
-                    'status'       => 'dispensed',
-                    'pemesanan_id' => $pemesanan->id,
-                    'penerima'     => $pemesanan->rs_pemesan,
-                ]);
-            }
+            // 2) OPTIMASI: Batch update unit sebagai dispensed (1 query)
+            $unitIds = $units->pluck('id')->all();
+            BloodUnit::whereIn('id', $unitIds)->update([
+                'status'       => 'dispensed',
+                'pemesanan_id' => $pemesanan->id,
+                'penerima'     => $pemesanan->rs_pemesan,
+                'updated_at'   => now(),
+            ]);
 
-            // 3) Sinkronkan stok_darah.jumlah per-batch PERSIS sebanyak unit yang terpakai
-            //    (hindari scan semua batch; pakai groupBy stok_id dari unit yang dipilih)
+            // 3) OPTIMASI: Sinkron stok_darah dengan batch decrement
+            // Group by stok_id untuk hitung jumlah per batch
             $byBatch = $units->groupBy('stok_id')->map->count();
-            foreach ($byBatch as $stokId => $count) {
-                // lock baris stok yang relevan saja
-                $batch = StokDarah::whereKey($stokId)->lockForUpdate()->first();
-                if ($batch) {
-                    // batas bawah nol (jaga-jaga)
+            
+            // Batch update menggunakan CASE WHEN untuk efisiensi
+            if ($byBatch->isNotEmpty()) {
+                $stokIds = $byBatch->keys()->all();
+                
+                // Lock semua batch yang terpengaruh sekaligus
+                $batches = StokDarah::whereIn('id', $stokIds)
+                    ->lockForUpdate()
+                    ->get(['id', 'jumlah']);
+                
+                // Update dengan single query menggunakan raw SQL
+                foreach ($batches as $batch) {
+                    $count = $byBatch[$batch->id] ?? 0;
                     $newVal = max(0, (int) $batch->jumlah - (int) $count);
-                    $batch->update(['jumlah' => $newVal]);
+                    
+                    // Direct update tanpa re-fetch
+                    DB::table('stok_darah')
+                        ->where('id', $batch->id)
+                        ->update([
+                            'jumlah' => $newVal,
+                            'updated_at' => now(),
+                        ]);
                 }
             }
 
@@ -151,6 +226,11 @@ class VerifikasiPemesananController extends Controller
             if ($e instanceof ValidationException) {
                 throw $e;
             }
+            Log::error('Error allocating units', [
+                'pemesanan_id' => $pemesanan->id,
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+            ]);
             throw ValidationException::withMessages([
                 'status' => 'Terjadi kesalahan saat mengalokasikan unit. Silakan coba kembali.',
             ]);

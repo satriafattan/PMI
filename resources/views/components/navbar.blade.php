@@ -6,12 +6,12 @@
       {{-- Logo --}}
       <a href="/"
          class="flex items-center gap-2 transition-transform hover:scale-105 sm:gap-3">
-        <img src="{{ asset('images/LOGO NAV.png') }}"
-             alt="Logo PMI"
+        <img src="{{ asset('images/Logo Nav New.png') }}"
+             alt="Logo SIMPHONY"
              class="h-14 w-14 object-contain sm:h-16 sm:w-16 md:h-20 md:w-20">
         <div class="flex flex-col">
-          <span class="text-sm font-bold text-slate-900 sm:text-base md:text-lg">Provinsi Lampung</span>
-          <span class="hidden text-xs text-slate-500 sm:block">Unit Donor Darah</span>
+          <span class="text-sm font-bold text-slate-900 sm:text-base md:text-lg">SIMPHONY</span>
+          <span class="hidden text-xs text-slate-500 sm:block">Sistem Informasi Pemesanan & Inventori</span>
         </div>
       </a>
 

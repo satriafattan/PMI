@@ -4,8 +4,8 @@
   <div class="w-full max-w-md rounded-xl bg-white p-8 shadow-lg">
     <div class="mb-8 text-center">
       <div class="mx-auto mb-3">
-        <img src="{{ asset('images/LOGO NAV.png') }}" 
-             alt="Logo PMI" 
+        <img src="{{ asset('images/Logo Nav New.png') }}"
+             alt="Logo SIMPHONY"
              class="mx-auto h-32 w-32 object-contain">
       </div>
       <h1 class="text-2xl font-bold text-gray-800">Login Admin</h1>
@@ -23,37 +23,46 @@
       </div>
     @endif
 
-    <form method="POST" action="{{ route('admin.login.submit') }}" class="space-y-5">
+    <form method="POST"
+          action="{{ route('admin.login.submit') }}"
+          class="space-y-5">
       @csrf
 
       {{-- Email --}}
       <div>
         <label class="block text-sm font-medium text-gray-700">Email</label>
-        <input type="email" name="email" value="{{ old('email') }}" required autofocus
-          class="mt-1 w-full rounded-lg border border-gray-300 p-2.5 focus:border-red-500 focus:ring-2 focus:ring-red-500" />
+        <input type="email"
+               name="email"
+               value="{{ old('email') }}"
+               required
+               autofocus
+               class="mt-1 w-full rounded-lg border border-gray-300 p-2.5 focus:border-red-500 focus:ring-2 focus:ring-red-500" />
       </div>
 
       {{-- Password --}}
       <div>
         <label class="block text-sm font-medium text-gray-700">Password</label>
-        <input type="password" name="password" required
-          class="mt-1 w-full rounded-lg border border-gray-300 p-2.5 focus:border-red-500 focus:ring-2 focus:ring-red-500" />
+        <input type="password"
+               name="password"
+               required
+               class="mt-1 w-full rounded-lg border border-gray-300 p-2.5 focus:border-red-500 focus:ring-2 focus:ring-red-500" />
       </div>
 
       {{-- Remember Me --}}
       <div class="flex items-center justify-between">
         <label class="flex items-center gap-2 text-sm text-gray-600">
-          <input type="checkbox" name="remember" class="h-4 w-4 rounded border-gray-300 text-red-600 focus:ring-red-500">
+          <input type="checkbox"
+                 name="remember"
+                 class="h-4 w-4 rounded border-gray-300 text-red-600 focus:ring-red-500">
           Ingat saya
         </label>
       </div>
 
       {{-- Submit --}}
       <button type="submit"
-        class="w-full rounded-lg bg-red-600 px-4 py-2.5 font-medium text-white shadow hover:bg-red-700">
+              class="w-full rounded-lg bg-red-600 px-4 py-2.5 font-medium text-white shadow hover:bg-red-700">
         Masuk
       </button>
     </form>
   </div>
 </main>
-

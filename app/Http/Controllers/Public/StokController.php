@@ -12,7 +12,12 @@ class StokController extends Controller
     /** Halaman utama stok publik (invokable) */
     public function __invoke()
     {
-        $stokAll      = StokDarah::query()->get();
+        // Ambil hanya stok yang belum kadaluwarsa
+        $stokAll = StokDarah::query()
+            ->whereDate('tgl_kadaluarsa', '>=', now()->toDateString())
+            ->where('jumlah', '>', 0) // Hanya yang masih ada stoknya
+            ->get();
+
         $komponenRows = $this->aggregateByProduk($stokAll)->toArray();
         $totalsGol    = $this->totalsByGolongan($stokAll);
 
@@ -62,8 +67,10 @@ class StokController extends Controller
     /** API endpoint untuk mendapatkan stok per golongan */
     public function getStokGolongan()
     {
-        // Ambil stok PRC per golongan darah (sama seperti di WelcomeController)
+        // Ambil stok PRC per golongan darah yang belum kadaluwarsa
         $stok = StokDarah::where('produk', 'PRC')
+            ->whereDate('tgl_kadaluarsa', '>=', now()->toDateString()) // Filter expired
+            ->where('jumlah', '>', 0) // Hanya yang masih ada stoknya
             ->select(
                 DB::raw('SUM(CASE WHEN gol_darah = "A" THEN jumlah ELSE 0 END) as stokA'),
                 DB::raw('SUM(CASE WHEN gol_darah = "B" THEN jumlah ELSE 0 END) as stokB'),
@@ -80,7 +87,7 @@ class StokController extends Controller
                 'B'  => (int)($stok->stokB ?? 0),
                 'O'  => (int)($stok->stokO ?? 0),
             ],
-            'lastUpdated' => now()->translatedFormat('d M Y, H:i'),
+            'lastUpdated' => now()->timezone('Asia/Jakarta')->translatedFormat('d M Y, H:i') . ' WIB',
         ]);
     }
 }

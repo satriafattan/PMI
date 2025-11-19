@@ -1,7 +1,7 @@
 {{-- resources/views/about.blade.php --}}
 @extends('layouts.app')
 
-@section('title', 'Tentang Kami – UDD PMI Provinsi Lampung')
+@section('title', 'Tentang Kami – SIMPHONY')
 @section('content')
   <div class="min-h-screen bg-white text-slate-800">
     <x-navbar />
@@ -33,13 +33,12 @@
 
           <h1 class="mt-6 text-5xl font-extrabold leading-tight tracking-tight sm:text-6xl lg:text-7xl">
             Tentang
-            <span class="block bg-gradient-to-r from-white to-red-100 bg-clip-text text-transparent">UDD PMI Provinsi
-              Lampung</span>
+            <span class="block bg-gradient-to-r from-white to-red-100 bg-clip-text text-transparent">SIMPHONY</span>
           </h1>
 
           <p class="mx-auto mt-6 max-w-3xl text-lg leading-relaxed text-white/90 sm:text-xl">
             Membangun masa depan kesehatan yang lebih baik melalui <strong class="font-semibold text-white">inovasi,
-              dedikasi, dan pelayanan terdepan</strong> untuk seluruh masyarakat Indonesia.
+              dedikasi, dan pelayanan terdepan</strong> dalam pengelolaan pemesanan dan inventori darah.
           </p>
 
           {{-- Stats --}}
@@ -113,7 +112,7 @@
             Profil Institusi
           </div>
           <h2 class="mt-4 text-4xl font-extrabold text-slate-900 sm:text-5xl">
-            Mengenal UDD PMI Lampung
+            Mengenal SIMPHONY
           </h2>
         </div>
 
@@ -122,27 +121,29 @@
           <div>
             <div class="space-y-4 text-lg leading-relaxed text-slate-600">
               <p>
-                Sebagai <strong class="font-semibold text-slate-900">institusi kesehatan terdepan</strong>, kami
-                berkomitmen untuk memberikan pelayanan medis berkualitas tinggi dengan mengintegrasikan teknologi modern
-                dan pendekatan humanis dalam setiap aspek pelayanan.
+                Sebagai <strong class="font-semibold text-slate-900">platform sistem informasi terdepan</strong>, SIMPHONY
+                berkomitmen untuk memberikan solusi digital berkualitas tinggi dalam mengelola pemesanan darah dan
+                inventori
+                dengan mengintegrasikan teknologi modern dan pendekatan yang efisien.
               </p>
               <p>
-                Dengan pengalaman lebih dari <strong class="font-semibold text-red-600">dua dekade</strong>, kami terus
-                berinovasi untuk memenuhi kebutuhan kesehatan masyarakat yang berkembang.
+                SIMPHONY (Sistem Informasi Pemesanan dan Inventori) dirancang untuk <strong
+                        class="font-semibold text-red-600">mengharmonisasikan alur kerja</strong> antara proses pemesanan
+                darah, pengelolaan stok, serta verifikasi pada Unit Donor Darah.
               </p>
               <p>
-                Didukung oleh <strong class="font-semibold text-slate-900">tim medis profesional</strong> dan peralatan
-                canggih, kami memastikan setiap unit darah yang disalurkan telah melalui proses screening ketat sesuai
-                standar internasional.
+                Didukung oleh <strong class="font-semibold text-slate-900">teknologi terkini</strong> dan antarmuka yang
+                user-friendly, kami memastikan setiap proses pemesanan dan pengelolaan stok darah berjalan lancar, aman,
+                dan efisien sesuai standar kesehatan.
               </p>
             </div>
 
             {{-- Achievement Cards --}}
             <div class="mt-8 grid grid-cols-3 gap-4">
               @foreach ([
-          ['25+', 'Tahun Pengalaman', '<svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" /></svg>'],
-          ['1M+', 'Pasien Dilayani', '<svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" /></svg>'],
-          ['50+', 'Tenaga Medis', '<svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" /></svg>'],
+          ['2025', 'Tahun Peluncuran', '<svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" /></svg>'],
+          ['100%', 'Sistem Digital', '<svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>'],
+          ['24/7', 'Akses Real-time', '<svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>'],
       ] as $s)
                 <div class="group relative">
                   <div
@@ -195,7 +196,7 @@
                             stroke-width="1.5"
                             d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
                     </svg>
-                    <p class="mt-4 text-lg font-semibold text-slate-400">Tim Medis Profesional</p>
+                    <p class="mt-4 text-lg font-semibold text-slate-400">Platform Digital Terpadu</p>
                   </div>
                 </div>
               </div>
@@ -204,8 +205,8 @@
               <div class="border-t border-slate-100 bg-white p-6">
                 <div class="flex items-center justify-center gap-6 text-center">
                   <div>
-                    <div class="text-2xl font-bold text-red-600">ISO</div>
-                    <div class="mt-1 text-xs text-slate-600">Certified</div>
+                    <div class="text-2xl font-bold text-red-600">DIGITAL</div>
+                    <div class="mt-1 text-xs text-slate-600">Platform</div>
                   </div>
                   <div class="h-8 w-px bg-slate-200"></div>
                   <div>
@@ -215,7 +216,7 @@
                   <div class="h-8 w-px bg-slate-200"></div>
                   <div>
                     <div class="text-2xl font-bold text-red-600">100%</div>
-                    <div class="mt-1 text-xs text-slate-600">Safe</div>
+                    <div class="mt-1 text-xs text-slate-600">Secure</div>
                   </div>
                 </div>
               </div>
@@ -300,9 +301,9 @@
                class="tab-panel">
             <div class="grid gap-6 md:grid-cols-3">
               @foreach ([
-          ['Kepemimpinan Global', 'Menjadi institusi kesehatan terdepan di Asia Tenggara yang diakui secara internasional.', '<svg class="h-7 w-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>', 'blue'],
-          ['Aksesibilitas Universal', 'Setiap individu memiliki akses layanan kesehatan berkualitas tanpa memandang latar belakang.', '<svg class="h-7 w-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" /></svg>', 'green'],
-          ['Inovasi Berkelanjutan', 'Mengintegrasikan teknologi terdepan dengan pendekatan medis holistik.', '<svg class="h-7 w-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" /></svg>', 'purple'],
+          ['Efisiensi Digital', 'Menjadi platform sistem informasi terdepan yang mengintegrasikan teknologi digital dalam pengelolaan pemesanan dan inventori darah.', '<svg class="h-7 w-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>', 'blue'],
+          ['Aksesibilitas 24/7', 'Setiap pengguna memiliki akses real-time ke sistem untuk pemesanan dan monitoring stok darah kapan saja, dimana saja.', '<svg class="h-7 w-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>', 'green'],
+          ['Harmonisasi Alur Kerja', 'Mengintegrasikan proses pemesanan, pengelolaan stok, dan verifikasi dalam satu platform yang terkoordinasi.', '<svg class="h-7 w-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" /></svg>', 'purple'],
       ] as $v)
                 <div class="group relative text-left">
                   <div
@@ -327,9 +328,9 @@
                class="tab-panel hidden">
             <div class="grid gap-6 md:grid-cols-3">
               @foreach ([
-          ['Pelayanan Aman', 'Menjaga standar keamanan donor & transfusi sesuai protokol WHO dan standar internasional.', '<svg class="h-7 w-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" /></svg>', 'red'],
-          ['Pendidikan & Riset', 'Mendorong pendidikan, penelitian, dan kolaborasi lintas disiplin untuk kemajuan medis.', '<svg class="h-7 w-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" /></svg>', 'indigo'],
-          ['Respons 24/7', 'Menyiapkan tim responsif untuk keadaan darurat kesehatan kapan pun dibutuhkan.', '<svg class="h-7 w-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>', 'amber'],
+          ['Sistem Terintegrasi', 'Menyediakan platform terpadu untuk mengelola pemesanan darah, inventori stok, dan verifikasi secara efisien.', '<svg class="h-7 w-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" /></svg>', 'red'],
+          ['Digitalisasi Proses', 'Mengotomatisasi alur kerja pemesanan dan pengelolaan stok untuk meningkatkan efisiensi dan akurasi.', '<svg class="h-7 w-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>', 'indigo'],
+          ['Update Real-time', 'Menyediakan informasi stok darah yang akurat dan terkini untuk mendukung pengambilan keputusan cepat.', '<svg class="h-7 w-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>', 'amber'],
       ] as $m)
                 <div class="group relative text-left">
                   <div
@@ -377,11 +378,11 @@
 
         <div class="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-5">
           @foreach ([
-          ['Integritas', 'Berkomitmen pada kejujuran, transparansi, dan etika profesional dalam setiap pelayanan.', '<svg class="h-7 w-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" /></svg>', 'red'],
-          ['Profesional', 'Menjaga standar pelayanan tertinggi dengan tenaga medis terlatih dan berpengalaman.', '<svg class="h-7 w-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>', 'blue'],
-          ['Peduli', 'Mengutamakan empati dan kepedulian terhadap setiap kebutuhan pasien dan donor.', '<svg class="h-7 w-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" /></svg>', 'rose'],
-          ['Inovatif', 'Terus berinovasi dengan teknologi dan metode terkini untuk pelayanan optimal.', '<svg class="h-7 w-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>', 'amber'],
-          ['Bertanggung Jawab', 'Menjamin keamanan dan kualitas setiap proses dengan akuntabilitas penuh.', '<svg class="h-7 w-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" /></svg>', 'green'],
+          ['Integritas', 'Berkomitmen pada kejujuran, transparansi, dan akurasi data dalam setiap transaksi sistem.', '<svg class="h-7 w-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" /></svg>', 'red'],
+          ['Efisiensi', 'Mengoptimalkan setiap proses untuk menghemat waktu dan meningkatkan produktivitas.', '<svg class="h-7 w-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>', 'blue'],
+          ['User-Friendly', 'Mengutamakan kemudahan penggunaan dengan antarmuka yang intuitif dan responsif.', '<svg class="h-7 w-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>', 'rose'],
+          ['Inovatif', 'Terus berinovasi dengan teknologi dan fitur terkini untuk pelayanan yang lebih baik.', '<svg class="h-7 w-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" /></svg>', 'amber'],
+          ['Keamanan Data', 'Menjamin keamanan dan privasi data dengan sistem enkripsi dan protokol keamanan tingkat tinggi.', '<svg class="h-7 w-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg>', 'green'],
       ] as $nilai)
             <div class="group relative text-left">
               <div
@@ -416,8 +417,8 @@
                       d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
               </svg>
             </div>
-            <h3 class="font-bold text-slate-900">Terakreditasi Nasional</h3>
-            <p class="mt-2 text-sm text-slate-600">Memenuhi standar akreditasi kesehatan Indonesia</p>
+            <h3 class="font-bold text-slate-900">Platform Terintegrasi</h3>
+            <p class="mt-2 text-sm text-slate-600">Sistem terpadu untuk pemesanan dan inventori</p>
           </div>
           <div class="rounded-2xl border border-slate-200 bg-white p-6 text-center shadow-lg">
             <div class="mx-auto mb-3 flex h-16 w-16 items-center justify-center rounded-2xl bg-blue-100 text-blue-600">
@@ -431,8 +432,8 @@
                       d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
               </svg>
             </div>
-            <h3 class="font-bold text-slate-900">Sertifikasi ISO</h3>
-            <p class="mt-2 text-sm text-slate-600">Manajemen mutu sesuai standar internasional</p>
+            <h3 class="font-bold text-slate-900">Teknologi Modern</h3>
+            <p class="mt-2 text-sm text-slate-600">Dibangun dengan framework Laravel terkini</p>
           </div>
           <div class="rounded-2xl border border-slate-200 bg-white p-6 text-center shadow-lg">
             <div
@@ -448,7 +449,7 @@
               </svg>
             </div>
             <h3 class="font-bold text-slate-900">Keamanan Terjamin</h3>
-            <p class="mt-2 text-sm text-slate-600">Screening lengkap sesuai protokol WHO</p>
+            <p class="mt-2 text-sm text-slate-600">Enkripsi data dan sistem autentikasi berlapis</p>
           </div>
         </div>
       </div>
@@ -478,8 +479,8 @@
               Berkolaborasi Dengan Kami
             </h3>
             <p class="mx-auto mt-4 max-w-2xl text-lg leading-relaxed text-white/90">
-              Mari bersama-sama membangun masa depan kesehatan yang lebih baik untuk Indonesia.
-              <strong class="font-semibold text-white">Setiap kontribusi Anda sangat berarti.</strong>
+              Mari bersama-sama membangun sistem kesehatan yang lebih baik melalui digitalisasi dan efisiensi.
+              <strong class="font-semibold text-white">Setiap kontribusi teknologi membawa dampak nyata.</strong>
             </p>
 
             <div class="mt-8 flex flex-wrap justify-center gap-4">
@@ -492,7 +493,7 @@
                   <path stroke-linecap="round"
                         stroke-linejoin="round"
                         stroke-width="2"
-                        d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+                        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                 </svg>
                 Jadwalkan Event
               </a>
@@ -523,7 +524,7 @@
                         stroke-width="2"
                         d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
                 </svg>
-                <span>24/7 Emergency Line</span>
+                <span>Support 24/7</span>
               </div>
               <div class="flex items-center gap-2">
                 <svg class="h-5 w-5"
@@ -535,7 +536,7 @@
                         stroke-width="2"
                         d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                 </svg>
-                <span>info@pmilampung.or.id</span>
+                <span>info@simphony.id</span>
               </div>
               <div class="flex items-center gap-2">
                 <svg class="h-5 w-5"
@@ -650,7 +651,7 @@
       counters.forEach(el => counterObserver.observe(el));
 
       // Parallax effect for hero background
-      
+
       // Fade-in animation for sections
       const sections = document.querySelectorAll('section');
       const sectionObserver = new IntersectionObserver((entries) => {

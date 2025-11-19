@@ -21,7 +21,7 @@
   $lokasi = data_get($event, 'lokasi_lengkap', '-') ?: '-';
   $nomorWA = '0721-703020'; // Nomor WhatsApp PMI - sesuaikan dengan nomor yang benar
 @endphp
-  
+
 <!DOCTYPE html>
 <html lang="id">
 
@@ -54,20 +54,20 @@
                      border="0">
                 <tr>
                   <td style="width:72px;vertical-align:top;">
-                    <img src="{{ asset('images/pmi-logo.png') }}"
-                         alt="PMI"
+                    <img src="{{ asset('images/Logo Nav New.png') }}"
+                         alt="SIMPHONY"
                          width="56"
                          height="56"
                          style="display:block;border:0;">
                   </td>
                   <td style="text-align:left;">
                     <h2 style="color:#dc2626;margin:0 0 4px 0;font-size:20px;font-weight:bold;letter-spacing:.5px;">
-                      PALANG MERAH INDONESIA</h2>
-                    <h3 style="color:#1f2937;margin:0 0 6px 0;font-size:18px;font-weight:bold;">UNIT DONOR DARAH
-                      PROVINSI LAMPUNG</h3>
+                      SIMPHONY</h2>
+                    <h3 style="color:#1f2937;margin:0 0 6px 0;font-size:18px;font-weight:bold;">SISTEM INFORMASI
+                      PEMESANAN DAN INVENTORI</h3>
                     <p style="margin:0;font-size:12px;color:#4b5563;line-height:1.6;">
                       Jl. Sam Ratulangi No.105, Penengahan, Kec. Tj. Karang Bar., Kota Bandar Lampung, Lampung 35118<br>
-                      Telp: 0721 703020 | Email: lampung@pmi.ac.id
+                      Telp: 0721 703020 | Email: info@simphony.id
                     </p>
                   </td>
                 </tr>
@@ -86,7 +86,7 @@
                   <td style="width:50%;">
                     <p style="margin:0;font-size:13px;color:#374151;">
                       <strong>Nomor</strong><br>
-                      {{ $idShort }}/EVENT-PMI-LAMP/{{ date('Y') }}
+                      {{ $idShort }}/EVENT-SIMPHONY/{{ date('Y') }}
                     </p>
                   </td>
                   <td style="width:50%;text-align:right;">
@@ -132,7 +132,7 @@
               <p style="margin:0 0 15px 0;font-size:13px;color:#374151;line-height:1.8;text-align:justify;">
                 Melalui surat elektronik ini, kami sampaikan pemberitahuan terkait status pengajuan kegiatan event donor
                 darah
-                yang telah Bapak/Ibu ajukan kepada Unit Donor Darah PMI Provinsi Lampung dengan rincian sebagai berikut:
+                yang telah Bapak/Ibu ajukan dengan rincian sebagai berikut:
               </p>
             </td>
           </tr>
@@ -318,62 +318,6 @@
                 donor darah,
                 kami ucapkan terima kasih.
               </p>
-            </td>
-          </tr>
-
-          <!-- Tanda Tangan + Cap -->
-          <tr>
-            <td style="padding:0 40px 40px 40px;">
-              <table width="100%"
-                     cellpadding="0"
-                     cellspacing="0"
-                     border="0">
-                <tr>
-                  <td style="width:50%;"></td>
-                  <td style="width:50%;text-align:center;">
-                    <p style="margin:0 0 5px 0;font-size:13px;color:#374151;">Hormat kami,</p>
-                    <p style="margin:0 0 14px 0;font-size:13px;color:#374151;font-weight:bold;">Unit Donor Darah PMI
-                      Provinsi Lampung</p>
-
-                    <!-- Cap PNG transparan (email aman) -->
-                    <img src="{{ asset('images/cap-pmi.png') }}"
-                         alt="Cap PMI"
-                         width="120"
-                         style="display:block;margin:0 auto 28px auto;border:0;">
-
-                    <!-- Nama Jabatan -->
-                    <p
-                       style="margin:0;font-size:13px;color:#374151;border-bottom:1px solid #374151;display:inline-block;padding-bottom:2px;">
-                      <strong>Kepala Unit Donor Darah</strong>
-                    </p>
-                  </td>
-                </tr>
-              </table>
-            </td>
-          </tr>
-
-          <!-- Footer minimal -->
-          <tr>
-            <td style="padding:18px 40px;border-top:1px solid #e5e7eb;">
-              <table width="100%"
-                     cellpadding="0"
-                     cellspacing="0"
-                     border="0">
-                <tr>
-                  <td style="font-size:12px;color:#6b7280;line-height:1.7;">
-                    <strong style="color:#111827;">UDD PMI Provinsi Lampung</strong><br>
-                    Jl. Sam Ratulangi No.105, Penengahan, Tj. Karang Bar., Kota Bandar Lampung 35118<br>
-                    Telp: 0721 703020 · Email: lampung@pmi.ac.id
-                    <div style="margin-top:6px;font-size:11px;color:#9ca3af;">
-                      Email ini dikirim otomatis oleh sistem. Jika data tidak sesuai, mohon hubungi kontak di atas.
-                    </div>
-                  </td>
-                  <td align="right"
-                      style="font-size:11px;color:#9ca3af;white-space:nowrap;">
-                    © {{ date('Y') }} PMI Lampung
-                  </td>
-                </tr>
-              </table>
             </td>
           </tr>
 

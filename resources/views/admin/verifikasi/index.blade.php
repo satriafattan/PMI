@@ -1108,14 +1108,14 @@
                 if (variant === 'approve') {
                     cmIcon.className = base + 'border-emerald-200 bg-emerald-50 text-emerald-700';
                     cmIcon.innerHTML =
-                        `<svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M5 13l4 4L19 7"/></svg>`;
+                        `<svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 9v4m0 4h.01M12 22a10 10 0 1 1 0-20 10 10 0 0 1 0 20z"/></svg>`;
                     cmOk.className =
                         'min-h-10 rounded-lg px-3 py-2 text-sm font-medium text-white bg-emerald-600 hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-300';
                     cmOk.textContent = 'Setuju';
                 } else if (variant === 'reject') {
                     cmIcon.className = base + 'border-rose-200 bg-rose-50 text-rose-700';
                     cmIcon.innerHTML =
-                        `<svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M6 18L18 6M6 6l12 12"/></svg>`;
+                        `<svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 9v4m0 4h.01M12 22a10 10 0 1 1 0-20 10 10 0 0 1 0 20z"/></svg>`;
                     cmOk.className =
                         'min-h-10 rounded-lg px-3 py-2 text-sm font-medium text-white bg-rose-600 hover:bg-rose-700 focus:outline-none focus:ring-2 focus:ring-rose-300';
                     cmOk.textContent = 'Tolak';
