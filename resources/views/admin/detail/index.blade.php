@@ -14,7 +14,7 @@
         // Kumpulkan opsi komponen dari data nyata
         $kompOpts = collect($rows)->pluck('komponen')->filter()->unique()->values()->all();
 
-        // Jika tidak ada data sama sekali → pakai daftar default
+        // Jika tidak ada data sama sekali G�� pakai daftar default
         if (empty($kompOpts)) {
             $kompOpts = $kompAll;
         } else {
@@ -62,7 +62,7 @@
                         </span>
                         <input id="searchInput" type="text"
                             class="w-full rounded-2xl border border-neutral-200 bg-white py-2.5 pl-11 pr-3 text-sm placeholder-neutral-400 focus:border-navy-300 focus:outline-none focus:ring-2 focus:ring-navy-200"
-                            placeholder="Cari ID darah atau komponen…" />
+                            placeholder="Cari ID darah atau komponenGǪ" />
                     </div>
 
                     {{-- Filter dropdown (Produk & Gol) --}}
@@ -266,10 +266,9 @@
                         </span>
                         <input id="hkSearchInput" type="text"
                             class="w-full rounded-2xl border border-neutral-200 bg-white py-2.5 pl-11 pr-3 text-sm placeholder-neutral-400 focus:border-navy-300 focus:outline-none focus:ring-2 focus:ring-navy-200"
-                            placeholder="Cari ID darah atau penerima…" />
+                            placeholder="Cari ID darah atau penerimaGǪ" />
                     </div>
 
-<<<<<<< HEAD
   {{-- ========================= --}}
   {{-- SECTION: TABEL 2 (Keluar / Tidak Tersedia) --}}
   {{-- ========================= --}}
@@ -292,7 +291,7 @@
           <input id="hkSearchInput"
                  type="text"
                  class="w-full rounded-xl border border-neutral-200 bg-white py-2.5 pl-11 pr-3 text-sm placeholder-neutral-400 focus:border-neutral-300 focus:outline-none focus:ring-2 focus:ring-neutral-900/10"
-                 placeholder="Cari ID darah atau penerima…">
+                 placeholder="Cari ID darah atau penerimaGǪ">
         </div>
 
         <div class="relative">
@@ -387,21 +386,6 @@
         </select>
       </div>
     </div>
-=======
-                    {{-- Filter dropdown (Produk & Gol) --}}
-                    <div class="relative">
-                        <button type="button" id="hkFilterBtn"
-                            class="inline-flex min-h-10 items-center gap-2 rounded-2xl border border-neutral-200 bg-white px-3 py-2 text-sm shadow-sm hover:bg-neutral-50 focus:outline-none focus:ring-2 focus:ring-navy-200"
-                            aria-haspopup="menu" aria-expanded="false" aria-controls="hkFilterMenu">
-                            <svg class="size-5 text-neutral-600" viewBox="0 0 24 24" fill="none"
-                                stroke="currentColor" aria-hidden="true">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6"
-                                    d="M3 6h18M6 12h12M10 18h4" />
-                            </svg>
-                            <span>Filter</span>
-                        </button>
->>>>>>> 26a6e90c2beefc016005be09f4a340fa8bfff97c
-
                         <div id="hkFilterMenu" role="menu" aria-labelledby="hkFilterBtn"
                             class="absolute right-0 z-20 mt-2 hidden w-[22rem] rounded-2xl border border-neutral-200 bg-white p-3 shadow-xl">
                             <div class="space-y-3">
@@ -432,7 +416,6 @@
                                             </svg>
                                         </button>
 
-<<<<<<< HEAD
   <!-- SECTION: TABEL 3 (Kadaluwarsa) -->
   <section id="secExpired"
            class="mt-6 hidden space-y-6">
@@ -453,7 +436,7 @@
           <input id="exSearchInput"
                  type="text"
                  class="w-full rounded-xl border border-neutral-200 bg-white py-2.5 pl-11 pr-3 text-sm placeholder-neutral-400 focus:border-neutral-300 focus:outline-none focus:ring-2 focus:ring-neutral-900/10"
-                 placeholder="Cari ID darah atau produk…">
+                 placeholder="Cari ID darah atau produkGǪ">
         </div>
 
         <div class="relative">
@@ -562,23 +545,6 @@
         </table>
       </div>
     </div>
-=======
-                                        @foreach ($kompOpts as $opt)
-                                            <button type="button" role="menuitemradio"
-                                                class="hk-produk-item group flex w-full items-center justify-between rounded-xl px-3 py-2 text-left text-sm transition"
-                                                data-value="{{ $opt }}">
-                                                <span class="truncate">{{ $opt }}</span>
-                                                <svg class="check-icon size-4 opacity-0" viewBox="0 0 24 24"
-                                                    fill="none" stroke="currentColor">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                        d="M5 13l4 4L19 7" />
-                                                </svg>
-                                            </button>
-                                        @endforeach
-                                    </div>
-                                </div>
->>>>>>> 26a6e90c2beefc016005be09f4a340fa8bfff97c
-
                                 {{-- Golongan --}}
                                 <div class="relative">
                                     <label class="text-xs font-medium text-neutral-500">Golongan Darah</label>
@@ -702,19 +668,10 @@
                 </div>
             </div>
 
-<<<<<<< HEAD
     /* ====== DATA dari Controller (fallback ke array kosong) ====== */
     const rows = Array.isArray(@json($rows ?? [])) ? @json($rows ?? []) : [];
     const hkRows = Array.isArray(@json($historyRows ?? [])) ? @json($historyRows ?? []) : [];
     const expiredRows = Array.isArray(@json($expiredRows ?? [])) ? @json($expiredRows ?? []) : [];
-=======
-            <div class="flex flex-col justify-between gap-3 sm:flex-row sm:items-center">
-                <div id="hkPageInfo" class="text-sm text-neutral-600"></div>
-                <div id="hkPagination" class="flex items-center gap-2"></div>
-            </div>
-        </section>
->>>>>>> 26a6e90c2beefc016005be09f4a340fa8bfff97c
-
         {{-- ========================= --}}
         {{-- SECTION: TABEL 3 (Kadaluwarsa) --}}
         {{-- ========================= --}}
@@ -733,7 +690,7 @@
                         </span>
                         <input id="exSearchInput" type="text"
                             class="w-full rounded-2xl border border-neutral-200 bg-white py-2.5 pl-11 pr-3 text-sm placeholder-neutral-400 focus:border-navy-300 focus:outline-none focus:ring-2 focus:ring-navy-200"
-                            placeholder="Cari ID darah…" />
+                            placeholder="Cari ID darahGǪ" />
                     </div>
 
                     {{-- Filter dropdown (Produk & Gol) --}}
@@ -953,17 +910,9 @@
             const btnUnavail = document.getElementById('btnUnavail');
             const btnExpired = document.getElementById('btnExpired');
 
-<<<<<<< HEAD
     /* ====== TABEL 3 (Kadaluwarsa) ====== */
     // Ambil data expired yang sudah dikirim dari controller
     const exRows = expiredRows;
-=======
-            function setTab(active) {
-                if (secAvail) secAvail.classList.toggle('hidden', active !== 'avail');
-                if (secUnavail) secUnavail.classList.toggle('hidden', active !== 'unavail');
-                if (secExpired) secExpired.classList.toggle('hidden', active !== 'expired');
->>>>>>> 26a6e90c2beefc016005be09f4a340fa8bfff97c
-
                 [btnAvail, btnUnavail, btnExpired].forEach(b => b?.classList.remove('is-active'));
                 (active === 'avail' ?
                     btnAvail :
@@ -1074,7 +1023,7 @@
 
                 if (start > 1) {
                     pages.push(1);
-                    if (start > 2) pages.push('…');
+                    if (start > 2) pages.push('GǪ');
                 }
 
                 for (let i = start; i <= end; i++) {
@@ -1082,7 +1031,7 @@
                 }
 
                 if (end < totalPages) {
-                    if (end < totalPages - 1) pages.push('…');
+                    if (end < totalPages - 1) pages.push('GǪ');
                     pages.push(totalPages);
                 }
 
@@ -1121,18 +1070,18 @@
             `;
 
                 let html = '';
-                html += btn('«', currentPage - 1, currentPage === 1);
+                html += btn('-�', currentPage - 1, currentPage === 1);
 
                 const range = getPageRange(pages, currentPage, 5);
                 range.forEach(p => {
-                    if (p === '…') {
-                        html += '<span class="px-2 text-neutral-400">…</span>';
+                    if (p === 'GǪ') {
+                        html += '<span class="px-2 text-neutral-400">GǪ</span>';
                     } else {
                         html += btn(p, p, false, p === currentPage);
                     }
                 });
 
-                html += btn('»', currentPage + 1, currentPage === pages);
+                html += btn('-+', currentPage + 1, currentPage === pages);
                 cont.innerHTML = html;
 
                 cont.querySelectorAll('button[data-page]').forEach(b => {
@@ -1152,7 +1101,7 @@
                     if (th.dataset.key === sortKey) {
                         const s = document.createElement('span');
                         s.className = 'sort-ind inline-block ml-1 text-neutral-400';
-                        s.innerHTML = sortDir === 'asc' ? '▲' : '▼';
+                        s.innerHTML = sortDir === 'asc' ? 'G��' : 'G�+';
                         th.appendChild(s);
                     }
                 });
@@ -1262,7 +1211,7 @@
 
                 if (start > 1) {
                     pages.push(1);
-                    if (start > 2) pages.push('…');
+                    if (start > 2) pages.push('GǪ');
                 }
 
                 for (let i = start; i <= end; i++) {
@@ -1270,7 +1219,7 @@
                 }
 
                 if (end < totalPages) {
-                    if (end < totalPages - 1) pages.push('…');
+                    if (end < totalPages - 1) pages.push('GǪ');
                     pages.push(totalPages);
                 }
 
@@ -1310,17 +1259,17 @@
             `;
 
                 let html = '';
-                html += btn('«', hkCurrentPage - 1, hkCurrentPage === 1);
+                html += btn('-�', hkCurrentPage - 1, hkCurrentPage === 1);
 
                 hkRange(pages, hkCurrentPage, 5).forEach(p => {
-                    if (p === '…') {
-                        html += '<span class="px-2 text-neutral-400">…</span>';
+                    if (p === 'GǪ') {
+                        html += '<span class="px-2 text-neutral-400">GǪ</span>';
                     } else {
                         html += btn(p, p, false, p === hkCurrentPage);
                     }
                 });
 
-                html += btn('»', hkCurrentPage + 1, hkCurrentPage === pages);
+                html += btn('-+', hkCurrentPage + 1, hkCurrentPage === pages);
                 cont.innerHTML = html;
 
                 cont.querySelectorAll('button[data-hkpage]').forEach(b => {
@@ -1340,7 +1289,7 @@
                     if (th.dataset.hk === hkSortKey) {
                         const s = document.createElement('span');
                         s.className = 'hk-ind inline-block ml-1 text-neutral-400';
-                        s.innerHTML = hkSortDir === 'asc' ? '▲' : '▼';
+                        s.innerHTML = hkSortDir === 'asc' ? 'G��' : 'G�+';
                         th.appendChild(s);
                     }
                 });
@@ -1449,7 +1398,7 @@
 
                 if (start > 1) {
                     pages.push(1);
-                    if (start > 2) pages.push('…');
+                    if (start > 2) pages.push('GǪ');
                 }
 
                 for (let i = start; i <= end; i++) {
@@ -1457,7 +1406,7 @@
                 }
 
                 if (end < totalPages) {
-                    if (end < totalPages - 1) pages.push('…');
+                    if (end < totalPages - 1) pages.push('GǪ');
                     pages.push(totalPages);
                 }
 
@@ -1497,17 +1446,17 @@
             `;
 
                 let html = '';
-                html += btn('«', exCurrentPage - 1, exCurrentPage === 1);
+                html += btn('-�', exCurrentPage - 1, exCurrentPage === 1);
 
                 exRange(pages, exCurrentPage, 5).forEach(p => {
-                    if (p === '…') {
-                        html += '<span class="px-2 text-neutral-400">…</span>';
+                    if (p === 'GǪ') {
+                        html += '<span class="px-2 text-neutral-400">GǪ</span>';
                     } else {
                         html += btn(p, p, false, p === exCurrentPage);
                     }
                 });
 
-                html += btn('»', exCurrentPage + 1, exCurrentPage === pages);
+                html += btn('-+', exCurrentPage + 1, exCurrentPage === pages);
                 cont.innerHTML = html;
 
                 cont.querySelectorAll('button[data-expage]').forEach(b => {
@@ -1527,7 +1476,7 @@
                     if (th.dataset.ex === exSortKey) {
                         const s = document.createElement('span');
                         s.className = 'ex-ind inline-block ml-1 text-neutral-400';
-                        s.innerHTML = exSortDir === 'asc' ? '▲' : '▼';
+                        s.innerHTML = exSortDir === 'asc' ? 'G��' : 'G�+';
                         th.appendChild(s);
                     }
                 });
