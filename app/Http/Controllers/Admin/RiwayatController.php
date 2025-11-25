@@ -74,6 +74,9 @@ class RiwayatController extends Controller
                     'hasil_serologi',
                     'created_at'
                 );
+            }, 'pemesanan.verifikasi' => function ($q) {
+                $q->select('id', 'pemesanan_id', 'status', 'updated_at')
+                    ->whereIn('status', ['approved', 'rejected']);
             }])
             ->whereHas('pemesanan', function ($p) {
                 $p->whereIn('status', ['approved', 'rejected']);
@@ -82,7 +85,7 @@ class RiwayatController extends Controller
         if ($q !== '') {
             $query->whereHas('pemesanan', function ($p) use ($q) {
                 $p->where('rs_pemesan', 'like', "%{$q}%")
-                  ->orWhere('nama_pasien', 'like', "%{$q}%");
+                    ->orWhere('nama_pasien', 'like', "%{$q}%");
             });
         }
 
@@ -93,14 +96,14 @@ class RiwayatController extends Controller
         if (!empty($gol)) {
             $query->where(function ($w) use ($gol) {
                 $w->where('gol_darah', $gol)
-                  ->orWhereHas('pemesanan', fn($p) => $p->where('gol_darah', $gol));
+                    ->orWhereHas('pemesanan', fn($p) => $p->where('gol_darah', $gol));
             });
         }
 
         if (!empty($produk)) {
             $query->where(function ($w) use ($produk) {
                 $w->where('produk', $produk)
-                  ->orWhereHas('pemesanan', fn($p) => $p->where('produk', $produk));
+                    ->orWhereHas('pemesanan', fn($p) => $p->where('produk', $produk));
             });
         }
 
@@ -113,6 +116,12 @@ class RiwayatController extends Controller
             $tglPesan = optional($p->tanggal_pemesanan ?? $p->created_at)->toDateString();
             $tglMinta = optional($p->tanggal_permintaan)->toDateString();
 
+            // Ambil waktu verifikasi dari relasi
+            $verifikasi = optional($p)->verifikasi;
+            $waktuVerifikasi = $verifikasi && $verifikasi->updated_at
+                ? Carbon::parse($verifikasi->updated_at)->format('d-m-Y')
+                : null;
+
             return [
                 'id'      => $it->id,
                 'nama'    => $it->nama ?? ($p->nama_pasien ?? '-'),
@@ -122,13 +131,15 @@ class RiwayatController extends Controller
                 'produk'  => $it->produk ?? ($p->produk ?? '-'),
                 'kantong' => (int) ($it->jumlah_kantong ?? ($p->jumlah_kantong ?? 0)),
                 'status'  => $p ? ucfirst($p->status) : '-',
+                'waktu_verifikasi' => $waktuVerifikasi,
 
                 'payload' => [
                     'id'                => $p->id ?? $it->id,
                     'status'            => $p->status ?? '-',
                     'tanggal'           => $tglPesan ?? null,
                     'tanggal_pemesanan' => $tglPesan,
-                    'tanggal_permintaan'=> $tglMinta,
+                    'tanggal_permintaan' => $tglMinta,
+                    'waktu_verifikasi'  => $waktuVerifikasi,
                     'nama_pasien'       => $p->nama_pasien ?? $it->nama,
                     'rs_pemesan'        => $p->rs_pemesan ?? null,
                     'jenis_kelamin'     => $p->jenis_kelamin ?? null,

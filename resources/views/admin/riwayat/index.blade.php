@@ -342,6 +342,7 @@
               <th class="px-4 py-3 font-medium">Rhesus</th>
               <th class="px-4 py-3 font-medium">Tanggal Pemesanan</th>
               <th class="px-4 py-3 font-medium">Produk Darah</th>
+              <th class="px-4 py-3 font-medium">Tanggal Verifikasi</th>
               <th class="px-4 py-3 font-medium">Status</th>
               <th class="px-4 py-3 font-medium">Aksi</th>
             </tr>
@@ -511,10 +512,15 @@
               <dd id="dm_cek">-</dd>
             </dl>
 
-            <div class="mt-4 grid grid-cols-1 gap-3 rounded-xl border border-neutral-100 bg-white/60 p-3 sm:grid-cols-2">
+            <div class="mt-4 grid grid-cols-1 gap-3 rounded-xl border border-neutral-100 bg-white/60 p-3 sm:grid-cols-3">
               <div class="flex items-center justify-between rounded-lg border border-neutral-100 bg-white px-3 py-2">
                 <span class="text-xs text-neutral-500">Tgl. Pemesanan</span>
                 <span id="dm_tgl_pesan"
+                      class="text-sm font-medium text-neutral-900">-</span>
+              </div>
+              <div class="flex items-center justify-between rounded-lg border border-neutral-100 bg-white px-3 py-2">
+                <span class="text-xs text-neutral-500">Tanggal Verifikasi</span>
+                <span id="dm_waktu_verifikasi"
                       class="text-sm font-medium text-neutral-900">-</span>
               </div>
               <div class="flex items-center justify-between rounded-lg border border-neutral-100 bg-white px-3 py-2">
@@ -649,7 +655,7 @@
     function renderTable(slice) {
       const tbody = document.getElementById('tableBody');
       if (!slice.length) {
-        tbody.innerHTML = `<tr><td colspan="8" class="px-4 py-8 text-center text-neutral-500">Tidak ada data.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="9" class="px-4 py-8 text-center text-neutral-500">Tidak ada data.</td></tr>`;
         return;
       }
       tbody.innerHTML = slice.map(o => {
@@ -660,6 +666,7 @@
         const tgl = o.tgl ?? o.payload?.tanggal ?? '-';
         const prod = o.produk ?? o.payload?.produk ?? '-';
         const stat = o.status ?? o.payload?.status ?? '-';
+        const waktu = o.waktu_verifikasi ?? o.payload?.waktu_verifikasi ?? '-';
         const payload = JSON.stringify(o.payload || {});
         return `
       <tr class="border-t border-neutral-100 hover:bg-neutral-50/60">
@@ -669,6 +676,7 @@
         <td class="px-4 py-3">${rh ? `${rhesusPill(rh)}` : '-'}</td>
         <td class="px-4 py-3">${tgl}</td>
         <td class="px-4 py-3">${prod ? `${productPill(prod)}` : '-'}</td>
+        <td class="px-4 py-3"><span class="text-sm font-medium text-neutral-700">${waktu}</span></td>
         <td class="px-4 py-3"><span class="inline-flex items-center rounded-full px-2.5 py-1 text-xs font-medium ${statusBadgeClass(stat)}">${String(stat).charAt(0).toUpperCase()+String(stat).slice(1)}</span></td>
         <td class="px-4 py-3">
           <button type="button" class="lihat-detail-btn inline-flex w-full items-center justify-center gap-2 rounded-xl border border-neutral-200 bg-white px-3 py-2 text-sm font-medium text-neutral-700 shadow-sm transition hover:bg-neutral-50 focus:outline-none focus:ring-2 focus:ring-navy-200"
@@ -700,6 +708,7 @@
         const tgl = o.tgl ?? o.payload?.tanggal ?? '-';
         const prod = o.produk ?? o.payload?.produk ?? '-';
         const stat = o.status ?? o.payload?.status ?? '-';
+        const waktu = o.waktu_verifikasi ?? o.payload?.waktu_verifikasi ?? '-';
         const payload = JSON.stringify(o.payload || {});
         return `
       <div class="rounded-2xl border border-neutral-200 bg-white p-4">
@@ -714,6 +723,7 @@
           <div class="text-neutral-500">Rhesus</div><div>${rh ? rhesusPill(rh) : '-'}</div>
           <div class="text-neutral-500">Tanggal</div><div>${tgl}</div>
           <div class="text-neutral-500">Produk</div><div>${prod ? productPill(prod) : '-'}</div>
+          <div class="text-neutral-500">Tanggal Verifikasi</div><div class="font-medium text-neutral-700">${waktu}</div>
         </div>
 
         <div class="mt-3">
@@ -780,6 +790,7 @@
       status: document.getElementById('dm_status'),
       tglPesan: document.getElementById('dm_tgl_pesan'),
       tglMinta: document.getElementById('dm_tgl_minta'),
+      waktuVerifikasi: document.getElementById('dm_waktu_verifikasi'),
       nama: document.getElementById('dm_nama'),
       rs: document.getElementById('dm_rs'),
       jk: document.getElementById('dm_jk'),
@@ -873,6 +884,7 @@
 
       dm.tglPesan.textContent = fmt(payload.tanggal_pemesanan ?? payload.tanggal);
       dm.tglMinta.textContent = fmt(payload.tanggal_permintaan ?? payload.tanggal);
+      dm.waktuVerifikasi.textContent = fmt(payload.waktu_verifikasi);
 
       dm.nama.textContent = payload.nama_pasien ?? '-';
       dm.rs.textContent = payload.rs_pemesan ?? '-';

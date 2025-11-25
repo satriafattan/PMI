@@ -18,6 +18,7 @@ use App\Http\Controllers\Admin\RiwayatController;
 use App\Http\Controllers\Admin\LaporanController;
 use App\Http\Controllers\Admin\EventVerificationController;
 use App\Http\Controllers\Admin\NotificationController;
+use App\Http\Controllers\Admin\AdminManagementController;
 
 /*
 |--------------------------------------------------------------------------
@@ -89,6 +90,18 @@ Route::middleware('auth:admin')->prefix('admin')->name('admin.')->group(function
     // ==> PERBAIKAN: pakai nama rute 'detail-darah.*' supaya sesuai dengan pemanggilan di Blade.
     Route::get('/detail-darah', [BloodUnitController::class, 'index'])
         ->name('detail-darah.index');   // final: admin.detail-darah.index
+    Route::get('/detail-darah/tersedia', [BloodUnitController::class, 'tersedia'])
+        ->name('detail-darah.tersedia');
+    Route::get('/detail-darah/tersedia/export', [BloodUnitController::class, 'exportTersedia'])
+        ->name('detail-darah.tersedia.export');
+    Route::get('/detail-darah/keluar', [BloodUnitController::class, 'keluar'])
+        ->name('detail-darah.keluar');
+    Route::get('/detail-darah/keluar/export', [BloodUnitController::class, 'exportKeluar'])
+        ->name('detail-darah.keluar.export');
+    Route::get('/detail-darah/kadaluwarsa', [BloodUnitController::class, 'kadaluwarsa'])
+        ->name('detail-darah.kadaluwarsa');
+    Route::get('/detail-darah/kadaluwarsa/export', [BloodUnitController::class, 'exportKadaluwarsa'])
+        ->name('detail-darah.kadaluwarsa.export');
     Route::get('/detail-darah/{unit}', [BloodUnitController::class, 'show'])
         ->name('detail-darah.show');    // final: admin.detail-darah.show
     Route::get('/detail-darah/data', [BloodUnitController::class, 'data'])
@@ -117,4 +130,7 @@ Route::middleware('auth:admin')->prefix('admin')->name('admin.')->group(function
     Route::get('event-verifikasi/{event}', [EventVerificationController::class, 'show'])->name('event-verifikasi.show');
     Route::post('event-verifikasi/{event}/decide', [EventVerificationController::class, 'decide'])->name('event-verifikasi.decide');
     Route::get('event-verifikasi/{event}/surat', [EventVerificationController::class, 'downloadSurat'])->name('event-verifikasi.surat');
+
+    // ===== Manajemen Admin =====
+    Route::resource('admins', AdminManagementController::class)->except(['show']);
 });

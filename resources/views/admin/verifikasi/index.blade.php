@@ -84,7 +84,7 @@
       $hasActiveFilter = $q || $golQ || $produkQ || $statusQ;
     @endphp
 
-    {{-- =================== Toolbar (Search GÇó Filters GÇó Page Size) =================== --}}
+    {{-- =================== Toolbar (Search â€¢ Filters â€¢ Page Size) =================== --}}
     <form id="filterForm"
           method="GET"
           class="space-y-3">
@@ -298,7 +298,7 @@
               Cari: <strong class="font-medium">{{ $q }}</strong>
               <button type="button"
                       class="remove-chip ml-1"
-                      data-target="q">+ù</button>
+                      data-target="q">Ã—</button>
             </span>
           @endif
           @if ($produkQ !== '')
@@ -307,7 +307,7 @@
               Produk: <strong class="font-medium">{{ $produkOpts[$produkQ] ?? $produkQ }}</strong>
               <button type="button"
                       class="remove-chip ml-1"
-                      data-target="produk">+ù</button>
+                      data-target="produk">Ã—</button>
             </span>
           @endif
           @if ($golQ)
@@ -316,7 +316,7 @@
               Gol: <strong class="font-medium">{{ $golQ }}</strong>
               <button type="button"
                       class="remove-chip ml-1"
-                      data-target="gol">+ù</button>
+                      data-target="gol">Ã—</button>
             </span>
           @endif
           <button type="button"
@@ -341,7 +341,7 @@
              value="{{ $perPage }}">
     </form>
 
-    {{-- =================== TABLE (GëÑ md) =================== --}}
+    {{-- =================== TABLE (â‰¥ md) =================== --}}
     <div class="hidden overflow-hidden rounded-2xl border border-neutral-200 bg-white md:block">
       <div class="overflow-x-auto">
         <table class="min-w-full text-sm">
@@ -536,7 +536,7 @@
     <div class="flex flex-col justify-between gap-3 sm:flex-row sm:items-center">
       <div class="text-sm text-neutral-600">
         @if ($pemesanan->total() > 0)
-          Menampilkan {{ $pemesanan->firstItem() }}GÇô{{ $pemesanan->lastItem() }} dari {{ $pemesanan->total() }}
+          Menampilkan {{ $pemesanan->firstItem() }}â€“{{ $pemesanan->lastItem() }} dari {{ $pemesanan->total() }}
           data
         @else
           Tidak ada data
@@ -692,7 +692,7 @@
               <dt>Jumlah Kantong</dt>
               <dd id="dm_jumlah">-</dd>
               <dt>Alasan Tambahan</dt>
-              <dd id="dm_gejala">GÇö</dd>
+              <dd id="dm_gejala">â€”</dd>
             </dl>
 
             <div class="mt-4 grid grid-cols-1 gap-3 rounded-xl border border-neutral-100 bg-white/60 p-3 sm:grid-cols-2">
@@ -1165,7 +1165,7 @@
           dm.produk.textContent = productLabel(payload.produk);
           dm.jumlah.textContent = jumlahLabel(payload.jumlah_kantong);
           dm.alasan.textContent = payload.alasan_transfusi ?? '-';
-          dm.gejala.textContent = (payload.alasan_tambahan ?? '').toString().trim() || 'GÇö';
+          dm.gejala.textContent = (payload.alasan_tambahan ?? '').toString().trim() || 'â€”';
           dm.suamiIstri.textContent = payload.nama_suami_istri ?? '-';
           dm.diagnosa.textContent = payload.diagnosa_klinik ?? '-';
           dm.pernahSerologi.textContent = yaTidak(payload.pernah_serologi);

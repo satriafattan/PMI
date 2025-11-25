@@ -57,7 +57,22 @@ class PemesananDarah extends Model
             ->latestOfMany('tanggal_permintaan');
     }
 
-    public function scopePending($q)   { return $q->where('status', 'pending'); }
-    public function scopeApproved($q)  { return $q->where('status', 'approved'); }
-    public function scopeRejected($q)  { return $q->where('status', 'rejected'); }
+    public function verifikasi()
+    {
+        return $this->hasOne(VerifikasiPemesanan::class, 'pemesanan_id')
+            ->latest('updated_at');
+    }
+
+    public function scopePending($q)
+    {
+        return $q->where('status', 'pending');
+    }
+    public function scopeApproved($q)
+    {
+        return $q->where('status', 'approved');
+    }
+    public function scopeRejected($q)
+    {
+        return $q->where('status', 'rejected');
+    }
 }

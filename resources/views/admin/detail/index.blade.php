@@ -150,7 +150,7 @@
                 <th class="px-4 py-3 text-left font-medium text-neutral-700">Rhesus</th>
                 <th class="px-4 py-3 text-left font-medium text-neutral-700">Produk</th>
                 <th class="px-4 py-3 text-left font-medium text-neutral-700">Rumah Sakit</th>
-                <th class="px-4 py-3 text-left font-medium text-neutral-700">Tgl Masuk</th>
+                <th class="px-4 py-3 text-left font-medium text-neutral-700">Tgl Keluar</th>
                 <th class="px-4 py-3 text-left font-medium text-neutral-700">Status</th>
               </tr>
             </thead>
@@ -408,7 +408,7 @@
                     <span class="inline-flex rounded-md bg-blue-50 px-2 py-1 text-xs font-medium text-blue-700">${row.produk || '-'}</span>
                 </td>
                 <td class="px-4 py-3">${row.penerima || '-'}</td>
-                <td class="px-4 py-3">${formatDate(row.masuk)}</td>
+                <td class="px-4 py-3">${formatDate(row.keluar)}</td>
                 <td class="px-4 py-3">
                     <span class="inline-flex rounded-md px-2 py-1 text-xs font-medium ${row.status === 'Dispensed' ? 'bg-green-50 text-green-700' : 'bg-neutral-50 text-neutral-700'}">${row.status || '-'}</span>
                 </td>

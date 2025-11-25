@@ -9,6 +9,10 @@
         content="{{ csrf_token() }}">
   <title>{{ $title ?? 'Dashboard Admin' }} — {{ config('app.name') }}</title>
   @vite(['resources/css/app.css', 'resources/js/app.js'])
+  <script defer
+          src="https://cdn.jsdelivr.net/npm/@alpinejs/collapse@3.x.x/dist/cdn.min.js"></script>
+  <script defer
+          src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 </head>
 
 <body class="bg-slate-50 text-slate-800">
@@ -56,13 +60,23 @@
         <x-admin.nav-item route="admin.stok-darah.index"
                           icon="M20 13V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v7m16 0v5a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-5m16 0H4">Stok
           Darah</x-admin.nav-item>
-        <x-admin.nav-item route="admin.detail-darah.index"
-                          icon="M3 7h18M8 7v13m8-13v13">Detail Darah</x-admin.nav-item>
+
+        <x-admin.nav-dropdown icon="M3 7h18M8 7v13m8-13v13"
+                              label="Detail Darah"
+                              :items="[
+                                  ['route' => 'admin.detail-darah.tersedia', 'label' => 'Darah Tersedia'],
+                                  ['route' => 'admin.detail-darah.keluar', 'label' => 'Darah Keluar'],
+                                  ['route' => 'admin.detail-darah.kadaluwarsa', 'label' => 'Darah Kadaluwarsa'],
+                              ]" />
+
         <x-admin.nav-item route="admin.laporan.index"
-                          icon="M4 6h16v12H4z">Laporan Stok Darah</x-admin.nav-item>
+                          icon="M4 6h16v12H4z">Laporan Pemesanan Darah</x-admin.nav-item>
         <x-admin.nav-item route="admin.event-verifikasi.index"
                           icon="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z">
           Verifikasi Event </x-admin.nav-item>
+        <x-admin.nav-item route="admin.admins.index"
+                          icon="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z">
+          Manajemen Admin</x-admin.nav-item>
       </nav>
 
       <div class="border-t border-slate-800 p-3">
@@ -112,7 +126,8 @@
 
             <div class="min-w-0">
               <div class="truncate text-lg font-bold md:text-xl">{{ $title ?? 'Dashboard Admin' }}</div>
-              <div class="truncate text-xs text-slate-500 md:text-sm">SIMPHONY - Sistem Informasi Pemesanan & Inventori</div>
+              <div class="truncate text-xs text-slate-500 md:text-sm">SIMPHONY - Sistem Informasi Pemesanan & Inventori
+              </div>
             </div>
           </div>
           <div class="flex flex-wrap items-center justify-end gap-2 sm:gap-3">
@@ -155,15 +170,15 @@
                 </div>
               </div>
             </div>
-            
-          {{-- User Avatar --}}  
+
+            {{-- User Avatar --}}
             <div class="relative">
-          <div class="size-9 grid place-items-center bg-blue-100 text-blue-700 font-semibold rounded-xl">
-            {{ Str::of(auth('admin')->user()->name ?? 'A')->substr(0,1)->upper() }}
+              <div class="grid size-9 place-items-center rounded-xl bg-blue-100 font-semibold text-blue-700">
+                {{ Str::of(auth('admin')->user()->name ?? 'A')->substr(0, 1)->upper() }}
+              </div>
+            </div>
           </div>
-        </div>
-      </div>
-    </header>
+      </header>
 
       {{-- PAGE CONTENT --}}
       <main class="p-4 md:p-6">

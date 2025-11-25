@@ -24,5 +24,13 @@ class AdminSeeder extends Seeder
                 'password' => Hash::make('password123') // Ganti dengan password yang Anda inginkan
             ]
         );
+
+        Admin::updateOrCreate(
+            ['email' => 'admin2@gmail.com'],
+            [
+                'name' => 'Admin Heru',
+                'password' => Hash::make('password123') // Ganti dengan password yang Anda inginkan
+            ]
+        );
     }
 }

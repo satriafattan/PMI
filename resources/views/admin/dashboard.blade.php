@@ -82,82 +82,16 @@
     </div>
   </div>
 
-  {{-- GRAFIK DAN STATISTIK --}}
-  <div class="grid grid-cols-1 gap-5 md:grid-cols-3">
-    {{-- Grafik Stok per Produk --}}
-    <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm md:col-span-2">
+  {{-- GRAFIK STOK PRODUK (FULL WIDTH) --}}
+  <div class="mb-6">
+    <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
       <h3 class="mb-4 font-semibold">Grafik Stok per Produk</h3>
       <canvas id="stokChart"
-              height="200"></canvas>
-    </div>
-
-    {{-- Statistik Cepat --}}
-    <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-      <h3 class="mb-4 font-semibold">Statistik Cepat</h3>
-      <div class="space-y-4">
-        <div class="flex items-center justify-between border-b border-slate-100 pb-2">
-          <span class="text-slate-600">Total Permintaan</span>
-          <span class="font-medium">{{ $stats['permintaan']['total'] ?? 0 }}</span>
-        </div>
-        <div class="flex items-center justify-between border-b border-slate-100 pb-2">
-          <span class="text-slate-600">Permintaan Diproses</span>
-          <span class="font-medium">{{ $stats['permintaan']['diproses'] ?? 0 }}</span>
-        </div>
-        <div class="flex items-center justify-between border-b border-slate-100 pb-2">
-          <span class="text-slate-600">Stok Kritis</span>
-          <span class="font-medium text-rose-600">{{ $stats['stok_kritis'] ?? 0 }}</span>
-        </div>
-        <div class="flex items-center justify-between border-b border-slate-100 pb-2">
-          <span class="text-slate-600">Total Stok</span>
-          <span class="font-medium">{{ $stats['total_stok'] ?? 0 }}</span>
-        </div>
-        <div class="flex items-center justify-between">
-          <span class="text-slate-600">Waktu Avg Verifikasi</span>
-          <span class="font-medium text-blue-600">{{ $stats['avg_verification_hours'] ?? 0 }}h</span>
-        </div>
-      </div>
+              height="120"></canvas>
     </div>
   </div>
 
-  {{-- TREND PEMESANAN & TOP HOSPITALS --}}
-  <div class="mt-6 grid grid-cols-1 gap-5 md:grid-cols-2">
-    {{-- Trend Pemesanan 6 Bulan --}}
-    <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-      <h3 class="mb-4 font-semibold">Trend Pemesanan (6 Bulan)</h3>
-      <canvas id="trendChart"
-              height="200"></canvas>
-    </div>
-
-    {{-- Top 5 Rumah Sakit --}}
-    <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-      <h3 class="mb-4 font-semibold">Top 5 Rumah Sakit (Bulan Ini)</h3>
-      <div class="space-y-3">
-        @forelse($stats['top_hospitals'] ?? [] as $index => $hospital)
-          <div class="flex items-center gap-3">
-            <div
-                 class="flex size-8 items-center justify-center rounded-lg bg-gradient-to-br from-blue-500 to-blue-600 text-sm font-bold text-white">
-              {{ $index + 1 }}
-            </div>
-            <div class="min-w-0 flex-1">
-              <div class="truncate text-sm font-medium">{{ $hospital->rs_pemesan }}</div>
-              <div class="text-xs text-slate-500">{{ $hospital->total }} pemesanan</div>
-            </div>
-            <div class="text-right">
-              <div class="h-2 w-24 overflow-hidden rounded-full bg-slate-100">
-                <div class="h-full bg-blue-500"
-                     style="width: {{ min(100, ($hospital->total / max(1, $stats['top_hospitals'][0]->total ?? 1)) * 100) }}%">
-                </div>
-              </div>
-            </div>
-          </div>
-        @empty
-          <div class="py-8 text-center text-sm text-slate-400">Belum ada data</div>
-        @endforelse
-      </div>
-    </div>
-  </div>
-
-  {{-- STOCK ALERTS & STATUS DISTRIBUTION --}}
+  {{-- STOCK ALERTS & TREND PEMESANAN --}}
   <div class="mt-6 grid grid-cols-1 gap-5 md:grid-cols-2">
     {{-- Stock Alerts --}}
     <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
@@ -194,10 +128,10 @@
       </div>
     </div>
 
-    {{-- Status Distribution --}}
+    {{-- Trend Pemesanan 6 Bulan --}}
     <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-      <h3 class="mb-4 font-semibold">Distribusi Status Pemesanan</h3>
-      <canvas id="statusChart"
+      <h3 class="mb-4 font-semibold">Trend Pemesanan (6 Bulan)</h3>
+      <canvas id="trendChart"
               height="200"></canvas>
     </div>
   </div>
@@ -315,41 +249,6 @@
           // Tampilkan pesan jika tidak ada data
           trendCtx.canvas.parentElement.innerHTML =
             '<div class="flex items-center justify-center h-full text-slate-400 text-sm">Tidak ada data pemesanan</div>';
-        }
-
-        // 3. Status Distribution (Doughnut Chart)
-        const statusCtx = document.getElementById('statusChart').getContext('2d');
-        const statusData = @json($stats['status_distribution'] ?? []);
-
-        if (statusData && Object.keys(statusData).length > 0) {
-          new Chart(statusCtx, {
-            type: 'doughnut',
-            data: {
-              labels: Object.keys(statusData).map(s => s.charAt(0).toUpperCase() + s.slice(1)),
-              datasets: [{
-                data: Object.values(statusData),
-                backgroundColor: [
-                  'rgba(245, 158, 11, 0.7)', // pending - orange
-                  'rgba(16, 185, 129, 0.7)', // approved - green
-                  'rgba(239, 68, 68, 0.7)', // rejected - red
-                ],
-                borderWidth: 2,
-                borderColor: '#fff'
-              }]
-            },
-            options: {
-              responsive: true,
-              plugins: {
-                legend: {
-                  position: 'bottom'
-                }
-              }
-            }
-          });
-        } else {
-          // Tampilkan pesan jika tidak ada data
-          statusCtx.canvas.parentElement.innerHTML =
-            '<div class="flex items-center justify-center h-full text-slate-400 text-sm">Tidak ada data status pemesanan</div>';
         }
       });
     </script>

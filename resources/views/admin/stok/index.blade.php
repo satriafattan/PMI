@@ -256,9 +256,8 @@
                   <th class="px-4 py-3 font-medium">ID</th>
                   <th class="px-4 py-3 font-medium">Rhesus</th>
                   <th class="px-4 py-3 font-medium">Jumlah</th>
-                  <th class="px-4 py-3 font-medium">Tgl Masuk</th>
-                  <th class="px-4 py-3 font-medium">Tgl Kadaluarsa</th>
                   <th class="px-4 py-3 font-medium">Ditambahkan</th>
+                  <th class="px-4 py-3 font-medium">Aksi</th>
                 </tr>
               </thead>
               <tbody id="riwayatBody"
@@ -622,29 +621,27 @@
                   <span class="text-xs text-neutral-500">(${totalUnits} unit)</span>
                 </div>
                 ${riwayat.length > 0 ? `
-                              <span class="text-xs text-neutral-500 flex items-center gap-1">
-                                ${iconHistory}
-                                ${riwayat.length} riwayat
-                              </span>
-                            ` : ''}
+                                <span class="text-xs text-neutral-500 flex items-center gap-1">
+                                  ${iconHistory}
+                                  ${riwayat.length} riwayat
+                                </span>
+                              ` : ''}
               </div>
               
               ${riwayat.length > 0 ? `
-                            <div class="rounded-lg border border-neutral-200 overflow-hidden">
-                              <table class="w-full text-xs">
-                                <thead class="bg-neutral-50 text-neutral-600">
-                                  <tr>
-                                    <th class="px-3 py-2 text-left font-medium">ID</th>
-                                    <th class="px-3 py-2 text-left font-medium">Rhesus</th>
-                                    <th class="px-3 py-2 text-left font-medium">Jumlah</th>
-                                    <th class="px-3 py-2 text-left font-medium">Tgl Masuk</th>
-                                    <th class="px-3 py-2 text-left font-medium">Tgl Kadaluarsa</th>
-                                    <th class="px-3 py-2 text-left font-medium">Ditambahkan</th>
-                                    <th class="px-3 py-2 text-center font-medium">Aksi</th>
-                                  </tr>
-                                </thead>
-                                <tbody class="divide-y divide-neutral-100 bg-white">
-                                  ${riwayat.map(item => `
+                              <div class="rounded-lg border border-neutral-200 overflow-hidden">
+                                <table class="w-full text-xs">
+                                  <thead class="bg-neutral-50 text-neutral-600">
+                                    <tr>
+                                      <th class="px-3 py-2 text-left font-medium">ID</th>
+                                      <th class="px-3 py-2 text-left font-medium">Rhesus</th>
+                                      <th class="px-3 py-2 text-left font-medium">Jumlah</th>
+                                      <th class="px-3 py-2 text-left font-medium">Ditambahkan</th>
+                                      <th class="px-3 py-2 text-center font-medium">Aksi</th>
+                                    </tr>
+                                  </thead>
+                                  <tbody class="divide-y divide-neutral-100 bg-white">
+                                    ${riwayat.map(item => `
                         <tr class="hover:bg-blue-50/30 transition-colors">
                           <td class="px-3 py-2 font-medium text-neutral-700">#${item.id}</td>
                           <td class="px-3 py-2">
@@ -653,8 +650,6 @@
                             </span>
                           </td>
                           <td class="px-3 py-2 font-medium text-blue-600">${item.jumlah} unit</td>
-                          <td class="px-3 py-2 text-neutral-600">${item.tgl_masuk}</td>
-                          <td class="px-3 py-2 text-neutral-600">${item.tgl_kadaluarsa}</td>
                           <td class="px-3 py-2 text-neutral-500 text-xs">${item.created_at}</td>
                           <td class="px-3 py-2 text-center">
                             <button onclick="confirmDelete(${item.id}, '${r.produk}', '${gol}', '${item.rhesus}', ${item.jumlah})"
@@ -668,14 +663,14 @@
                           </td>
                         </tr>
                       `).join('')}
-                                </tbody>
-                              </table>
-                            </div>
-                          ` : `
-                            <div class="rounded-lg border border-dashed border-neutral-300 bg-neutral-50 px-4 py-6 text-center">
-                              <p class="text-sm text-neutral-500">Belum ada riwayat penambahan stok untuk golongan ${gol}</p>
-                            </div>
-                          `}
+                                  </tbody>
+                                </table>
+                              </div>
+                            ` : `
+                              <div class="rounded-lg border border-dashed border-neutral-300 bg-neutral-50 px-4 py-6 text-center">
+                                <p class="text-sm text-neutral-500">Belum ada riwayat penambahan stok untuk golongan ${gol}</p>
+                              </div>
+                            `}
             </div>
           `;
         }).join('');
@@ -744,8 +739,8 @@
               </div>
               
               ${riwayat.length > 0 ? `
-                            <div class="space-y-2 mt-2">
-                              ${riwayat.slice(0, 3).map(item => `
+                              <div class="space-y-2 mt-2">
+                                ${riwayat.slice(0, 3).map(item => `
                     <div class="rounded-lg border border-neutral-200 bg-white p-2 text-xs">
                       <div class="flex justify-between items-start mb-1">
                         <span class="font-medium text-neutral-700">#${item.id}</span>
@@ -765,18 +760,16 @@
                       </div>
                       <div class="text-neutral-600 space-y-0.5">
                         <div><span class="font-medium text-blue-600">${item.jumlah} unit</span></div>
-                        <div>Masuk: ${item.tgl_masuk}</div>
-                        <div>Exp: ${item.tgl_kadaluarsa}</div>
                       </div>
                     </div>
                   `).join('')}
-                              ${riwayat.length > 3 ? `
+                                ${riwayat.length > 3 ? `
                     <p class="text-xs text-center text-neutral-500">+${riwayat.length - 3} lainnya</p>
                   ` : ''}
-                            </div>
-                          ` : `
-                            <p class="text-xs text-neutral-500 text-center py-2">Belum ada riwayat</p>
-                          `}
+                              </div>
+                            ` : `
+                              <p class="text-xs text-neutral-500 text-center py-2">Belum ada riwayat</p>
+                            `}
             </div>
           `;
         }).join('');
@@ -926,7 +919,7 @@
       if (tbody) {
         if (riwayat.length === 0) {
           tbody.innerHTML =
-            '<tr><td colspan="6" class="px-4 py-8 text-center text-neutral-500">Belum ada riwayat penambahan stok.</td></tr>';
+            '<tr><td colspan="5" class="px-4 py-8 text-center text-neutral-500">Belum ada riwayat penambahan stok.</td></tr>';
           return;
         }
 
@@ -935,9 +928,17 @@
             <td class="px-4 py-3 font-medium">#${item.id}</td>
             <td class="px-4 py-3">${item.rhesus}</td>
             <td class="px-4 py-3">${item.jumlah} unit</td>
-            <td class="px-4 py-3">${formatDate(item.tgl_masuk)}</td>
-            <td class="px-4 py-3">${formatDate(item.tgl_kadaluarsa)}</td>
             <td class="px-4 py-3">${formatDate(item.created_at)}</td>
+            <td class="px-4 py-3 text-center">
+              <button onclick="confirmDelete(${item.id}, '${produk}', '${golDarah}', '${item.rhesus}', ${item.jumlah})"
+                      class="inline-flex items-center justify-center p-1.5 rounded-lg text-rose-600 hover:bg-rose-50 hover:text-rose-700 transition-colors"
+                      title="Hapus stok ini">
+                <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                </svg>
+              </button>
+            </td>
           </tr>
         `).join('');
       }
