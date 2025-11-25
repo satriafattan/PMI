@@ -75,6 +75,37 @@ class StokDarahController extends Controller
             ->with('success', 'Stok berhasil disimpan.');
     }
 
+    /**
+     * Hapus stok darah berdasarkan ID
+     */
+    public function destroy($id)
+    {
+        try {
+            // Cari stok berdasarkan ID
+            $stok = StokDarah::findOrFail($id);
+
+            // Simpan info untuk notifikasi
+            $produk = $stok->produk;
+            $golDarah = $stok->gol_darah;
+            $rhesus = $stok->rhesus;
+            $jumlah = $stok->jumlah;
+
+            // Hapus stok
+            $stok->delete();
+
+            // Clear cache
+            StokCacheService::clearCache();
+
+            return redirect()
+                ->route('admin.stok-darah.index')
+                ->with('success', "Berhasil menghapus {$jumlah} unit stok {$produk} {$golDarah} ({$rhesus})");
+        } catch (\Exception $e) {
+            return redirect()
+                ->route('admin.stok-darah.index')
+                ->with('error', 'Gagal menghapus stok: ' . $e->getMessage());
+        }
+    }
+
     /** Agregasi per produk (untuk kartu ringkasan) */
     private function aggregateRows(Collection $stok): Collection
     {

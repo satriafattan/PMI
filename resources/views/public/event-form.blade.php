@@ -117,11 +117,14 @@
             <div class="flex items-center justify-between">
               <label class="block text-sm font-medium text-slate-700">Nomor Telepon</label>
             </div>
-            <input type="text"
+            <input type="tel"
                    name="nomor_telefon"
                    required
                    placeholder="0812xxxxxxx"
                    value="{{ old('nomor_telefon') }}"
+                   pattern="[0-9]{10,15}"
+                   title="Nomor telepon harus terdiri dari 10-15 digit angka"
+                   inputmode="numeric"
                    class="mt-1 w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-[15px] shadow-inner focus:border-red-500 focus:outline-none focus:ring-2 focus:ring-red-500/20">
             @error('nomor_telefon')
               <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
@@ -225,6 +228,7 @@
                      name="tanggal_event"
                      required
                      value="{{ old('tanggal_event') }}"
+                     min="{{ date('Y-m-d') }}"
                      class="peer w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 pl-10 text-[15px] shadow-sm transition-all duration-200 hover:border-slate-300 focus:border-red-500 focus:shadow-md focus:outline-none focus:ring-2 focus:ring-red-500/20">
               <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
                 <span class="text-slate-400 transition-colors duration-200 peer-focus:text-red-500">
@@ -240,6 +244,20 @@
                 </span>
               </div>
             </div>
+            @error('tanggal_event')
+              <p class="mt-1.5 flex items-center gap-1 text-sm text-red-600">
+                <svg class="h-4 w-4"
+                     fill="none"
+                     stroke="currentColor"
+                     viewBox="0 0 24 24">
+                  <path stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                {{ $message }}
+              </p>
+            @enderror
           </div>
 
           <div class="group">
@@ -545,41 +563,62 @@
     </form>
 
     {{-- Success Modal --}}
-    <div id="successModal"
-         class="fixed inset-0 z-[9999] hidden items-center justify-center">
-      <div class="absolute inset-0 bg-black/40"></div>
+    @if (session('success'))
+      <div id="successModal"
+           class="fixed inset-0 z-[9999] flex items-center justify-center">
+        <div class="absolute inset-0 bg-black/40"></div>
 
-      <div class="relative z-10 w-[90%] max-w-2xl rounded-3xl bg-white p-10 text-center shadow-2xl">
-        <button type="button"
-                class="absolute right-4 top-4 text-2xl text-slate-400 hover:text-slate-600"
-                onclick="hideSuccessModal()">✕</button>
+        <div class="relative z-10 w-[90%] max-w-lg overflow-hidden rounded-3xl bg-white shadow-2xl">
+          <div class="absolute right-4 top-4">
+            <button type="button"
+                    class="rounded-lg p-2 text-slate-400 hover:bg-slate-50 hover:text-slate-600"
+                    onclick="hideSuccessModal()">
+              <svg class="h-5 w-5"
+                   fill="none"
+                   stroke="currentColor"
+                   viewBox="0 0 24 24">
+                <path stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M6 18L18 6M6 6l12 12"></path>
+              </svg>
+            </button>
+          </div>
 
-        <div
-             class="mx-auto mb-4 grid h-16 w-16 place-items-center rounded-full bg-emerald-100 text-3xl text-emerald-700">
-          ✔
-        </div>
+          <div class="px-8 pb-10 pt-12 text-center">
+            <div class="mx-auto mb-6 grid h-20 w-20 place-items-center rounded-full bg-emerald-50 text-emerald-500">
+              <svg class="h-10 w-10"
+                   fill="none"
+                   stroke="currentColor"
+                   viewBox="0 0 24 24">
+                <path stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+              </svg>
+            </div>
 
-        <!-- GANTI JUDUL DI SINI -->
-        <h3 id="successTitle"
-            class="text-2xl font-bold text-slate-800">
-          Pengajuan Berhasil Dikirim!
-        </h3>
+            <h3 class="text-2xl font-bold text-slate-800">Pengajuan Berhasil Dikirim!</h3>
+            <p class="mx-auto mt-3 max-w-sm text-slate-600">Kami akan meninjau pengajuan Anda dan menghubungi melalui
+              email atau telepon.</p>
+          </div>
 
-        <!-- GANTI PESAN DI SINI -->
-        <p id="successMessage"
-           class="mt-3 text-lg text-slate-600">
-          Silakan cek email secara berkala untuk informasi selanjutnya.
-        </p>
-
-        <div class="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
-          <button type="button"
-                  class="rounded-lg border border-slate-300 px-6 py-3 text-slate-700 transition hover:bg-slate-50"
-                  onclick="hideSuccessModal()">Tutup</button>
-          <a href="{{ route('public.event.create') }}"
-             class="rounded-lg bg-red-600 px-6 py-3 text-white transition hover:bg-red-700">Ajukan Lagi</a>
+          <div class="grid grid-cols-2 divide-x divide-slate-100 border-t border-slate-100">
+            <button type="button"
+                    class="px-6 py-4 text-sm font-medium text-slate-600 transition hover:bg-slate-50"
+                    onclick="hideSuccessModal()">Tutup</button>
+            <a href="{{ route('public.event.create') }}"
+               class="bg-red-600 px-6 py-4 text-center text-sm font-medium text-white transition hover:bg-red-700">Ajukan
+              Lagi</a>
+          </div>
         </div>
       </div>
-    </div>
+
+      @php
+        // Mencegah session flash message muncul sebagai notifikasi terpisah
+        Session::forget('success');
+      @endphp
+    @endif
 
   </main>
 
@@ -618,25 +657,12 @@
     form.addEventListener('change', toggleSubmit); // Untuk file input
     document.addEventListener('DOMContentLoaded', toggleSubmit);
 
-    function showSuccessModal(message) {
-      const modal = document.getElementById('successModal');
-      const msgEl = document.getElementById('successMessage');
-      if (message && msgEl) msgEl.textContent = message;
-      modal.classList.remove('hidden');
-      modal.classList.add('flex');
-    }
-
     function hideSuccessModal() {
       const modal = document.getElementById('successModal');
-      modal.classList.add('hidden');
-      modal.classList.remove('flex');
+      if (modal) {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+      }
     }
-
-    // Auto show modal jika ada flash session "success"
-    document.addEventListener('DOMContentLoaded', () => {
-      @if (session('success'))
-        showSuccessModal(@json(session('success')));
-      @endif
-    });
   </script>
 @endsection

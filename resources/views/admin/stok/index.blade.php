@@ -7,6 +7,12 @@
     </div>
   @endif
 
+  @if (session('error'))
+    <div class="mb-6 rounded-xl border border-rose-200 bg-rose-50 px-4 py-3 text-rose-800">
+      {{ session('error') }}
+    </div>
+  @endif
+
   <div class="space-y-8">
     {{-- ===== Summary cards ===== --}}
     <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
@@ -138,8 +144,95 @@
     <div id="cardsContainer"
          class="space-y-3 md:hidden"></div>
   </div>
-  {{-- @dd($grouped) --}}
-  {{-- ===== Modal Edit Stok Darah ===== --}}
+
+  {{-- ===== MODAL: Konfirmasi Hapus Stok ===== --}}
+  <div id="deleteModal"
+       class="fixed inset-0 z-[10001] hidden items-center justify-center">
+    <div class="absolute inset-0 bg-black/50"
+         id="deleteModalBackdrop"></div>
+
+    <div class="relative z-10 w-[92%] max-w-md rounded-2xl bg-white shadow-xl">
+      <div class="flex items-center justify-between border-b border-neutral-200 p-4">
+        <h3 class="text-lg font-semibold text-rose-700">Konfirmasi Hapus Stok</h3>
+        <button id="closeDeleteModalBtn"
+                class="text-neutral-400 hover:text-neutral-600">✕</button>
+      </div>
+
+      <div class="p-6">
+        <div class="mb-4 flex items-center justify-center">
+          <div class="rounded-full bg-rose-100 p-3">
+            <svg class="h-8 w-8 text-rose-600"
+                 viewBox="0 0 24 24"
+                 fill="none"
+                 stroke="currentColor">
+              <path stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+            </svg>
+          </div>
+        </div>
+
+        <p class="mb-4 text-center text-neutral-700">
+          Apakah Anda yakin ingin menghapus stok ini?
+        </p>
+
+        <div class="rounded-lg bg-neutral-50 p-4 text-sm">
+          <div class="space-y-2">
+            <div class="flex justify-between">
+              <span class="text-neutral-600">ID:</span>
+              <span class="font-medium text-neutral-800"
+                    id="deleteStokId">-</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-neutral-600">Produk:</span>
+              <span class="font-medium text-neutral-800"
+                    id="deleteStokProduk">-</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-neutral-600">Golongan:</span>
+              <span class="font-medium text-neutral-800"
+                    id="deleteStokGolongan">-</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-neutral-600">Rhesus:</span>
+              <span class="font-medium text-neutral-800"
+                    id="deleteStokRhesus">-</span>
+            </div>
+            <div class="flex justify-between border-t border-neutral-200 pt-2">
+              <span class="text-neutral-600">Jumlah:</span>
+              <span class="font-bold text-rose-600"
+                    id="deleteStokJumlah">-</span>
+            </div>
+          </div>
+        </div>
+
+        <p class="mt-4 text-center text-xs text-neutral-500">
+          ⚠️ Tindakan ini tidak dapat dibatalkan!
+        </p>
+      </div>
+
+      <form id="deleteStokForm"
+            method="POST"
+            class="border-t border-neutral-200 p-4">
+        @csrf
+        @method('DELETE')
+        <div class="flex gap-2">
+          <button type="button"
+                  id="cancelDeleteBtn"
+                  class="flex-1 rounded-lg border border-neutral-300 px-4 py-2 text-neutral-700 hover:bg-neutral-50">
+            Batal
+          </button>
+          <button type="submit"
+                  class="flex-1 rounded-lg bg-rose-600 px-4 py-2 font-medium text-white hover:bg-rose-700">
+            Ya, Hapus
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  {{-- ===== Data awal dari controller ===== --}}
   <div id="produkModal"
        class="fixed inset-0 z-[9999] hidden items-center justify-center">
     <div class="absolute inset-0 bg-black/40"
@@ -529,28 +622,29 @@
                   <span class="text-xs text-neutral-500">(${totalUnits} unit)</span>
                 </div>
                 ${riwayat.length > 0 ? `
-                            <span class="text-xs text-neutral-500 flex items-center gap-1">
-                              ${iconHistory}
-                              ${riwayat.length} riwayat
-                            </span>
-                          ` : ''}
+                              <span class="text-xs text-neutral-500 flex items-center gap-1">
+                                ${iconHistory}
+                                ${riwayat.length} riwayat
+                              </span>
+                            ` : ''}
               </div>
               
               ${riwayat.length > 0 ? `
-                          <div class="rounded-lg border border-neutral-200 overflow-hidden">
-                            <table class="w-full text-xs">
-                              <thead class="bg-neutral-50 text-neutral-600">
-                                <tr>
-                                  <th class="px-3 py-2 text-left font-medium">ID</th>
-                                  <th class="px-3 py-2 text-left font-medium">Rhesus</th>
-                                  <th class="px-3 py-2 text-left font-medium">Jumlah</th>
-                                  <th class="px-3 py-2 text-left font-medium">Tgl Masuk</th>
-                                  <th class="px-3 py-2 text-left font-medium">Tgl Kadaluarsa</th>
-                                  <th class="px-3 py-2 text-left font-medium">Ditambahkan</th>
-                                </tr>
-                              </thead>
-                              <tbody class="divide-y divide-neutral-100 bg-white">
-                                ${riwayat.map(item => `
+                            <div class="rounded-lg border border-neutral-200 overflow-hidden">
+                              <table class="w-full text-xs">
+                                <thead class="bg-neutral-50 text-neutral-600">
+                                  <tr>
+                                    <th class="px-3 py-2 text-left font-medium">ID</th>
+                                    <th class="px-3 py-2 text-left font-medium">Rhesus</th>
+                                    <th class="px-3 py-2 text-left font-medium">Jumlah</th>
+                                    <th class="px-3 py-2 text-left font-medium">Tgl Masuk</th>
+                                    <th class="px-3 py-2 text-left font-medium">Tgl Kadaluarsa</th>
+                                    <th class="px-3 py-2 text-left font-medium">Ditambahkan</th>
+                                    <th class="px-3 py-2 text-center font-medium">Aksi</th>
+                                  </tr>
+                                </thead>
+                                <tbody class="divide-y divide-neutral-100 bg-white">
+                                  ${riwayat.map(item => `
                         <tr class="hover:bg-blue-50/30 transition-colors">
                           <td class="px-3 py-2 font-medium text-neutral-700">#${item.id}</td>
                           <td class="px-3 py-2">
@@ -562,16 +656,26 @@
                           <td class="px-3 py-2 text-neutral-600">${item.tgl_masuk}</td>
                           <td class="px-3 py-2 text-neutral-600">${item.tgl_kadaluarsa}</td>
                           <td class="px-3 py-2 text-neutral-500 text-xs">${item.created_at}</td>
+                          <td class="px-3 py-2 text-center">
+                            <button onclick="confirmDelete(${item.id}, '${r.produk}', '${gol}', '${item.rhesus}', ${item.jumlah})"
+                                    class="inline-flex items-center justify-center p-1.5 rounded-lg text-rose-600 hover:bg-rose-50 hover:text-rose-700 transition-colors"
+                                    title="Hapus stok ini">
+                              <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                      d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                              </svg>
+                            </button>
+                          </td>
                         </tr>
                       `).join('')}
-                              </tbody>
-                            </table>
-                          </div>
-                        ` : `
-                          <div class="rounded-lg border border-dashed border-neutral-300 bg-neutral-50 px-4 py-6 text-center">
-                            <p class="text-sm text-neutral-500">Belum ada riwayat penambahan stok untuk golongan ${gol}</p>
-                          </div>
-                        `}
+                                </tbody>
+                              </table>
+                            </div>
+                          ` : `
+                            <div class="rounded-lg border border-dashed border-neutral-300 bg-neutral-50 px-4 py-6 text-center">
+                              <p class="text-sm text-neutral-500">Belum ada riwayat penambahan stok untuk golongan ${gol}</p>
+                            </div>
+                          `}
             </div>
           `;
         }).join('');
@@ -640,14 +744,24 @@
               </div>
               
               ${riwayat.length > 0 ? `
-                          <div class="space-y-2 mt-2">
-                            ${riwayat.slice(0, 3).map(item => `
+                            <div class="space-y-2 mt-2">
+                              ${riwayat.slice(0, 3).map(item => `
                     <div class="rounded-lg border border-neutral-200 bg-white p-2 text-xs">
                       <div class="flex justify-between items-start mb-1">
                         <span class="font-medium text-neutral-700">#${item.id}</span>
-                        <span class="inline-flex items-center px-1.5 py-0.5 rounded text-xs font-medium ${item.rhesus === 'Rh+' ? 'bg-green-100 text-green-700' : 'bg-purple-100 text-purple-700'}">
-                          ${item.rhesus}
-                        </span>
+                        <div class="flex items-center gap-1">
+                          <span class="inline-flex items-center px-1.5 py-0.5 rounded text-xs font-medium ${item.rhesus === 'Rh+' ? 'bg-green-100 text-green-700' : 'bg-purple-100 text-purple-700'}">
+                            ${item.rhesus}
+                          </span>
+                          <button onclick="confirmDelete(${item.id}, '${r.produk}', '${gol}', '${item.rhesus}', ${item.jumlah})"
+                                  class="inline-flex items-center justify-center p-1 rounded text-rose-600 hover:bg-rose-50"
+                                  title="Hapus">
+                            <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                            </svg>
+                          </button>
+                        </div>
                       </div>
                       <div class="text-neutral-600 space-y-0.5">
                         <div><span class="font-medium text-blue-600">${item.jumlah} unit</span></div>
@@ -656,13 +770,13 @@
                       </div>
                     </div>
                   `).join('')}
-                            ${riwayat.length > 3 ? `
+                              ${riwayat.length > 3 ? `
                     <p class="text-xs text-center text-neutral-500">+${riwayat.length - 3} lainnya</p>
                   ` : ''}
-                          </div>
-                        ` : `
-                          <p class="text-xs text-neutral-500 text-center py-2">Belum ada riwayat</p>
-                        `}
+                            </div>
+                          ` : `
+                            <p class="text-xs text-neutral-500 text-center py-2">Belum ada riwayat</p>
+                          `}
             </div>
           `;
         }).join('');
@@ -829,6 +943,32 @@
       }
     }
 
+    // ===== Fungsi untuk konfirmasi delete =====
+    function confirmDelete(id, produk, golongan, rhesus, jumlah) {
+      const modal = document.getElementById('deleteModal');
+      const form = document.getElementById('deleteStokForm');
+
+      // Set detail stok di modal
+      document.getElementById('deleteStokId').textContent = `#${id}`;
+      document.getElementById('deleteStokProduk').textContent = produk;
+      document.getElementById('deleteStokGolongan').textContent = golongan;
+      document.getElementById('deleteStokRhesus').textContent = rhesus;
+      document.getElementById('deleteStokJumlah').textContent = `${jumlah} unit`;
+
+      // Set action URL untuk form
+      form.action = `/admin/stok-darah/${id}`;
+
+      // Tampilkan modal
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+    }
+
+    function closeDeleteModal() {
+      const modal = document.getElementById('deleteModal');
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+    }
+
     document.addEventListener('DOMContentLoaded', () => {
       // search
       const searchInput = document.getElementById('searchInput');
@@ -878,6 +1018,11 @@
       document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape') closeAddModal();
       });
+
+      // modal delete open/close
+      document.getElementById('closeDeleteModalBtn')?.addEventListener('click', closeDeleteModal);
+      document.getElementById('cancelDeleteBtn')?.addEventListener('click', closeDeleteModal);
+      document.getElementById('deleteModalBackdrop')?.addEventListener('click', closeDeleteModal);
 
       // render pertama
       renderAll();

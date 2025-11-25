@@ -8,9 +8,16 @@
              alt="Logo SIMPHONY"
              class="mx-auto h-32 w-32 object-contain">
       </div>
-      <h1 class="text-2xl font-bold text-gray-800">Login Admin</h1>
-      <p class="mt-1 text-sm text-gray-500">Silakan masuk untuk mengelola sistem</p>
+      <h1 class="text-2xl font-bold text-gray-800">Lupa Password</h1>
+      <p class="mt-1 text-sm text-gray-500">Masukkan email Anda untuk reset password</p>
     </div>
+
+    {{-- Success message --}}
+    @if (session('success'))
+      <div class="mb-6 rounded bg-green-100 p-3 text-sm text-green-700">
+        {{ session('success') }}
+      </div>
+    @endif
 
     {{-- Error message --}}
     @if ($errors->any())
@@ -24,7 +31,7 @@
     @endif
 
     <form method="POST"
-          action="{{ route('admin.login.submit') }}"
+          action="{{ route('admin.forgot-password.submit') }}"
           class="space-y-5">
       @csrf
 
@@ -37,36 +44,22 @@
                required
                autofocus
                class="mt-1 w-full rounded-lg border border-gray-300 p-2.5 focus:border-red-500 focus:ring-2 focus:ring-red-500" />
-      </div>
-
-      {{-- Password --}}
-      <div>
-        <label class="block text-sm font-medium text-gray-700">Password</label>
-        <input type="password"
-               name="password"
-               required
-               class="mt-1 w-full rounded-lg border border-gray-300 p-2.5 focus:border-red-500 focus:ring-2 focus:ring-red-500" />
-      </div>
-
-      {{-- Remember Me --}}
-      <div class="flex items-center justify-between">
-        <label class="flex items-center gap-2 text-sm text-gray-600">
-          <input type="checkbox"
-                 name="remember"
-                 class="h-4 w-4 rounded border-gray-300 text-red-600 focus:ring-red-500">
-          Ingat saya
-        </label>
-        <a href="{{ route('admin.forgot-password') }}"
-           class="text-sm text-red-600 hover:text-red-700">
-          Lupa Password?
-        </a>
+        <p class="mt-1 text-xs text-gray-500">Kami akan mengirimkan link reset password ke email Anda</p>
       </div>
 
       {{-- Submit --}}
       <button type="submit"
               class="w-full rounded-lg bg-red-600 px-4 py-2.5 font-medium text-white shadow hover:bg-red-700">
-        Masuk
+        Kirim Link Reset Password
       </button>
+
+      {{-- Back to Login --}}
+      <div class="text-center">
+        <a href="{{ route('admin.login') }}"
+           class="text-sm text-red-600 hover:text-red-700">
+          ← Kembali ke Login
+        </a>
+      </div>
     </form>
   </div>
 </main>

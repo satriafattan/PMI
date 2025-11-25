@@ -67,6 +67,12 @@ Route::get('/admin/login', [AuthController::class, 'showLoginForm'])->name('admi
 Route::post('/admin/login', [AuthController::class, 'login'])->name('admin.login.submit');
 Route::post('/admin/logout', [AuthController::class, 'logout'])->name('admin.logout');
 
+// Forget Password Routes
+Route::get('/admin/forgot-password', [AuthController::class, 'showForgotPasswordForm'])->name('admin.forgot-password');
+Route::post('/admin/forgot-password', [AuthController::class, 'sendResetLinkEmail'])->name('admin.forgot-password.submit');
+Route::get('/admin/reset-password/{token}', [AuthController::class, 'showResetPasswordForm'])->name('admin.reset-password');
+Route::post('/admin/reset-password', [AuthController::class, 'resetPassword'])->name('admin.reset-password.submit');
+
 /*
 |--------------------------------------------------------------------------
 | Admin Area (guard: admin)

@@ -60,6 +60,7 @@
                    data-counter>25</div>
               <div class="mt-1 text-sm text-white/80">Tahun Pengalaman</div>
             </div>
+
             <div class="group">
               <div
                    class="mb-3 inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-white/10 ring-1 ring-white/20 backdrop-blur-sm transition group-hover:scale-110 group-hover:bg-white/20">
@@ -77,6 +78,7 @@
                    data-counter>1000000</div>
               <div class="mt-1 text-sm text-white/80">Pasien Dilayani</div>
             </div>
+
             <div class="group">
               <div
                    class="mb-3 inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-white/10 ring-1 ring-white/20 backdrop-blur-sm transition group-hover:scale-110 group-hover:bg-white/20">
@@ -123,13 +125,12 @@
               <p>
                 Sebagai <strong class="font-semibold text-slate-900">platform sistem informasi terdepan</strong>, SIMPHONY
                 berkomitmen untuk memberikan solusi digital berkualitas tinggi dalam mengelola pemesanan darah dan
-                inventori
-                dengan mengintegrasikan teknologi modern dan pendekatan yang efisien.
+                inventori dengan mengintegrasikan teknologi modern dan pendekatan yang efisien.
               </p>
               <p>
                 SIMPHONY (Sistem Informasi Pemesanan dan Inventori) dirancang untuk <strong
-                        class="font-semibold text-red-600">mengharmonisasikan alur kerja</strong> antara proses pemesanan
-                darah, pengelolaan stok, serta verifikasi pada Unit Donor Darah.
+                        class="font-semibold text-red-600">mengharmonisasikan alur kerja</strong> antara proses
+                pemesanan darah, pengelolaan stok, serta verifikasi pada Unit Donor Darah.
               </p>
               <p>
                 Didukung oleh <strong class="font-semibold text-slate-900">teknologi terkini</strong> dan antarmuka yang
@@ -242,7 +243,7 @@
                  fill="currentColor"
                  viewBox="0 0 20 20">
               <path
-                    d="M10.394 2.08a1 1 0 00-.788 0l-7 3a1 1 0 000 1.84L5.25 8.051a.999.999 0 01.356-.257l4-1.714a1 1 0 11.788 1.838L7.667 9.088l1.94.831a1 1 0 00.787 0l7-3a1 1 0 000-1.838l-7-3zM3.31 9.397L5 10.12v4.102a8.969 8.969 0 00-1.05-.174 1 1 0 01-.89-.89 11.115 11.115 0 01.25-3.762zM9.3 16.573A9.026 9.026 0 007 14.935v-3.957l1.818.78a3 3 0 002.364 0l5.508-2.361a11.026 11.026 0 01.25 3.762 1 1 0 01-.89.89 8.968 8.968 0 00-5.35 2.524 1 1 0 01-1.4 0zM6 18a1 1 0 001-1v-2.065a8.935 8.935 0 00-2-.712V17a1 1 0 001 1z" />
+                    d="M10.394 2.08a1 1 0 00-.788 0l-7 3a1 1 0 000 1.84L5.25 8.051a.999.999 0 01.356-.257l4-1.714a1 1 0 11.788 1.838L7.667 9.088l1.94.831a1 1 0 00.787 0l7-3a1 1 0 000-1.838l-7-3zM3.31 9.397L5 10.12v4.102a8.969 8.969 0 00-1.05-.174 1 1 0 01-.89-.89 11.115 11.115 0 01-.25-3.762zM9.3 16.573A9.026 9.026 0 007 14.935v-3.957l1.818.78a3 3 0 002.364 0l5.508-2.361a11.026 11.026 0 01.25 3.762 1 1 0 01-.89.89 8.968 8.968 0 00-5.35 2.524 1 1 0 01-1.4 0zM6 18a1 1 0 001-1v-2.065a8.935 8.935 0 00-2-.712V17a1 1 0 001 1z" />
             </svg>
             Visi & Misi
           </div>
@@ -295,58 +296,168 @@
         </div>
 
         {{-- Tab Content --}}
-        <div class="mt-12">
-          {{-- Visi --}}
-          <div id="tab-visi"
-               class="tab-panel">
-            <div class="grid gap-6 md:grid-cols-3">
-              @foreach ([
-          ['Efisiensi Digital', 'Menjadi platform sistem informasi terdepan yang mengintegrasikan teknologi digital dalam pengelolaan pemesanan dan inventori darah.', '<svg class="h-7 w-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>', 'blue'],
-          ['Aksesibilitas 24/7', 'Setiap pengguna memiliki akses real-time ke sistem untuk pemesanan dan monitoring stok darah kapan saja, dimana saja.', '<svg class="h-7 w-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>', 'green'],
-          ['Harmonisasi Alur Kerja', 'Mengintegrasikan proses pemesanan, pengelolaan stok, dan verifikasi dalam satu platform yang terkoordinasi.', '<svg class="h-7 w-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" /></svg>', 'purple'],
-      ] as $v)
-                <div class="group relative text-left">
-                  <div
-                       class="from-{{ $v[3] }}-500/30 to-{{ $v[3] }}-400/20 absolute -inset-0.5 rounded-3xl bg-gradient-to-br opacity-0 blur transition duration-300 group-hover:opacity-100">
-                  </div>
-                  <div
-                       class="group-hover:border-{{ $v[3] }}-200 relative h-full rounded-3xl border-2 border-slate-200 bg-white p-6 shadow-lg transition duration-300 group-hover:shadow-2xl">
-                    <div
-                         class="from-{{ $v[3] }}-600 to-{{ $v[3] }}-500 mb-4 inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br text-white shadow-lg ring-4 ring-white">
-                      {!! $v[2] !!}
-                    </div>
-                    <h3 class="text-xl font-bold text-slate-900">{{ $v[0] }}</h3>
-                    <p class="mt-3 leading-relaxed text-slate-600">{{ $v[1] }}</p>
-                  </div>
+        {{-- Visi --}}
+        <div id="tab-visi"
+             class="tab-panel mt-12">
+          <div class="grid gap-6 md:grid-cols-3">
+            {{-- Card 1: Efisiensi Digital --}}
+            <div class="group relative text-left">
+              <div
+                   class="absolute -inset-0.5 rounded-3xl bg-gradient-to-br from-blue-100 to-blue-50 opacity-0 blur transition duration-300 group-hover:opacity-100">
+              </div>
+              <div
+                   class="relative h-full rounded-3xl border-2 border-slate-200 bg-white p-6 shadow-lg transition duration-300 group-hover:border-blue-200 group-hover:shadow-2xl">
+                <div
+                     class="mb-4 inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-600 to-blue-500 text-white shadow-lg">
+                  <svg class="h-7 w-7"
+                       fill="none"
+                       stroke="currentColor"
+                       viewBox="0 0 24 24">
+                    <path stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                  </svg>
                 </div>
-              @endforeach
+                <h3 class="text-xl font-bold text-slate-900">Efisiensi Digital</h3>
+                <p class="mt-3 leading-relaxed text-slate-600">Menjadi platform sistem informasi terdepan yang
+                  mengintegrasikan teknologi digital dalam pengelolaan pemesanan dan inventori darah.</p>
+              </div>
+            </div>
+
+            {{-- Card 2: Aksesibilitas 24/7 --}}
+            <div class="group relative text-left">
+              <div
+                   class="absolute -inset-0.5 rounded-3xl bg-gradient-to-br from-green-100 to-green-50 opacity-0 blur transition duration-300 group-hover:opacity-100">
+              </div>
+              <div
+                   class="relative h-full rounded-3xl border-2 border-slate-200 bg-white p-6 shadow-lg transition duration-300 group-hover:border-green-200 group-hover:shadow-2xl">
+                <div
+                     class="mb-4 inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-green-600 to-green-500 text-white shadow-lg">
+                  <svg class="h-7 w-7"
+                       fill="none"
+                       stroke="currentColor"
+                       viewBox="0 0 24 24">
+                    <path stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                </div>
+                <h3 class="text-xl font-bold text-slate-900">Aksesibilitas 24/7</h3>
+                <p class="mt-3 leading-relaxed text-slate-600">Setiap pengguna memiliki akses real-time ke sistem untuk
+                  pemesanan dan monitoring stok darah kapan saja, dimana saja.</p>
+              </div>
+            </div>
+
+            {{-- Card 3: Harmonisasi Alur Kerja --}}
+            <div class="group relative text-left">
+              <div
+                   class="absolute -inset-0.5 rounded-3xl bg-gradient-to-br from-purple-100 to-purple-50 opacity-0 blur transition duration-300 group-hover:opacity-100">
+              </div>
+              <div
+                   class="relative h-full rounded-3xl border-2 border-slate-200 bg-white p-6 shadow-lg transition duration-300 group-hover:border-purple-200 group-hover:shadow-2xl">
+                <div
+                     class="mb-4 inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-purple-600 to-purple-500 text-white shadow-lg">
+                  <svg class="h-7 w-7"
+                       fill="none"
+                       stroke="currentColor"
+                       viewBox="0 0 24 24">
+                    <path stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                  </svg>
+                </div>
+                <h3 class="text-xl font-bold text-slate-900">Harmonisasi Alur Kerja</h3>
+                <p class="mt-3 leading-relaxed text-slate-600">Mengintegrasikan proses pemesanan, pengelolaan stok, dan
+                  verifikasi dalam satu platform yang terkoordinasi.</p>
+              </div>
             </div>
           </div>
+        </div>
 
-          {{-- Misi --}}
-          <div id="tab-misi"
-               class="tab-panel hidden">
-            <div class="grid gap-6 md:grid-cols-3">
-              @foreach ([
-          ['Sistem Terintegrasi', 'Menyediakan platform terpadu untuk mengelola pemesanan darah, inventori stok, dan verifikasi secara efisien.', '<svg class="h-7 w-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" /></svg>', 'red'],
-          ['Digitalisasi Proses', 'Mengotomatisasi alur kerja pemesanan dan pengelolaan stok untuk meningkatkan efisiensi dan akurasi.', '<svg class="h-7 w-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>', 'indigo'],
-          ['Update Real-time', 'Menyediakan informasi stok darah yang akurat dan terkini untuk mendukung pengambilan keputusan cepat.', '<svg class="h-7 w-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>', 'amber'],
-      ] as $m)
-                <div class="group relative text-left">
-                  <div
-                       class="from-{{ $m[3] }}-500/30 to-{{ $m[3] }}-400/20 absolute -inset-0.5 rounded-3xl bg-gradient-to-br opacity-0 blur transition duration-300 group-hover:opacity-100">
-                  </div>
-                  <div
-                       class="group-hover:border-{{ $m[3] }}-200 relative h-full rounded-3xl border-2 border-slate-200 bg-white p-6 shadow-lg transition duration-300 group-hover:shadow-2xl">
-                    <div
-                         class="from-{{ $m[3] }}-600 to-{{ $m[3] }}-500 mb-4 inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br text-white shadow-lg ring-4 ring-white">
-                      {!! $m[2] !!}
-                    </div>
-                    <h3 class="text-xl font-bold text-slate-900">{{ $m[0] }}</h3>
-                    <p class="mt-3 leading-relaxed text-slate-600">{{ $m[1] }}</p>
-                  </div>
+        {{-- Misi --}}
+        <div id="tab-misi"
+             class="tab-panel mt-12 hidden">
+          <div class="grid gap-6 md:grid-cols-3">
+            {{-- Card 1: Sistem Terintegrasi --}}
+            <div class="group relative text-left">
+              <div
+                   class="absolute -inset-0.5 rounded-3xl bg-gradient-to-br from-red-100 to-red-50 opacity-0 blur transition duration-300 group-hover:opacity-100">
+              </div>
+              <div
+                   class="relative h-full rounded-3xl border-2 border-slate-200 bg-white p-6 shadow-lg transition duration-300 group-hover:border-red-200 group-hover:shadow-2xl">
+                <div
+                     class="mb-4 inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-red-600 to-red-500 text-white shadow-lg">
+                  <svg class="h-7 w-7"
+                       fill="none"
+                       stroke="currentColor"
+                       viewBox="0 0 24 24">
+                    <path stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                  </svg>
                 </div>
-              @endforeach
+                <h3 class="text-xl font-bold text-slate-900">Sistem Terintegrasi</h3>
+                <p class="mt-3 leading-relaxed text-slate-600">Menyediakan platform terpadu untuk mengelola pemesanan
+                  darah, inventori stok, dan verifikasi secara efisien.</p>
+              </div>
+            </div>
+
+            {{-- Card 2: Digitalisasi Proses --}}
+            <div class="group relative text-left">
+              <div
+                   class="absolute -inset-0.5 rounded-3xl bg-gradient-to-br from-indigo-100 to-indigo-50 opacity-0 blur transition duration-300 group-hover:opacity-100">
+              </div>
+              <div
+                   class="relative h-full rounded-3xl border-2 border-slate-200 bg-white p-6 shadow-lg transition duration-300 group-hover:border-indigo-200 group-hover:shadow-2xl">
+                <div
+                     class="mb-4 inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-indigo-600 to-indigo-500 text-white shadow-lg">
+                  <svg class="h-7 w-7"
+                       fill="none"
+                       stroke="currentColor"
+                       viewBox="0 0 24 24">
+                    <path stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                    <path stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                  </svg>
+                </div>
+                <h3 class="text-xl font-bold text-slate-900">Digitalisasi Proses</h3>
+                <p class="mt-3 leading-relaxed text-slate-600">Mengotomatisasi alur kerja pemesanan dan pengelolaan stok
+                  untuk meningkatkan efisiensi dan akurasi.</p>
+              </div>
+            </div>
+
+            {{-- Card 3: Update Real-time --}}
+            <div class="group relative text-left">
+              <div
+                   class="absolute -inset-0.5 rounded-3xl bg-gradient-to-br from-amber-100 to-amber-50 opacity-0 blur transition duration-300 group-hover:opacity-100">
+              </div>
+              <div
+                   class="relative h-full rounded-3xl border-2 border-slate-200 bg-white p-6 shadow-lg transition duration-300 group-hover:border-amber-200 group-hover:shadow-2xl">
+                <div
+                     class="mb-4 inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-amber-600 to-amber-500 text-white shadow-lg">
+                  <svg class="h-7 w-7"
+                       fill="none"
+                       stroke="currentColor"
+                       viewBox="0 0 24 24">
+                    <path stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M13 10V3L4 14h7v7l9-11h-7z" />
+                  </svg>
+                </div>
+                <h3 class="text-xl font-bold text-slate-900">Update Real-time</h3>
+                <p class="mt-3 leading-relaxed text-slate-600">Menyediakan informasi stok darah yang akurat dan terkini
+                  untuk mendukung pengambilan keputusan cepat.</p>
+              </div>
             </div>
           </div>
         </div>
@@ -377,30 +488,135 @@
         </div>
 
         <div class="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-5">
-          @foreach ([
-          ['Integritas', 'Berkomitmen pada kejujuran, transparansi, dan akurasi data dalam setiap transaksi sistem.', '<svg class="h-7 w-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" /></svg>', 'red'],
-          ['Efisiensi', 'Mengoptimalkan setiap proses untuk menghemat waktu dan meningkatkan produktivitas.', '<svg class="h-7 w-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>', 'blue'],
-          ['User-Friendly', 'Mengutamakan kemudahan penggunaan dengan antarmuka yang intuitif dan responsif.', '<svg class="h-7 w-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>', 'rose'],
-          ['Inovatif', 'Terus berinovasi dengan teknologi dan fitur terkini untuk pelayanan yang lebih baik.', '<svg class="h-7 w-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" /></svg>', 'amber'],
-          ['Keamanan Data', 'Menjamin keamanan dan privasi data dengan sistem enkripsi dan protokol keamanan tingkat tinggi.', '<svg class="h-7 w-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg>', 'green'],
-      ] as $nilai)
-            <div class="group relative text-left">
-              <div
-                   class="from-{{ $nilai[3] }}-500/30 to-{{ $nilai[3] }}-400/20 absolute -inset-0.5 rounded-3xl bg-gradient-to-br opacity-0 blur transition duration-300 group-hover:opacity-100">
-              </div>
-              <div
-                   class="group-hover:border-{{ $nilai[3] }}-200 relative h-full rounded-3xl border-2 border-slate-200 bg-white p-6 shadow-lg transition duration-300 group-hover:shadow-2xl">
-                <div
-                     class="from-{{ $nilai[3] }}-600 to-{{ $nilai[3] }}-500 mb-4 inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br text-white shadow-lg ring-4 ring-white transition group-hover:scale-110">
-                  {!! $nilai[2] !!}
-                </div>
-                <h3 class="text-lg font-bold text-slate-900">{{ $nilai[0] }}</h3>
-                <p class="mt-2 text-sm leading-relaxed text-slate-600">
-                  {{ $nilai[1] }}
-                </p>
-              </div>
+          {{-- Card 1: Integritas --}}
+          <div class="group relative text-left">
+            <div
+                 class="absolute -inset-0.5 rounded-3xl bg-gradient-to-br from-red-100 to-red-50 opacity-0 blur transition duration-300 group-hover:opacity-100">
             </div>
-          @endforeach
+            <div
+                 class="relative h-full rounded-3xl border-2 border-slate-200 bg-white p-6 shadow-lg transition duration-300 group-hover:border-red-200 group-hover:shadow-2xl">
+              <div
+                   class="mb-4 inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-red-600 to-red-500 text-white shadow-lg transition group-hover:scale-110">
+                <svg class="h-7 w-7"
+                     fill="none"
+                     stroke="currentColor"
+                     viewBox="0 0 24 24">
+                  <path stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                </svg>
+              </div>
+              <h3 class="text-lg font-bold text-slate-900">Integritas</h3>
+              <p class="mt-2 text-sm leading-relaxed text-slate-600">
+                Berkomitmen pada kejujuran, transparansi, dan akurasi data dalam setiap transaksi sistem.
+              </p>
+            </div>
+          </div>
+
+          {{-- Card 2: Efisiensi --}}
+          <div class="group relative text-left">
+            <div
+                 class="absolute -inset-0.5 rounded-3xl bg-gradient-to-br from-blue-100 to-blue-50 opacity-0 blur transition duration-300 group-hover:opacity-100">
+            </div>
+            <div
+                 class="relative h-full rounded-3xl border-2 border-slate-200 bg-white p-6 shadow-lg transition duration-300 group-hover:border-blue-200 group-hover:shadow-2xl">
+              <div
+                   class="mb-4 inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-600 to-blue-500 text-white shadow-lg transition group-hover:scale-110">
+                <svg class="h-7 w-7"
+                     fill="none"
+                     stroke="currentColor"
+                     viewBox="0 0 24 24">
+                  <path stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M13 10V3L4 14h7v7l9-11h-7z" />
+                </svg>
+              </div>
+              <h3 class="text-lg font-bold text-slate-900">Efisiensi</h3>
+              <p class="mt-2 text-sm leading-relaxed text-slate-600">
+                Mengoptimalkan setiap proses untuk menghemat waktu dan meningkatkan produktivitas.
+              </p>
+            </div>
+          </div>
+
+          {{-- Card 3: User-Friendly --}}
+          <div class="group relative text-left">
+            <div
+                 class="absolute -inset-0.5 rounded-3xl bg-gradient-to-br from-rose-100 to-rose-50 opacity-0 blur transition duration-300 group-hover:opacity-100">
+            </div>
+            <div
+                 class="relative h-full rounded-3xl border-2 border-slate-200 bg-white p-6 shadow-lg transition duration-300 group-hover:border-rose-200 group-hover:shadow-2xl">
+              <div
+                   class="mb-4 inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-rose-600 to-rose-500 text-white shadow-lg transition group-hover:scale-110">
+                <svg class="h-7 w-7"
+                     fill="none"
+                     stroke="currentColor"
+                     viewBox="0 0 24 24">
+                  <path stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
+              <h3 class="text-lg font-bold text-slate-900">User-Friendly</h3>
+              <p class="mt-2 text-sm leading-relaxed text-slate-600">
+                Mengutamakan kemudahan penggunaan dengan antarmuka yang intuitif dan responsif.
+              </p>
+            </div>
+          </div>
+
+          {{-- Card 4: Inovatif --}}
+          <div class="group relative text-left">
+            <div
+                 class="absolute -inset-0.5 rounded-3xl bg-gradient-to-br from-amber-100 to-amber-50 opacity-0 blur transition duration-300 group-hover:opacity-100">
+            </div>
+            <div
+                 class="relative h-full rounded-3xl border-2 border-slate-200 bg-white p-6 shadow-lg transition duration-300 group-hover:border-amber-200 group-hover:shadow-2xl">
+              <div
+                   class="mb-4 inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-amber-600 to-amber-500 text-white shadow-lg transition group-hover:scale-110">
+                <svg class="h-7 w-7"
+                     fill="none"
+                     stroke="currentColor"
+                     viewBox="0 0 24 24">
+                  <path stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                </svg>
+              </div>
+              <h3 class="text-lg font-bold text-slate-900">Inovatif</h3>
+              <p class="mt-2 text-sm leading-relaxed text-slate-600">
+                Terus berinovasi dengan teknologi dan fitur terkini untuk pelayanan yang lebih baik.
+              </p>
+            </div>
+          </div>
+
+          {{-- Card 5: Keamanan Data --}}
+          <div class="group relative text-left">
+            <div
+                 class="absolute -inset-0.5 rounded-3xl bg-gradient-to-br from-green-100 to-green-50 opacity-0 blur transition duration-300 group-hover:opacity-100">
+            </div>
+            <div
+                 class="relative h-full rounded-3xl border-2 border-slate-200 bg-white p-6 shadow-lg transition duration-300 group-hover:border-green-200 group-hover:shadow-2xl">
+              <div
+                   class="mb-4 inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-green-600 to-green-500 text-white shadow-lg transition group-hover:scale-110">
+                <svg class="h-7 w-7"
+                     fill="none"
+                     stroke="currentColor"
+                     viewBox="0 0 24 24">
+                  <path stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                </svg>
+              </div>
+              <h3 class="text-lg font-bold text-slate-900">Keamanan Data</h3>
+              <p class="mt-2 text-sm leading-relaxed text-slate-600">
+                Menjamin keamanan dan privasi data dengan sistem enkripsi dan protokol keamanan tingkat tinggi.
+              </p>
+            </div>
+          </div>
         </div>
 
         {{-- Additional Trust Indicators --}}
@@ -420,6 +636,7 @@
             <h3 class="font-bold text-slate-900">Platform Terintegrasi</h3>
             <p class="mt-2 text-sm text-slate-600">Sistem terpadu untuk pemesanan dan inventori</p>
           </div>
+
           <div class="rounded-2xl border border-slate-200 bg-white p-6 text-center shadow-lg">
             <div class="mx-auto mb-3 flex h-16 w-16 items-center justify-center rounded-2xl bg-blue-100 text-blue-600">
               <svg class="h-8 w-8"
@@ -435,6 +652,7 @@
             <h3 class="font-bold text-slate-900">Teknologi Modern</h3>
             <p class="mt-2 text-sm text-slate-600">Dibangun dengan framework Laravel terkini</p>
           </div>
+
           <div class="rounded-2xl border border-slate-200 bg-white p-6 text-center shadow-lg">
             <div
                  class="mx-auto mb-3 flex h-16 w-16 items-center justify-center rounded-2xl bg-purple-100 text-purple-600">
@@ -466,7 +684,6 @@
       <div class="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div
              class="relative overflow-hidden rounded-3xl bg-gradient-to-r from-red-700 via-red-600 to-rose-500 shadow-2xl">
-
           {{-- Animated background blobs --}}
           <div class="pointer-events-none absolute inset-0">
             <div class="absolute -left-16 -top-16 h-64 w-64 animate-pulse rounded-full bg-white/10 blur-3xl"></div>
@@ -546,7 +763,7 @@
                   <path stroke-linecap="round"
                         stroke-linejoin="round"
                         stroke-width="2"
-                        d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                        d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 111.314 0z" />
                   <path stroke-linecap="round"
                         stroke-linejoin="round"
                         stroke-width="2"
@@ -561,7 +778,6 @@
     </section>
 
     <x-footer bg="bg-slate-50" />
-
   </div>
 
   {{-- Enhanced JavaScript with animations --}}
@@ -649,8 +865,6 @@
       });
 
       counters.forEach(el => counterObserver.observe(el));
-
-      // Parallax effect for hero background
 
       // Fade-in animation for sections
       const sections = document.querySelectorAll('section');

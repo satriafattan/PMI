@@ -8,8 +8,8 @@
              alt="Logo SIMPHONY"
              class="mx-auto h-32 w-32 object-contain">
       </div>
-      <h1 class="text-2xl font-bold text-gray-800">Login Admin</h1>
-      <p class="mt-1 text-sm text-gray-500">Silakan masuk untuk mengelola sistem</p>
+      <h1 class="text-2xl font-bold text-gray-800">Reset Password</h1>
+      <p class="mt-1 text-sm text-gray-500">Masukkan password baru Anda</p>
     </div>
 
     {{-- Error message --}}
@@ -24,16 +24,21 @@
     @endif
 
     <form method="POST"
-          action="{{ route('admin.login.submit') }}"
+          action="{{ route('admin.reset-password.submit') }}"
           class="space-y-5">
       @csrf
+
+      {{-- Hidden Token --}}
+      <input type="hidden"
+             name="token"
+             value="{{ $token }}">
 
       {{-- Email --}}
       <div>
         <label class="block text-sm font-medium text-gray-700">Email</label>
         <input type="email"
                name="email"
-               value="{{ old('email') }}"
+               value="{{ old('email', request('email')) }}"
                required
                autofocus
                class="mt-1 w-full rounded-lg border border-gray-300 p-2.5 focus:border-red-500 focus:ring-2 focus:ring-red-500" />
@@ -41,32 +46,36 @@
 
       {{-- Password --}}
       <div>
-        <label class="block text-sm font-medium text-gray-700">Password</label>
+        <label class="block text-sm font-medium text-gray-700">Password Baru</label>
         <input type="password"
                name="password"
                required
                class="mt-1 w-full rounded-lg border border-gray-300 p-2.5 focus:border-red-500 focus:ring-2 focus:ring-red-500" />
+        <p class="mt-1 text-xs text-gray-500">Minimal 8 karakter</p>
       </div>
 
-      {{-- Remember Me --}}
-      <div class="flex items-center justify-between">
-        <label class="flex items-center gap-2 text-sm text-gray-600">
-          <input type="checkbox"
-                 name="remember"
-                 class="h-4 w-4 rounded border-gray-300 text-red-600 focus:ring-red-500">
-          Ingat saya
-        </label>
-        <a href="{{ route('admin.forgot-password') }}"
-           class="text-sm text-red-600 hover:text-red-700">
-          Lupa Password?
-        </a>
+      {{-- Password Confirmation --}}
+      <div>
+        <label class="block text-sm font-medium text-gray-700">Konfirmasi Password</label>
+        <input type="password"
+               name="password_confirmation"
+               required
+               class="mt-1 w-full rounded-lg border border-gray-300 p-2.5 focus:border-red-500 focus:ring-2 focus:ring-red-500" />
       </div>
 
       {{-- Submit --}}
       <button type="submit"
               class="w-full rounded-lg bg-red-600 px-4 py-2.5 font-medium text-white shadow hover:bg-red-700">
-        Masuk
+        Reset Password
       </button>
+
+      {{-- Back to Login --}}
+      <div class="text-center">
+        <a href="{{ route('admin.login') }}"
+           class="text-sm text-red-600 hover:text-red-700">
+          ← Kembali ke Login
+        </a>
+      </div>
     </form>
   </div>
 </main>
