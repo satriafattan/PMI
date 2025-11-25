@@ -262,8 +262,7 @@ function renderTable1() {
             <tr class="hover:bg-neutral-50">
                 <td class="px-4 py-3">${row.id_darah || '-'}</td>
                 <td class="px-4 py-3">
-                    <span class="inline-flex items-center gap-1.5">
-                        <span class="h-2 w-2 rounded-full ${row.gol_darah === 'A' ? 'bg-red-500' : row.gol_darah === 'B' ? 'bg-blue-500' : row.gol_darah === 'AB' ? 'bg-purple-500' : 'bg-yellow-500'}"></span>
+                    <span class="inline-flex h-8 w-8 items-center justify-center rounded-full bg-pink-50 text-sm font-semibold text-pink-600">
                         ${row.gol_darah || '-'}
                     </span>
                 </td>
@@ -272,7 +271,7 @@ function renderTable1() {
                     <span class="inline-flex rounded-md bg-blue-50 px-2 py-1 text-xs font-medium text-blue-700">${row.komponen || '-'}</span>
                 </td>
                 <td class="px-4 py-3">${row.tgl_masuk || '-'}</td>
-                <td class="px-4 py-3">${row.tgl_kadaluwarsa || '-'}</td>
+                <td class="px-4 py-3">${row.tgl_kadaluarsa || '-'}</td>
             </tr>
         `).join('');
     }
@@ -333,8 +332,7 @@ function renderTable2() {
             <tr class="hover:bg-neutral-50">
                 <td class="px-4 py-3">${row.id || '-'}</td>
                 <td class="px-4 py-3">
-                    <span class="inline-flex items-center gap-1.5">
-                        <span class="h-2 w-2 rounded-full ${row.gol === 'A' ? 'bg-red-500' : row.gol === 'B' ? 'bg-blue-500' : row.gol === 'AB' ? 'bg-purple-500' : 'bg-yellow-500'}"></span>
+                    <span class="inline-flex h-8 w-8 items-center justify-center rounded-full bg-pink-50 text-sm font-semibold text-pink-600">
                         ${row.gol || '-'}
                     </span>
                 </td>
@@ -406,8 +404,7 @@ function renderTable3() {
             <tr class="hover:bg-neutral-50">
                 <td class="px-4 py-3">${row.id || '-'}</td>
                 <td class="px-4 py-3">
-                    <span class="inline-flex items-center gap-1.5">
-                        <span class="h-2 w-2 rounded-full ${row.gol === 'A' ? 'bg-red-500' : row.gol === 'B' ? 'bg-blue-500' : row.gol === 'AB' ? 'bg-purple-500' : 'bg-yellow-500'}"></span>
+                    <span class="inline-flex h-8 w-8 items-center justify-center rounded-full bg-pink-50 text-sm font-semibold text-pink-600">
                         ${row.gol || '-'}
                     </span>
                 </td>
