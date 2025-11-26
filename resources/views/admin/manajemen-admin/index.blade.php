@@ -67,7 +67,7 @@
         <table class="min-w-full text-sm">
           <thead class="bg-neutral-50 text-neutral-600">
             <tr>
-              <th class="w-16 px-4 py-3 text-left">ID</th>
+              <th class="w-16 px-4 py-3 text-left">No</th>
               <th class="px-4 py-3 text-left">Nama</th>
               <th class="px-4 py-3 text-left">Email</th>
               <th class="px-4 py-3 text-left">Role</th>
@@ -78,9 +78,9 @@
             </tr>
           </thead>
           <tbody class="divide-y divide-neutral-100">
-            @forelse ($admins as $admin)
+            @forelse ($admins as $index => $admin)
               <tr class="transition-colors hover:bg-neutral-50/50">
-                <td class="px-4 py-3 font-medium text-neutral-700">#{{ $admin->id }}</td>
+                <td class="px-4 py-3 font-medium text-neutral-700">{{ $admins->firstItem() + $index }}</td>
                 <td class="px-4 py-3">
                   <div class="flex items-center gap-3">
                     <div
@@ -281,11 +281,6 @@
         <div class="rounded-lg bg-neutral-50 p-4 text-sm">
           <div class="space-y-2">
             <div class="flex justify-between">
-              <span class="text-neutral-600">ID:</span>
-              <span class="font-medium text-neutral-800"
-                    id="deleteAdminId">-</span>
-            </div>
-            <div class="flex justify-between">
               <span class="text-neutral-600">Nama:</span>
               <span class="font-medium text-neutral-800"
                     id="deleteAdminName">-</span>
@@ -329,7 +324,6 @@
       const form = document.getElementById('deleteAdminForm');
 
       // Set detail admin di modal
-      document.getElementById('deleteAdminId').textContent = `#${id}`;
       document.getElementById('deleteAdminName').textContent = name;
       document.getElementById('deleteAdminEmail').textContent = email;
 

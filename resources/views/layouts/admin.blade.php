@@ -11,8 +11,11 @@
 
   {{-- Favicon --}}
   <link rel="icon"
-        type="image/png"
-        href="{{ asset('images/simphony-logo.png') }}">
+        type="image/x-icon"
+        href="{{ asset('images/simphony-logo.ico') }}">
+  <link rel="shortcut icon"
+        type="image/x-icon"
+        href="{{ asset('images/simphony-logo.ico') }}">
   <link rel="apple-touch-icon"
         href="{{ asset('images/simphony-logo.png') }}">
 
