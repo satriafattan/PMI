@@ -5,35 +5,36 @@
 @endphp
 
 @section('content')
-  <div class="mb-6">
-    <h1 class="text-2xl font-bold">Stok Darah</h1>
-    <p class="text-slate-500">Monitoring real-time stok darah per golongan</p>
+  <div class="mb-4">
+    <h1 class="text-xl font-bold md:text-2xl">Stok Darah</h1>
+    <p class="text-sm text-slate-500">Monitoring real-time stok darah per golongan</p>
   </div>
 
   {{-- KARTU STOK PER GOLONGAN --}}
-  <div class="mb-6 grid grid-cols-1 gap-5 md:grid-cols-4">
+  <div class="mb-4 grid grid-cols-2 gap-3 md:grid-cols-4">
     @foreach (['A', 'AB', 'B', 'O'] as $g)
       @php [$label,$cls] = StokHelper::badgeStatus($stats['stok'][$g]); @endphp
-      <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-        <div class="mb-3 flex items-center justify-between">
-          <span class="grid size-8 place-items-center rounded-xl bg-slate-100 font-semibold">{{ $g }}</span>
-          <span class="{{ $cls }} rounded-lg px-2 py-1 text-xs">{{ $label }}</span>
+      <div class="rounded-xl border border-slate-200 bg-white p-3 shadow-sm md:p-4">
+        <div class="mb-2 flex items-center justify-between">
+          <span
+                class="grid size-7 place-items-center rounded-lg bg-slate-100 text-sm font-semibold md:size-8">{{ $g }}</span>
+          <span class="{{ $cls }} rounded px-1.5 py-0.5 text-xs md:px-2 md:py-1">{{ $label }}</span>
         </div>
-        <div class="text-4xl font-bold leading-none">{{ $stats['stok'][$g] }}</div>
-        <div class="mt-1 text-sm text-slate-500">Unit tersedia</div>
+        <div class="text-2xl font-bold leading-none md:text-3xl">{{ $stats['stok'][$g] }}</div>
+        <div class="mt-1 text-xs text-slate-500">Unit tersedia</div>
       </div>
     @endforeach
   </div>
 
   {{-- DARAH MASUK & KELUAR --}}
-  <div class="mb-6 grid grid-cols-1 gap-5 md:grid-cols-2">
-    <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+  <div class="mb-4 grid grid-cols-1 gap-3 md:grid-cols-2">
+    <div class="rounded-xl border border-slate-200 bg-white p-3 shadow-sm md:p-4">
       <div class="mb-1 flex items-center gap-2">
-        <div class="grid size-7 place-items-center rounded-lg bg-emerald-50 text-emerald-700">
+        <div class="grid size-6 place-items-center rounded-lg bg-emerald-50 text-emerald-700">
           {{-- icon arrow-down-circle --}}
           <svg xmlns="http://www.w3.org/2000/svg"
                viewBox="0 0 24 24"
-               class="size-5"
+               class="size-4"
                fill="none"
                stroke="currentColor"
                stroke-width="1.6">
@@ -43,24 +44,24 @@
                     r="9" />
           </svg>
         </div>
-        <h3 class="font-semibold">Darah Masuk</h3>
+        <h3 class="text-sm font-semibold">Darah Masuk</h3>
       </div>
-      <div class="text-4xl font-bold leading-none">{{ $stats['masuk']['jumlah'] }}</div>
+      <div class="text-2xl font-bold leading-none md:text-3xl">{{ $stats['masuk']['jumlah'] }}</div>
       @if (!is_null($stats['masuk']['trend']))
         @php $t=$stats['masuk']['trend']; @endphp
-        <div class="{{ $t >= 0 ? 'text-emerald-600' : 'text-rose-600' }} mt-2 text-xs">
+        <div class="{{ $t >= 0 ? 'text-emerald-600' : 'text-rose-600' }} mt-1.5 text-xs">
           {{ $t >= 0 ? '↑' : '↓' }} {{ $t }}% dari bulan lalu
         </div>
       @endif
     </div>
 
-    <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+    <div class="rounded-xl border border-slate-200 bg-white p-3 shadow-sm md:p-4">
       <div class="mb-1 flex items-center gap-2">
-        <div class="grid size-7 place-items-center rounded-lg bg-rose-50 text-rose-700">
+        <div class="grid size-6 place-items-center rounded-lg bg-rose-50 text-rose-700">
           {{-- icon arrow-up-circle --}}
           <svg xmlns="http://www.w3.org/2000/svg"
                viewBox="0 0 24 24"
-               class="size-5"
+               class="size-4"
                fill="none"
                stroke="currentColor"
                stroke-width="1.6">
@@ -70,12 +71,12 @@
                     r="9" />
           </svg>
         </div>
-        <h3 class="font-semibold">Darah Keluar</h3>
+        <h3 class="text-sm font-semibold">Darah Keluar</h3>
       </div>
-      <div class="text-4xl font-bold leading-none">{{ $stats['keluar']['jumlah'] }}</div>
+      <div class="text-2xl font-bold leading-none md:text-3xl">{{ $stats['keluar']['jumlah'] }}</div>
       @if (!is_null($stats['keluar']['trend']))
         @php $t=$stats['keluar']['trend']; @endphp
-        <div class="{{ $t <= 0 ? 'text-emerald-600' : 'text-rose-600' }} mt-2 text-xs">
+        <div class="{{ $t <= 0 ? 'text-emerald-600' : 'text-rose-600' }} mt-1.5 text-xs">
           {{ $t >= 0 ? '↑' : '↓' }} {{ $t }}% dari bulan lalu
         </div>
       @endif
@@ -83,31 +84,32 @@
   </div>
 
   {{-- GRAFIK STOK PRODUK (FULL WIDTH) --}}
-  <div class="mb-6">
-    <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-      <h3 class="mb-4 font-semibold">Grafik Stok per Produk</h3>
+  <div class="mb-4">
+    <div class="rounded-xl border border-slate-200 bg-white p-3 shadow-sm md:p-4">
+      <h3 class="mb-3 text-sm font-semibold">Grafik Stok per Produk</h3>
       <canvas id="stokChart"
-              height="120"></canvas>
+              height="100"></canvas>
     </div>
   </div>
 
   {{-- STOCK ALERTS & TREND PEMESANAN --}}
-  <div class="mt-6 grid grid-cols-1 gap-5 md:grid-cols-2">
+  <div class="grid grid-cols-1 gap-3 md:grid-cols-2">
     {{-- Stock Alerts --}}
-    <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-      <div class="mb-4 flex items-center justify-between">
-        <h3 class="font-semibold">⚠️ Stock Alerts (< 30
+    <div class="rounded-xl border border-slate-200 bg-white p-3 shadow-sm md:p-4">
+      <div class="mb-3 flex items-center justify-between">
+        <h3 class="text-sm font-semibold">⚠️ Stock Alerts (< 30
             unit)</h3>
             <span class="rounded-lg bg-red-100 px-2 py-1 text-xs text-red-700">
               {{ count($stats['stock_alerts'] ?? []) }} item
             </span>
       </div>
-      <div class="max-h-48 space-y-2 overflow-y-auto">
+      <div class="max-h-[260px] space-y-2 overflow-y-auto pr-2"
+           style="scrollbar-width: thin; scrollbar-color: rgb(203 213 225) transparent;">
         @forelse($stats['stock_alerts'] ?? [] as $alert)
-          <div class="flex items-center justify-between rounded-lg bg-red-50 p-3">
+          <div class="flex items-center justify-between rounded-lg bg-red-50 p-2.5">
             <div class="flex items-center gap-2">
               <div
-                   class="flex size-8 items-center justify-center rounded-lg bg-red-100 text-sm font-semibold text-red-700">
+                   class="flex size-7 items-center justify-center rounded-lg bg-red-100 text-xs font-semibold text-red-700">
                 {{ $alert->gol_darah }}
               </div>
               <div>
@@ -121,7 +123,7 @@
             </div>
           </div>
         @empty
-          <div class="rounded-lg bg-emerald-50 p-4 text-center text-sm text-emerald-700">
+          <div class="rounded-lg bg-emerald-50 p-3 text-center text-sm text-emerald-700">
             ✓ Semua stok dalam kondisi aman
           </div>
         @endforelse
@@ -129,10 +131,10 @@
     </div>
 
     {{-- Trend Pemesanan 6 Bulan --}}
-    <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-      <h3 class="mb-4 font-semibold">Trend Pemesanan (6 Bulan)</h3>
+    <div class="rounded-xl border border-slate-200 bg-white p-3 shadow-sm md:p-4">
+      <h3 class="mb-3 text-sm font-semibold">Trend Pemesanan (6 Bulan)</h3>
       <canvas id="trendChart"
-              height="200"></canvas>
+              height="180"></canvas>
     </div>
   </div>
 
@@ -253,4 +255,25 @@
       });
     </script>
   @endpush
+
+  {{-- Custom scrollbar untuk Stock Alerts --}}
+  <style>
+    .overflow-y-auto::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .overflow-y-auto::-webkit-scrollbar-track {
+      background: #f1f5f9;
+      border-radius: 10px;
+    }
+
+    .overflow-y-auto::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 10px;
+    }
+
+    .overflow-y-auto::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8;
+    }
+  </style>
 @endsection

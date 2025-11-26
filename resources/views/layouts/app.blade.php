@@ -6,6 +6,14 @@
   <meta name="viewport"
         content="width=device-width, initial-scale=1">
   <title>{{ $title ?? config('app.name') }}</title>
+
+  {{-- Favicon --}}
+  <link rel="icon"
+        type="image/png"
+        href="{{ asset('images/simphony-logo.png') }}">
+  <link rel="apple-touch-icon"
+        href="{{ asset('images/simphony-logo.png') }}">
+
   @vite(['resources/css/app.css', 'resources/js/app.js'])
 
   @stack('styles')
@@ -21,7 +29,7 @@
     @endif
     {{ $slot ?? '' }}
     @yield('content')
-  </main> 
+  </main>
 
   {{-- Custom Scripts --}}
   @stack('scripts')

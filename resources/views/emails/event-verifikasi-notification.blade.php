@@ -54,7 +54,7 @@
                      border="0">
                 <tr>
                   <td style="width:72px;vertical-align:top;">
-                    <img src="{{ asset('images/Logo Nav New.png') }}"
+                    <img src="{{ $message->embed(public_path('images/simphony-logo.png')) }}"
                          alt="SIMPHONY"
                          width="56"
                          height="56"

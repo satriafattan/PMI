@@ -35,7 +35,7 @@
       <div class="flex flex-col gap-4">
         <a href="{{ url('/') }}"
            class="flex items-center gap-3 text-slate-800 transition-opacity duration-200 hover:opacity-80">
-          <img src="{{ asset('images/Logo Nav New.png') }}"
+          <img src="{{ asset('images/simphony-logo.png') }}"
                alt="Logo SIMPHONY"
                class="h-32 w-32 object-contain">
           <span class="text-lg font-semibold tracking-tight">SIMPHONY</span>

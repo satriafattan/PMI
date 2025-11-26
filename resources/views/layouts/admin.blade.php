@@ -8,33 +8,61 @@
   <meta name="csrf-token"
         content="{{ csrf_token() }}">
   <title>{{ $title ?? 'Dashboard Admin' }} — {{ config('app.name') }}</title>
+
+  {{-- Favicon --}}
+  <link rel="icon"
+        type="image/png"
+        href="{{ asset('images/simphony-logo.png') }}">
+  <link rel="apple-touch-icon"
+        href="{{ asset('images/simphony-logo.png') }}">
+
   @vite(['resources/css/app.css', 'resources/js/app.js'])
   <script defer
           src="https://cdn.jsdelivr.net/npm/@alpinejs/collapse@3.x.x/dist/cdn.min.js"></script>
   <script defer
           src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  <style>
+    /* Custom Scrollbar for Webkit browsers */
+    .overflow-y-auto::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .overflow-y-auto::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    .overflow-y-auto::-webkit-scrollbar-thumb {
+      background-color: rgb(203 213 225);
+      border-radius: 3px;
+    }
+
+    .overflow-y-auto::-webkit-scrollbar-thumb:hover {
+      background-color: rgb(148 163 184);
+    }
+  </style>
 </head>
 
 <body class="bg-slate-50 text-slate-800">
   <div class="flex min-h-screen">
 
     {{-- ============== SIDEBAR ============== --}}
-    {{-- Drawer (mobile) + Pinned (≥ md) --}}
+    {{-- Drawer (mobile) + Static (≥ md) --}}
     <div id="sidebarBackdrop"
          class="fixed inset-0 z-30 hidden bg-black/40 md:hidden"
          aria-hidden="true"></div>
 
+    {{-- Sidebar Desktop --}}
     <aside id="sidebar"
-           class="fixed inset-y-0 left-0 z-40 flex w-72 max-w-full -translate-x-full flex-col bg-slate-900 text-slate-100 transition-transform duration-200 will-change-transform md:static md:z-auto md:translate-x-0"
+           class="fixed inset-y-0 left-0 z-40 flex w-72 -translate-x-full flex-col bg-slate-900 text-slate-100 transition-transform duration-200 md:sticky md:top-0 md:z-auto md:h-screen md:translate-x-0 md:transition-none"
            role="navigation"
            aria-label="Sidebar">
-      <div class="flex items-center justify-between border-b border-slate-800 px-5 py-5">
+      <div class="flex shrink-0 items-center justify-between border-b border-slate-800 px-5 py-5">
         <div>
           <div class="text-xs uppercase tracking-wide text-slate-400 md:text-sm">SIMPHONY</div>
           <div class="text-base font-semibold md:text-lg">Dashboard Admin</div>
         </div>
 
-        {{-- Close button (mobile) --}}
+        {{-- Tombol Close (hanya tampil di mobile) --}}
         <button id="sidebarCloseBtn"
                 class="inline-flex items-center justify-center rounded-lg p-2 text-slate-300 hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-600 md:hidden"
                 aria-label="Tutup menu samping">
@@ -74,12 +102,15 @@
         <x-admin.nav-item route="admin.event-verifikasi.index"
                           icon="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z">
           Verifikasi Event </x-admin.nav-item>
-        <x-admin.nav-item route="admin.admins.index"
-                          icon="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z">
-          Manajemen Admin</x-admin.nav-item>
+
+        @if (auth('admin')->user()->isSuperAdmin())
+          <x-admin.nav-item route="admin.admins.index"
+                            icon="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z">
+            Manajemen Admin</x-admin.nav-item>
+        @endif
       </nav>
 
-      <div class="border-t border-slate-800 p-3">
+      <div class="shrink-0 border-t border-slate-800 p-3">
         <form method="POST"
               action="{{ route('admin.logout') }}">
           @csrf
@@ -101,11 +132,11 @@
     </aside>
 
     {{-- ============== MAIN ============== --}}
-    <div class="flex flex-1 flex-col md:ml-0">
+    <div class="flex flex-1 flex-col">
 
       {{-- TOPBAR --}}
-      <header class="sticky top-0 z-20 flex h-16 items-center border-b border-slate-200 bg-white">
-        <div class="flex w-full items-center justify-between gap-3 px-4 md:px-6">
+      <header class="sticky top-0 z-20 flex h-14 items-center border-b border-slate-200 bg-white md:h-16">
+        <div class="flex w-full items-center justify-between gap-3 px-3 md:px-4">
           <div class="flex min-w-0 items-center gap-3">
             {{-- Hamburger (mobile) --}}
             <button id="sidebarOpenBtn"
@@ -125,8 +156,9 @@
             </button>
 
             <div class="min-w-0">
-              <div class="truncate text-lg font-bold md:text-xl">{{ $title ?? 'Dashboard Admin' }}</div>
-              <div class="truncate text-xs text-slate-500 md:text-sm">SIMPHONY - Sistem Informasi Pemesanan & Inventori
+              <div class="truncate text-base font-bold md:text-lg">{{ $title ?? 'Dashboard Admin' }}</div>
+              <div class="hidden truncate text-xs text-slate-500 sm:block">SIMPHONY - Sistem Informasi Pemesanan &
+                Inventori
               </div>
             </div>
           </div>
@@ -171,17 +203,45 @@
               </div>
             </div>
 
-            {{-- User Avatar --}}
+            {{-- User Avatar & Dropdown --}}
             <div class="relative">
-              <div class="grid size-9 place-items-center rounded-xl bg-blue-100 font-semibold text-blue-700">
+              <button id="userMenuButton"
+                      class="grid size-9 place-items-center rounded-xl bg-blue-100 font-semibold text-blue-700 transition hover:bg-blue-200">
                 {{ Str::of(auth('admin')->user()->name ?? 'A')->substr(0, 1)->upper() }}
+              </button>
+
+              {{-- User Dropdown Menu --}}
+              <div id="userMenuDropdown"
+                   class="absolute right-0 z-50 mt-2 hidden w-56 rounded-xl border border-slate-200 bg-white shadow-2xl">
+                {{-- User Info --}}
+                <div class="border-b border-slate-100 p-3">
+                  <p class="truncate font-semibold text-slate-800">{{ auth('admin')->user()->name }}</p>
+                  <p class="truncate text-xs text-slate-500">{{ auth('admin')->user()->email }}</p>
+                </div>
+
+                {{-- Menu Items --}}
+                <div class="p-2">
+                  <a href="{{ route('admin.profile.index') }}"
+                     class="flex items-center gap-3 rounded-lg px-3 py-2 text-sm text-slate-700 transition hover:bg-slate-100">
+                    <svg class="size-5"
+                         viewBox="0 0 24 24"
+                         fill="none"
+                         stroke="currentColor">
+                      <path stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="1.8"
+                            d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                    </svg>
+                    Profil Saya
+                  </a>
+                </div>
               </div>
             </div>
           </div>
       </header>
 
       {{-- PAGE CONTENT --}}
-      <main class="p-4 md:p-6">
+      <main class="p-3 md:p-4">
         {{ $slot ?? '' }}
         @yield('content')
       </main>
@@ -201,10 +261,11 @@
       let lastFocusedBeforeOpen = null;
 
       function isOpen() {
-        return !drawer.classList.contains('-translate-x-full');
+        return drawer && !drawer.classList.contains('-translate-x-full');
       }
 
       function openDrawer() {
+        if (!drawer) return;
         lastFocusedBeforeOpen = document.activeElement;
         drawer.classList.remove('-translate-x-full');
         backdrop.classList.remove('hidden');
@@ -217,6 +278,7 @@
       }
 
       function closeDrawer() {
+        if (!drawer) return;
         drawer.classList.add('-translate-x-full');
         backdrop.classList.add('hidden');
         openBtn?.setAttribute('aria-expanded', 'false');
@@ -388,6 +450,28 @@
 
       // Poll every 15 seconds
       setInterval(fetchNotifications, 15000);
+    })();
+
+    // ===== User Menu Dropdown =====
+    (function() {
+      const userMenuButton = document.getElementById('userMenuButton');
+      const userMenuDropdown = document.getElementById('userMenuDropdown');
+      let isUserMenuOpen = false;
+
+      // Toggle dropdown
+      userMenuButton.addEventListener('click', function(e) {
+        e.stopPropagation();
+        isUserMenuOpen = !isUserMenuOpen;
+        userMenuDropdown.classList.toggle('hidden', !isUserMenuOpen);
+      });
+
+      // Close dropdown when clicking outside
+      document.addEventListener('click', function(e) {
+        if (isUserMenuOpen && !userMenuDropdown.contains(e.target) && e.target !== userMenuButton) {
+          isUserMenuOpen = false;
+          userMenuDropdown.classList.add('hidden');
+        }
+      });
     })();
   </script>
 

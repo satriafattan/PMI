@@ -22,19 +22,21 @@
         <p class="mt-1 text-sm text-neutral-500">Kelola akun administrator sistem</p>
       </div>
 
-      <a href="{{ route('admin.admins.create') }}"
-         class="inline-flex items-center justify-center rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-blue-700">
-        <svg class="mr-2 h-5 w-5"
-             viewBox="0 0 24 24"
-             fill="none"
-             stroke="currentColor">
-          <path stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M12 4v16m8-8H4" />
-        </svg>
-        Tambah Admin
-      </a>
+      @if (auth('admin')->user()->isSuperAdmin())
+        <a href="{{ route('admin.admins.create') }}"
+           class="inline-flex items-center justify-center rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-blue-700">
+          <svg class="mr-2 h-5 w-5"
+               viewBox="0 0 24 24"
+               fill="none"
+               stroke="currentColor">
+            <path stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M12 4v16m8-8H4" />
+          </svg>
+          Tambah Admin
+        </a>
+      @endif
     </div>
 
     {{-- Stats --}}
@@ -42,19 +44,19 @@
       <div class="rounded-2xl border border-blue-200 bg-blue-50 p-4">
         <p class="text-xs font-medium text-blue-700">Total Admin</p>
         <div class="mt-2 text-2xl font-semibold text-blue-800">
-          {{ $admins->total() }} <span class="text-base font-medium">akun</span>
-        </div>
-      </div>
-      <div class="rounded-2xl border border-emerald-200 bg-emerald-50 p-4">
-        <p class="text-xs font-medium text-emerald-700">Admin Aktif</p>
-        <div class="mt-2 text-2xl font-semibold text-emerald-800">
-          {{ $admins->total() }} <span class="text-base font-medium">akun</span>
+          {{ $totalAdmins }} <span class="text-base font-medium">akun</span>
         </div>
       </div>
       <div class="rounded-2xl border border-purple-200 bg-purple-50 p-4">
-        <p class="text-xs font-medium text-purple-700">Anda Login Sebagai</p>
-        <div class="mt-2 text-lg font-semibold text-purple-800">
-          {{ auth('admin')->user()->name }}
+        <p class="text-xs font-medium text-purple-700">Super Admin</p>
+        <div class="mt-2 text-2xl font-semibold text-purple-800">
+          {{ $superAdmins }} <span class="text-base font-medium">akun</span>
+        </div>
+      </div>
+      <div class="rounded-2xl border border-emerald-200 bg-emerald-50 p-4">
+        <p class="text-xs font-medium text-emerald-700">Admin Biasa</p>
+        <div class="mt-2 text-2xl font-semibold text-emerald-800">
+          {{ $regularAdmins }} <span class="text-base font-medium">akun</span>
         </div>
       </div>
     </div>
@@ -68,8 +70,11 @@
               <th class="w-16 px-4 py-3 text-left">ID</th>
               <th class="px-4 py-3 text-left">Nama</th>
               <th class="px-4 py-3 text-left">Email</th>
+              <th class="px-4 py-3 text-left">Role</th>
               <th class="px-4 py-3 text-left">Dibuat Pada</th>
-              <th class="w-32 px-4 py-3 text-center">Aksi</th>
+              @if (auth('admin')->user()->isSuperAdmin())
+                <th class="w-32 px-4 py-3 text-center">Aksi</th>
+              @endif
             </tr>
           </thead>
           <tbody class="divide-y divide-neutral-100">
@@ -94,27 +99,26 @@
                   </div>
                 </td>
                 <td class="px-4 py-3 text-neutral-600">{{ $admin->email }}</td>
-                <td class="px-4 py-3 text-neutral-600">{{ $admin->created_at->format('d M Y') }}</td>
                 <td class="px-4 py-3">
-                  <div class="flex items-center justify-center gap-2">
-                    <a href="{{ route('admin.admins.edit', $admin) }}"
-                       class="inline-flex items-center justify-center rounded-lg p-2 text-blue-600 transition-colors hover:bg-blue-50"
-                       title="Edit">
-                      <svg class="h-4 w-4"
-                           viewBox="0 0 24 24"
-                           fill="none"
-                           stroke="currentColor">
-                        <path stroke-linecap="round"
-                              stroke-linejoin="round"
-                              stroke-width="2"
-                              d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                      </svg>
-                    </a>
-
-                    @if ($admin->id !== auth('admin')->id())
-                      <button onclick="confirmDelete({{ $admin->id }}, '{{ $admin->name }}', '{{ $admin->email }}')"
-                              class="inline-flex items-center justify-center rounded-lg p-2 text-rose-600 transition-colors hover:bg-rose-50"
-                              title="Hapus">
+                  @if ($admin->isSuperAdmin())
+                    <span
+                          class="inline-flex items-center rounded-full bg-purple-100 px-2.5 py-1 text-xs font-semibold text-purple-700">
+                      SUPER ADMIN
+                    </span>
+                  @else
+                    <span
+                          class="inline-flex items-center rounded-full bg-blue-100 px-2.5 py-1 text-xs font-medium text-blue-700">
+                      Admin
+                    </span>
+                  @endif
+                </td>
+                <td class="px-4 py-3 text-neutral-600">{{ $admin->created_at->format('d M Y') }}</td>
+                @if (auth('admin')->user()->isSuperAdmin())
+                  <td class="px-4 py-3">
+                    <div class="flex items-center justify-center gap-2">
+                      <a href="{{ route('admin.admins.edit', $admin) }}"
+                         class="inline-flex items-center justify-center rounded-lg p-2 text-blue-600 transition-colors hover:bg-blue-50"
+                         title="Edit">
                         <svg class="h-4 w-4"
                              viewBox="0 0 24 24"
                              fill="none"
@@ -122,12 +126,28 @@
                           <path stroke-linecap="round"
                                 stroke-linejoin="round"
                                 stroke-width="2"
-                                d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                         </svg>
-                      </button>
-                    @endif
-                  </div>
-                </td>
+                      </a>
+
+                      @if ($admin->id !== auth('admin')->id() && !$admin->isSuperAdmin())
+                        <button onclick="confirmDelete({{ $admin->id }}, '{{ $admin->name }}', '{{ $admin->email }}')"
+                                class="inline-flex items-center justify-center rounded-lg p-2 text-rose-600 transition-colors hover:bg-rose-50"
+                                title="Hapus">
+                          <svg class="h-4 w-4"
+                               viewBox="0 0 24 24"
+                               fill="none"
+                               stroke="currentColor">
+                            <path stroke-linecap="round"
+                                  stroke-linejoin="round"
+                                  stroke-width="2"
+                                  d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                          </svg>
+                        </button>
+                      @endif
+                    </div>
+                  </td>
+                @endif
               </tr>
             @empty
               <tr>
@@ -155,33 +175,32 @@
               <div class="font-medium text-neutral-800">{{ $admin->name }}</div>
               <div class="text-sm text-neutral-600">{{ $admin->email }}</div>
               <div class="mt-1 text-xs text-neutral-500">Dibuat: {{ $admin->created_at->format('d M Y') }}</div>
-              @if ($admin->id === auth('admin')->id())
-                <span
-                      class="mt-2 inline-flex items-center rounded-full bg-green-100 px-2 py-0.5 text-xs font-medium text-green-700">
-                  Anda
-                </span>
-              @endif
+              <div class="mt-2 flex flex-wrap gap-1">
+                @if ($admin->id === auth('admin')->id())
+                  <span
+                        class="inline-flex items-center rounded-full bg-green-100 px-2 py-0.5 text-xs font-medium text-green-700">
+                    Anda
+                  </span>
+                @endif
+                @if ($admin->isSuperAdmin())
+                  <span
+                        class="inline-flex items-center rounded-full bg-purple-100 px-2 py-0.5 text-xs font-semibold text-purple-700">
+                    SUPER ADMIN
+                  </span>
+                @else
+                  <span
+                        class="inline-flex items-center rounded-full bg-blue-100 px-2 py-0.5 text-xs font-medium text-blue-700">
+                    Admin
+                  </span>
+                @endif
+              </div>
             </div>
           </div>
 
-          <div class="mt-4 flex gap-2 border-t border-neutral-100 pt-4">
-            <a href="{{ route('admin.admins.edit', $admin) }}"
-               class="inline-flex flex-1 items-center justify-center rounded-lg border border-blue-300 bg-blue-50 px-3 py-2 text-sm text-blue-700 transition-colors hover:bg-blue-100">
-              <svg class="mr-2 h-4 w-4"
-                   viewBox="0 0 24 24"
-                   fill="none"
-                   stroke="currentColor">
-                <path stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-              </svg>
-              Edit
-            </a>
-
-            @if ($admin->id !== auth('admin')->id())
-              <button onclick="confirmDelete({{ $admin->id }}, '{{ $admin->name }}', '{{ $admin->email }}')"
-                      class="inline-flex flex-1 items-center justify-center rounded-lg border border-rose-300 bg-rose-50 px-3 py-2 text-sm text-rose-700 transition-colors hover:bg-rose-100">
+          @if (auth('admin')->user()->isSuperAdmin())
+            <div class="mt-4 flex gap-2 border-t border-neutral-100 pt-4">
+              <a href="{{ route('admin.admins.edit', $admin) }}"
+                 class="inline-flex flex-1 items-center justify-center rounded-lg border border-blue-300 bg-blue-50 px-3 py-2 text-sm text-blue-700 transition-colors hover:bg-blue-100">
                 <svg class="mr-2 h-4 w-4"
                      viewBox="0 0 24 24"
                      fill="none"
@@ -189,12 +208,28 @@
                   <path stroke-linecap="round"
                         stroke-linejoin="round"
                         stroke-width="2"
-                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                        d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                 </svg>
-                Hapus
-              </button>
-            @endif
-          </div>
+                Edit
+              </a>
+
+              @if ($admin->id !== auth('admin')->id() && !$admin->isSuperAdmin())
+                <button onclick="confirmDelete({{ $admin->id }}, '{{ $admin->name }}', '{{ $admin->email }}')"
+                        class="inline-flex flex-1 items-center justify-center rounded-lg border border-rose-300 bg-rose-50 px-3 py-2 text-sm text-rose-700 transition-colors hover:bg-rose-100">
+                  <svg class="mr-2 h-4 w-4"
+                       viewBox="0 0 24 24"
+                       fill="none"
+                       stroke="currentColor">
+                    <path stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                  </svg>
+                  Hapus
+                </button>
+              @endif
+            </div>
+          @endif
         </div>
       @empty
         <div class="rounded-2xl border border-neutral-200 bg-white p-8 text-center text-neutral-500">

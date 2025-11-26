@@ -17,7 +17,12 @@ class AdminManagementController extends Controller
     {
         $admins = Admin::latest()->paginate(10);
 
-        return view('admin.manajemen-admin.index', compact('admins'));
+        // Statistics
+        $totalAdmins = Admin::count();
+        $superAdmins = Admin::where('is_super_admin', true)->count();
+        $regularAdmins = Admin::where('is_super_admin', false)->count();
+
+        return view('admin.manajemen-admin.index', compact('admins', 'totalAdmins', 'superAdmins', 'regularAdmins'));
     }
 
     /**
@@ -37,12 +42,14 @@ class AdminManagementController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:admins'],
             'password' => ['required', 'confirmed', Password::defaults()],
+            'is_super_admin' => ['boolean'],
         ]);
 
         Admin::create([
             'name' => $validated['name'],
             'email' => $validated['email'],
             'password' => Hash::make($validated['password']),
+            'is_super_admin' => $validated['is_super_admin'] ?? false,
         ]);
 
         return redirect()
@@ -67,10 +74,12 @@ class AdminManagementController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:admins,email,' . $admin->id],
             'password' => ['nullable', 'confirmed', Password::defaults()],
+            'is_super_admin' => ['boolean'],
         ]);
 
         $admin->name = $validated['name'];
         $admin->email = $validated['email'];
+        $admin->is_super_admin = $validated['is_super_admin'] ?? false;
 
         if (!empty($validated['password'])) {
             $admin->password = Hash::make($validated['password']);
@@ -93,6 +102,13 @@ class AdminManagementController extends Controller
             return redirect()
                 ->route('admin.admins.index')
                 ->with('error', 'Anda tidak dapat menghapus akun Anda sendiri!');
+        }
+
+        // Prevent deleting super admin
+        if ($admin->isSuperAdmin()) {
+            return redirect()
+                ->route('admin.admins.index')
+                ->with('error', 'Super Admin tidak dapat dihapus!');
         }
 
         $admin->delete();

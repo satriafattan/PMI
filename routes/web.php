@@ -19,6 +19,7 @@ use App\Http\Controllers\Admin\LaporanController;
 use App\Http\Controllers\Admin\EventVerificationController;
 use App\Http\Controllers\Admin\NotificationController;
 use App\Http\Controllers\Admin\AdminManagementController;
+use App\Http\Controllers\Admin\ProfileController;
 
 /*
 |--------------------------------------------------------------------------
@@ -86,6 +87,10 @@ Route::middleware('auth:admin')->prefix('admin')->name('admin.')->group(function
     // ===== API Notifikasi (untuk polling) =====
     Route::get('/api/notifications', [NotificationController::class, 'getPendingNotifications'])->name('api.notifications');
 
+    // ===== Profile Admin =====
+    Route::get('/profile', [ProfileController::class, 'index'])->name('profile.index');
+    Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
+
     // ===== Detail Darah (Blood Units) =====
     // ==> PERBAIKAN: pakai nama rute 'detail-darah.*' supaya sesuai dengan pemanggilan di Blade.
     Route::get('/detail-darah', [BloodUnitController::class, 'index'])
@@ -132,5 +137,16 @@ Route::middleware('auth:admin')->prefix('admin')->name('admin.')->group(function
     Route::get('event-verifikasi/{event}/surat', [EventVerificationController::class, 'downloadSurat'])->name('event-verifikasi.surat');
 
     // ===== Manajemen Admin =====
-    Route::resource('admins', AdminManagementController::class)->except(['show']);
+    // Index dapat diakses semua admin (read-only)
+    Route::get('admins', [AdminManagementController::class, 'index'])->name('admins.index');
+
+    // Routes berikut hanya untuk Super Admin
+    Route::middleware('super.admin')->group(function () {
+        Route::get('admins/create', [AdminManagementController::class, 'create'])->name('admins.create');
+        Route::post('admins', [AdminManagementController::class, 'store'])->name('admins.store');
+        Route::get('admins/{admin}/edit', [AdminManagementController::class, 'edit'])->name('admins.edit');
+        Route::put('admins/{admin}', [AdminManagementController::class, 'update'])->name('admins.update');
+        Route::patch('admins/{admin}', [AdminManagementController::class, 'update']);
+        Route::delete('admins/{admin}', [AdminManagementController::class, 'destroy'])->name('admins.destroy');
+    });
 });

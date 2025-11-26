@@ -142,6 +142,24 @@
           @enderror
         </div>
 
+        {{-- Super Admin Checkbox --}}
+        <div>
+          <label class="flex cursor-pointer items-start gap-3">
+            <input type="checkbox"
+                   id="is_super_admin"
+                   name="is_super_admin"
+                   value="1"
+                   {{ old('is_super_admin') ? 'checked' : '' }}
+                   class="mt-0.5 h-4 w-4 rounded border-neutral-300 text-purple-600 focus:ring-2 focus:ring-purple-500">
+            <div class="flex-1">
+              <span class="text-sm font-medium text-neutral-700">Jadikan Super Admin</span>
+              <p class="mt-0.5 text-xs text-neutral-500">
+                Super Admin memiliki akses penuh untuk menambah, mengedit, dan menghapus admin lain
+              </p>
+            </div>
+          </label>
+        </div>
+
         {{-- Info Box --}}
         <div class="rounded-xl border border-blue-200 bg-blue-50 p-4">
           <div class="flex gap-3">

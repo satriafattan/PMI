@@ -6,7 +6,7 @@
       {{-- Logo --}}
       <a href="/"
          class="flex items-center gap-2 transition-transform hover:scale-105 sm:gap-3">
-        <img src="{{ asset('images/Logo Nav New.png') }}"
+        <img src="{{ asset('images/simphony-logo.png') }}"
              alt="Logo SIMPHONY"
              class="h-14 w-14 object-contain sm:h-16 sm:w-16 md:h-20 md:w-20">
         <div class="flex flex-col">

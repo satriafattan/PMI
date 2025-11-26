@@ -4,7 +4,7 @@
   <div class="w-full max-w-md rounded-xl bg-white p-8 shadow-lg">
     <div class="mb-8 text-center">
       <div class="mx-auto mb-3">
-        <img src="{{ asset('images/Logo Nav New.png') }}"
+        <img src="{{ asset('images/simphony-logo.png') }}"
              alt="Logo SIMPHONY"
              class="mx-auto h-32 w-32 object-contain">
       </div>

@@ -10,18 +10,23 @@ class AdminSeeder extends Seeder
 {
     public function run(): void
     {
-        // Admin default
+        // Super Admin default
         Admin::updateOrCreate(
             ['email' => 'admin@example.com'],
-            ['name' => 'Super Admin', 'password' => Hash::make('password')]
+            [
+                'name' => 'Super Admin',
+                'password' => Hash::make('password'),
+                'is_super_admin' => true
+            ]
         );
 
-        // Tambahkan admin Anda di sini
+        // Admin biasa
         Admin::updateOrCreate(
             ['email' => 'jaflahx@gmail.com'],
             [
                 'name' => 'Admin Jafla',
-                'password' => Hash::make('password123') // Ganti dengan password yang Anda inginkan
+                'password' => Hash::make('password123'),
+                'is_super_admin' => false
             ]
         );
 
@@ -29,7 +34,8 @@ class AdminSeeder extends Seeder
             ['email' => 'admin2@gmail.com'],
             [
                 'name' => 'Admin Heru',
-                'password' => Hash::make('password123') // Ganti dengan password yang Anda inginkan
+                'password' => Hash::make('password123'),
+                'is_super_admin' => false
             ]
         );
     }

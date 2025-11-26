@@ -86,7 +86,7 @@
 <body>
 
   <div class="header">
-    <img src="{{ public_path('images/Logo Nav New.png') }}"
+    <img src="{{ public_path('images/simphony-logo.png') }}"
          alt="SIMPHONY">
     <div>
       <div style="font-weight:700;color:#dc2626;">SIMPHONY</div>
