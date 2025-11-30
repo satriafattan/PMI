@@ -35,6 +35,9 @@ class PemesananDarah extends Model
         'nama_dokter',
         'jenis_kelamin',
         'tanggal_permintaan',
+        'jumlah_kehamilan',
+        'abortus',
+        'riwayat_hemolitik',
     ];
 
     protected $casts = [
@@ -44,6 +47,7 @@ class PemesananDarah extends Model
         'tanggal_serologi'   => 'date',
         'cek_transfusi'      => 'boolean',
         'jumlah_kantong'     => 'integer',
+        'jumlah_kehamilan'   => 'integer',
     ];
 
     public function verifikasis()

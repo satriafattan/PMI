@@ -395,6 +395,9 @@
                     'tanggal_transfusi' =>
                         optional($o->tanggal_transfusi)->toDateString() ?? ($o->tanggal_transfusi ?? null),
                     'hasil_serologi' => $o->hasil_serologi,
+                    'jumlah_kehamilan' => $o->jumlah_kehamilan,
+                    'abortus' => $o->abortus,
+                    'riwayat_hemolitik' => $o->riwayat_hemolitik,
                     'tanggal' => $tglBaris,
                 ];
               @endphp
@@ -481,6 +484,9 @@
               'tanggal_serologi' => optional($o->tanggal_serologi)->toDateString() ?? ($o->tanggal_serologi ?? null),
               'tanggal_transfusi' => optional($o->tanggal_transfusi)->toDateString() ?? ($o->tanggal_transfusi ?? null),
               'hasil_serologi' => $o->hasil_serologi,
+              'jumlah_kehamilan' => $o->jumlah_kehamilan,
+              'abortus' => $o->abortus,
+              'riwayat_hemolitik' => $o->riwayat_hemolitik,
           ];
         @endphp
 
@@ -666,7 +672,7 @@
           </section>
 
           {{-- C. Permintaan Darah --}}
-          <section class="rounded-2xl border border-neutral-100 bg-neutral-50/60 p-3 sm:p-4 md:col-span-2">
+          <section class="rounded-2xl border border-neutral-100 bg-neutral-50/60 p-3 sm:p-4">
             <div class="mb-3 flex items-center gap-2">
               <span class="inline-flex size-6 items-center justify-center rounded-lg border border-neutral-200 bg-white">
                 <svg class="size-3.5 text-neutral-700"
@@ -694,8 +700,39 @@
               <dt>Alasan Tambahan</dt>
               <dd id="dm_gejala">—</dd>
             </dl>
+          </section>
 
-            <div class="mt-4 grid grid-cols-1 gap-3 rounded-xl border border-neutral-100 bg-white/60 p-3 sm:grid-cols-2">
+          {{-- D. Data Kehamilan (hanya untuk pasien perempuan) --}}
+          <section id="dm_section_kehamilan"
+                   class="hidden rounded-2xl border border-neutral-100 bg-neutral-50/60 p-3 sm:p-4">
+            <div class="mb-3 flex items-center gap-2">
+              <span class="inline-flex size-6 items-center justify-center rounded-lg border border-neutral-200 bg-white">
+                <svg class="size-3.5 text-neutral-700"
+                     viewBox="0 0 24 24"
+                     fill="none"
+                     stroke="currentColor"
+                     aria-hidden="true">
+                  <path stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="1.6"
+                        d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                </svg>
+              </span>
+              <h4 class="text-sm font-semibold tracking-wide text-neutral-800">D. Data Kehamilan</h4>
+            </div>
+            <dl class="two-col-dl">
+              <dt>Jumlah Kehamilan</dt>
+              <dd id="dm_jumlah_kehamilan">-</dd>
+              <dt>Abortus</dt>
+              <dd id="dm_abortus">-</dd>
+              <dt>Riwayat Hemolitik</dt>
+              <dd id="dm_riwayat_hemolitik">-</dd>
+            </dl>
+          </section>
+
+          {{-- Info Tanggal & Status --}}
+          <section class="md:col-span-2">
+            <div class="grid grid-cols-1 gap-3 rounded-xl border border-neutral-100 bg-white/60 p-3 sm:grid-cols-2">
               <div class="flex items-center justify-between rounded-lg border border-neutral-100 bg-white px-3 py-2">
                 <span class="text-xs text-neutral-500">Tgl. Pemesanan</span>
                 <span id="dm_tgl_pesan"
@@ -707,23 +744,23 @@
                       id="dm_status_clone">-</span>
               </div>
             </div>
-
-            {{-- Form POST (hidden) --}}
-            <form id="dm_form"
-                  method="POST"
-                  action="#"
-                  class="hidden">
-              @csrf
-              <input type="hidden"
-                     name="status"
-                     id="dm_status_input"
-                     value="">
-              <input type="hidden"
-                     name="tanggal_permintaan"
-                     id="dm_tanggal_input"
-                     value="">
-            </form>
           </section>
+
+          {{-- Form POST (hidden) --}}
+          <form id="dm_form"
+                method="POST"
+                action="#"
+                class="hidden md:col-span-2">
+            @csrf
+            <input type="hidden"
+                   name="status"
+                   id="dm_status_input"
+                   value="">
+            <input type="hidden"
+                   name="tanggal_permintaan"
+                   id="dm_tanggal_input"
+                   value="">
+          </form>
         </div>
       </div>
 
@@ -757,19 +794,6 @@
          tabindex="-1">
       <div class="px-4 pt-4 sm:px-5 sm:pt-5">
         <div class="flex items-start gap-3">
-          <span id="cm_icon"
-                class="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-neutral-200 bg-neutral-50 text-neutral-700">
-            <svg class="h-5 w-5"
-                 viewBox="0 0 24 24"
-                 fill="none"
-                 stroke="currentColor"
-                 aria-hidden="true">
-              <path stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="1.8"
-                    d="M12 9v4m0 4h.01M12 22a10 10 0 1 1 0-20 10 10 0 0 1 0 20z" />
-            </svg>
-          </span>
           <div class="min-w-0">
             <h4 id="confirmModalTitle"
                 class="text-base font-semibold text-neutral-900">Konfirmasi</h4>
@@ -1117,6 +1141,10 @@
         tglSerologi: document.getElementById('dm_tgl_serologi'),
         tglTransfusi: document.getElementById('dm_tgl_transfusi'),
         hasilSerologi: document.getElementById('dm_hasil_serologi'),
+        sectionKehamilan: document.getElementById('dm_section_kehamilan'),
+        jumlahKehamilan: document.getElementById('dm_jumlah_kehamilan'),
+        abortus: document.getElementById('dm_abortus'),
+        riwayatHemolitik: document.getElementById('dm_riwayat_hemolitik'),
       };
 
       const fmt = v => v ? v : '-';
@@ -1173,6 +1201,17 @@
           dm.tglSerologi.textContent = fmt(payload.tanggal_serologi);
           dm.tglTransfusi.textContent = fmt(payload.tanggal_transfusi);
           dm.hasilSerologi.textContent = payload.hasil_serologi ?? '-';
+
+          // Toggle & populate data kehamilan (hanya untuk pasien perempuan)
+          if (payload.jenis_kelamin === 'P') {
+            dm.sectionKehamilan.classList.remove('hidden');
+            dm.jumlahKehamilan.textContent = payload.jumlah_kehamilan != null ? payload.jumlah_kehamilan + ' kali' :
+              '-';
+            dm.abortus.textContent = yaTidak(payload.abortus);
+            dm.riwayatHemolitik.textContent = yaTidak(payload.riwayat_hemolitik);
+          } else {
+            dm.sectionKehamilan.classList.add('hidden');
+          }
 
           dmForm.action = actionUrl || '#';
           dmTanggalInput.value = (payload.tanggal_permintaan ?? payload.tanggal ?? new Date().toISOString().slice(0,
@@ -1234,7 +1273,6 @@
       const cmDesc = document.getElementById('cm_desc');
       const cmOk = document.getElementById('cm_ok');
       const cmCancel = document.getElementById('cm_cancel');
-      const cmIcon = document.getElementById('cm_icon');
       const confirmModal = document.getElementById('confirmModal');
       const confirmCard = document.getElementById('confirmCard');
       const lastFocusConfirm = {
@@ -1243,25 +1281,15 @@
       let cmNext = null;
 
       function setConfirmAppearance(variant) {
-        const base = 'inline-flex h-9 w-9 items-center justify-center rounded-lg border ';
         if (variant === 'approve') {
-          cmIcon.className = base + 'border-emerald-200 bg-emerald-50 text-emerald-700';
-          cmIcon.innerHTML =
-            `<svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 9v4m0 4h.01M12 22a10 10 0 1 1 0-20 10 10 0 0 1 0 20z"/></svg>`;
           cmOk.className =
             'min-h-10 rounded-lg px-3 py-2 text-sm font-medium text-white bg-emerald-600 hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-300';
           cmOk.textContent = 'Setuju';
         } else if (variant === 'reject') {
-          cmIcon.className = base + 'border-rose-200 bg-rose-50 text-rose-700';
-          cmIcon.innerHTML =
-            `<svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 9v4m0 4h.01M12 22a10 10 0 1 1 0-20 10 10 0 0 1 0 20z"/></svg>`;
           cmOk.className =
             'min-h-10 rounded-lg px-3 py-2 text-sm font-medium text-white bg-rose-600 hover:bg-rose-700 focus:outline-none focus:ring-2 focus:ring-rose-300';
           cmOk.textContent = 'Tolak';
         } else {
-          cmIcon.className = base + 'border-neutral-200 bg-neutral-50 text-neutral-700';
-          cmIcon.innerHTML =
-            `<svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 9v4m0 4h.01M12 22a10 10 0 1 1 0-20 10 10 0 0 1 0 20z"/></svg>`;
           cmOk.className =
             'min-h-10 rounded-lg px-3 py-2 text-sm font-medium text-white bg-emerald-600 hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-300';
           cmOk.textContent = 'Lanjutkan';

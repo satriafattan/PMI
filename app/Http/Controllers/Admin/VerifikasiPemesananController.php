@@ -135,9 +135,9 @@ class VerifikasiPemesananController extends Controller
 
         $successMessage = 'Verifikasi berhasil disimpan.';
         if ($emailSent) {
-            $successMessage .= ' ✅ Email notifikasi telah dikirim ke ' . $pemesanan->email;
+            $successMessage .= ' Email notifikasi telah dikirim ke ' . $pemesanan->email;
         } elseif (!empty($pemesanan->email)) {
-            $successMessage .= ' ⚠️ Email notifikasi gagal dikirim';
+            $successMessage .= ' Email notifikasi gagal dikirim';
             if ($emailError) {
                 $successMessage .= ': ' . $emailError;
             }

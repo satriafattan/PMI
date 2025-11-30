@@ -239,6 +239,7 @@
                       <input type="date"
                              name="tanggal_diperlukan"
                              value="{{ old('tanggal_diperlukan') }}"
+                             min="{{ date('Y-m-d') }}"
                              required
                              class="{{ $field }}">
                     </div>
@@ -293,6 +294,7 @@
                     <input type="date"
                            name="tanggal_transfusi"
                            value="{{ old('tanggal_transfusi') }}"
+                           min="{{ date('Y-m-d') }}"
                            required
                            class="{{ $field }}">
                   </div>

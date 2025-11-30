@@ -12,7 +12,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('pemesanan_darah', function (Blueprint $table) {
-            //
+            $table->unsignedTinyInteger('jumlah_kehamilan')->nullable()->after('jenis_kelamin');
+            $table->enum('abortus', ['Ya', 'Tidak'])->nullable()->after('jumlah_kehamilan');
+            $table->enum('riwayat_hemolitik', ['Ya', 'Tidak'])->nullable()->after('abortus');
         });
     }
 
@@ -22,7 +24,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('pemesanan_darah', function (Blueprint $table) {
-            //
+            $table->dropColumn(['jumlah_kehamilan', 'abortus', 'riwayat_hemolitik']);
         });
     }
 };

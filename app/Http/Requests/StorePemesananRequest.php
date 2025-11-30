@@ -55,13 +55,13 @@ class StorePemesananRequest extends FormRequest
             'nama_suami_istri'  => ['nullable', 'string', 'max:150'],
             'nama_dokter'       => ['required', 'string', 'max:150'],
             'nama_pasien'       => ['required', 'string', 'max:150'],
-            'tanggal_diperlukan' => ['nullable', 'date'],
+            'tanggal_diperlukan' => ['required', 'date', 'after_or_equal:today'],
             'pernah_serologi'   => ['required', 'in:Ya,Tidak'],
             'diagnosa_klinik'   => ['required', 'string', 'max:255'],
             'lokasi_serologi'   => ['nullable', 'string', 'max:120'],
             'tanggal_serologi'  => ['nullable', 'date'],
             'hasil_serologi'    => ['required', 'string'],
-            'tanggal_transfusi' => ['required', 'date'],
+            'tanggal_transfusi' => ['required', 'date', 'after_or_equal:today'],
             'jumlah_kehamilan'  => ['nullable', 'integer', 'min:0', 'max:99'],
             'abortus'           => ['nullable', 'in:Ya,Tidak'],
             'riwayat_hemolitik' => ['nullable', 'in:Ya,Tidak'],
@@ -73,6 +73,7 @@ class StorePemesananRequest extends FormRequest
             'rhesus'            => ['required', 'in:Rh+,Rh-'],
             'cek_transfusi'     => ['nullable', 'boolean'],
             'tanggal_pemesanan' => ['nullable', 'date'],
+            'tanggal_permintaan' => ['nullable', 'date'], // mapped dari tanggal_diperlukan
         ];
     }
 
@@ -85,7 +86,17 @@ class StorePemesananRequest extends FormRequest
             'no_regis_rs'   => 'Nomor registrasi RS',
             'no_rekap_rs'   => 'Nomor rekam medis RS',
             'tanggal_permintaan' => 'Tanggal diperlukan',
+            'tanggal_diperlukan' => 'Tanggal diperlukan',
+            'tanggal_transfusi'  => 'Tanggal transfusi',
             'tanggal_serologi'   => 'Tanggal serologi',
+        ];
+    }
+
+    public function messages(): array
+    {
+        return [
+            'tanggal_diperlukan.after_or_equal' => 'Tanggal diperlukan tidak boleh kurang dari hari ini.',
+            'tanggal_transfusi.after_or_equal' => 'Tanggal transfusi tidak boleh kurang dari hari ini.',
         ];
     }
 
