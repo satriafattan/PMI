@@ -101,16 +101,22 @@
               $border = 'border-emerald-400/40';
               $bgGradient = 'from-emerald-500/20 to-emerald-400/10';
               if ($jumlah < 50) {
-                  $status = 'Menipis';
+                  $status = 'Perhatian';
                   $color = 'amber';
                   $border = 'border-amber-400/40';
                   $bgGradient = 'from-amber-500/20 to-amber-400/10';
               }
-              if ($jumlah < 20) {
+              if ($jumlah < 10) {
                   $status = 'Kritis';
                   $color = 'red';
                   $border = 'border-red-400/50';
                   $bgGradient = 'from-red-500/20 to-red-400/10';
+              }
+              if ($jumlah === 0) {
+                  $status = 'Habis';
+                  $color = 'slate';
+                  $border = 'border-slate-400/40';
+                  $bgGradient = 'from-slate-500/20 to-slate-400/10';
               }
 
               $percentage = $jumlah > 0 ? min(100, ($jumlah / 100) * 100) : 0;
@@ -165,9 +171,9 @@
             <div class="text-sm text-slate-600">
               <strong>Keterangan Status:</strong>
               <span class="text-emerald-600">≥50 Aman</span>,
-              <span class="text-amber-600">20–49 Menipis</span>,
-              <span class="text-red-600">&lt;20 Kritis</span>.
-              Data diperbarui secara real-time dari sistem inventory PMI.
+              <span class="text-amber-600">10–49 Perhatian</span>,
+              <span class="text-red-600">1–9 Kritis</span>,
+              <span class="text-slate-600">0 Habis</span>.
             </div>
           </div>
         </div>

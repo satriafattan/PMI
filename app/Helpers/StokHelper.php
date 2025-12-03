@@ -6,24 +6,28 @@ class StokHelper
 {
     public static function badgeStatus($total)
     {
-        if ($total >= 80) {
+        if ($total >= 50) {
             return ['Aman', 'bg-emerald-100 text-emerald-700'];
         }
-        if ($total >= 40) {
+        if ($total >= 10) {
             return ['Perhatian', 'bg-amber-100 text-amber-700'];
         }
-        return ['Kritis', 'bg-rose-100 text-rose-700'];
+        if ($total >= 1) {
+            return ['Kritis', 'bg-rose-100 text-rose-700'];
+        }
+        return ['Habis', 'bg-slate-100 text-slate-700'];
     }
 
     public static function isKritis($jumlah)
     {
-        return $jumlah < 20;
+        return $jumlah < 10 && $jumlah > 0;
     }
 
     public static function statusLevel($jumlah)
     {
-        if ($jumlah >= 80) return 'aman';
-        if ($jumlah >= 40) return 'menipis';
-        return 'kritis';
+        if ($jumlah >= 50) return 'aman';
+        if ($jumlah >= 10) return 'perhatian';
+        if ($jumlah >= 1) return 'kritis';
+        return 'habis';
     }
 }

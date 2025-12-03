@@ -538,9 +538,7 @@
       <div class="md:col-span-2">
         <div class="flex flex-col-reverse items-center justify-between gap-4 sm:flex-row">
           <p class="text-sm text-slate-500">
-            Dengan mengajukan, Anda menyetujui
-            <a href="#"
-               class="font-medium text-red-600 hover:text-red-700">Syarat & Ketentuan</a> kami
+            Pastikan semua data yang Anda masukkan sudah benar dan sesuai dengan kebutuhan Anda.
           </p>
           <button id="submitBtn"
                   type="submit"

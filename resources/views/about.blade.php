@@ -42,61 +42,7 @@
           </p>
 
           {{-- Stats --}}
-          <div class="mx-auto mt-12 grid max-w-4xl grid-cols-3 gap-6 sm:gap-8">
-            <div class="group">
-              <div
-                   class="mb-3 inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-white/10 ring-1 ring-white/20 backdrop-blur-sm transition group-hover:scale-110 group-hover:bg-white/20">
-                <svg class="h-7 w-7 text-white"
-                     fill="none"
-                     stroke="currentColor"
-                     viewBox="0 0 24 24">
-                  <path stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
-                </svg>
-              </div>
-              <div class="text-3xl font-extrabold tracking-tight"
-                   data-counter>25</div>
-              <div class="mt-1 text-sm text-white/80">Tahun Pengalaman</div>
-            </div>
-
-            <div class="group">
-              <div
-                   class="mb-3 inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-white/10 ring-1 ring-white/20 backdrop-blur-sm transition group-hover:scale-110 group-hover:bg-white/20">
-                <svg class="h-7 w-7 text-white"
-                     fill="none"
-                     stroke="currentColor"
-                     viewBox="0 0 24 24">
-                  <path stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-                </svg>
-              </div>
-              <div class="text-3xl font-extrabold tracking-tight"
-                   data-counter>1000000</div>
-              <div class="mt-1 text-sm text-white/80">Pasien Dilayani</div>
-            </div>
-
-            <div class="group">
-              <div
-                   class="mb-3 inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-white/10 ring-1 ring-white/20 backdrop-blur-sm transition group-hover:scale-110 group-hover:bg-white/20">
-                <svg class="h-7 w-7 text-white"
-                     fill="none"
-                     stroke="currentColor"
-                     viewBox="0 0 24 24">
-                  <path stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-                </svg>
-              </div>
-              <div class="text-3xl font-extrabold tracking-tight"
-                   data-counter>50</div>
-              <div class="mt-1 text-sm text-white/80">Tenaga Medis Profesional</div>
-            </div>
-          </div>
+          <div class="mt-12 flex justify-center gap-8">
         </div>
       </div>
     </section>
@@ -139,30 +85,6 @@
               </p>
             </div>
 
-            {{-- Achievement Cards --}}
-            <div class="mt-8 grid grid-cols-3 gap-4">
-              @foreach ([
-          ['2025', 'Tahun Peluncuran', '<svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" /></svg>'],
-          ['100%', 'Sistem Digital', '<svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>'],
-          ['24/7', 'Akses Real-time', '<svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>'],
-      ] as $s)
-                <div class="group relative">
-                  <div
-                       class="absolute -inset-0.5 rounded-2xl bg-gradient-to-br from-red-500/30 to-rose-400/20 opacity-0 blur transition duration-300 group-hover:opacity-100">
-                  </div>
-                  <div
-                       class="relative rounded-2xl border-2 border-slate-200 bg-white p-4 shadow-lg transition duration-300 group-hover:border-red-200 group-hover:shadow-xl">
-                    <div class="mb-2 flex h-8 w-8 items-center justify-center rounded-lg bg-red-100 text-red-600">
-                      {!! $s[2] !!}
-                    </div>
-                    <div class="text-3xl font-extrabold text-red-600"
-                         data-counter-stat>{{ $s[0] }}</div>
-                    <div class="mt-1 text-xs font-medium text-slate-500">{{ $s[1] }}</div>
-                  </div>
-                </div>
-              @endforeach
-            </div>
-
             {{-- CTA Button --}}
             <div class="mt-8">
               <a href="{{ url('/pemesanan') }}"
@@ -185,41 +107,10 @@
           <div class="relative">
             <div class="absolute -inset-4 rounded-3xl bg-gradient-to-r from-red-200/50 to-rose-200/50 blur-2xl"></div>
             <div class="relative overflow-hidden rounded-3xl bg-white shadow-2xl ring-1 ring-slate-200">
-              <div class="aspect-[4/3] bg-gradient-to-br from-slate-50 to-slate-100 p-12">
-                <div class="flex h-full items-center justify-center">
-                  <div class="text-center">
-                    <svg class="mx-auto h-40 w-40 text-slate-300"
-                         fill="none"
-                         stroke="currentColor"
-                         viewBox="0 0 24 24">
-                      <path stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="1.5"
-                            d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-                    </svg>
-                    <p class="mt-4 text-lg font-semibold text-slate-400">Platform Digital Terpadu</p>
-                  </div>
-                </div>
-              </div>
-
-              {{-- Image Overlay Badge --}}
-              <div class="border-t border-slate-100 bg-white p-6">
-                <div class="flex items-center justify-center gap-6 text-center">
-                  <div>
-                    <div class="text-2xl font-bold text-red-600">DIGITAL</div>
-                    <div class="mt-1 text-xs text-slate-600">Platform</div>
-                  </div>
-                  <div class="h-8 w-px bg-slate-200"></div>
-                  <div>
-                    <div class="text-2xl font-bold text-red-600">24/7</div>
-                    <div class="mt-1 text-xs text-slate-600">Available</div>
-                  </div>
-                  <div class="h-8 w-px bg-slate-200"></div>
-                  <div>
-                    <div class="text-2xl font-bold text-red-600">100%</div>
-                    <div class="mt-1 text-xs text-slate-600">Secure</div>
-                  </div>
-                </div>
+              <div class="aspect-[4/3]">
+                <img src="{{ asset('images/Gambar About.jpeg') }}"
+                     alt="Platform Digital Terpadu"
+                     class="h-full w-full object-cover">
               </div>
             </div>
           </div>
@@ -300,7 +191,7 @@
         <div id="tab-visi"
              class="tab-panel mt-12">
           <div class="grid gap-6 md:grid-cols-3">
-            {{-- Card 1: Efisiensi Digital --}}
+            {{-- Card 1: Transformasi Digital --}}
             <div class="group relative text-left">
               <div
                    class="absolute -inset-0.5 rounded-3xl bg-gradient-to-br from-blue-100 to-blue-50 opacity-0 blur transition duration-300 group-hover:opacity-100">
@@ -319,7 +210,7 @@
                           d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                   </svg>
                 </div>
-                <h3 class="text-xl font-bold text-slate-900">Efisiensi Digital</h3>
+                <h3 class="text-xl font-bold text-slate-900">Transformasi Digital</h3>
                 <p class="mt-3 leading-relaxed text-slate-600">Menjadi platform sistem informasi terdepan yang
                   mengintegrasikan teknologi digital dalam pengelolaan pemesanan dan inventori darah.</p>
               </div>
@@ -431,7 +322,7 @@
                 </div>
                 <h3 class="text-xl font-bold text-slate-900">Digitalisasi Proses</h3>
                 <p class="mt-3 leading-relaxed text-slate-600">Mengotomatisasi alur kerja pemesanan dan pengelolaan stok
-                  untuk meningkatkan efisiensi dan akurasi.</p>
+                  untuk meningkatkan kecepatan dan akurasi.</p>
               </div>
             </div>
 
@@ -514,7 +405,7 @@
             </div>
           </div>
 
-          {{-- Card 2: Efisiensi --}}
+          {{-- Card 2: Kecepatan --}}
           <div class="group relative text-left">
             <div
                  class="absolute -inset-0.5 rounded-3xl bg-gradient-to-br from-blue-100 to-blue-50 opacity-0 blur transition duration-300 group-hover:opacity-100">
@@ -533,7 +424,7 @@
                         d="M13 10V3L4 14h7v7l9-11h-7z" />
                 </svg>
               </div>
-              <h3 class="text-lg font-bold text-slate-900">Efisiensi</h3>
+              <h3 class="text-lg font-bold text-slate-900">Kecepatan</h3>
               <p class="mt-2 text-sm leading-relaxed text-slate-600">
                 Mengoptimalkan setiap proses untuk menghemat waktu dan meningkatkan produktivitas.
               </p>
@@ -696,7 +587,7 @@
               Berkolaborasi Dengan Kami
             </h3>
             <p class="mx-auto mt-4 max-w-2xl text-lg leading-relaxed text-white/90">
-              Mari bersama-sama membangun sistem kesehatan yang lebih baik melalui digitalisasi dan efisiensi.
+              Mari bersama-sama membangun sistem kesehatan yang lebih baik melalui digitalisasi dan inovasi.
               <strong class="font-semibold text-white">Setiap kontribusi teknologi membawa dampak nyata.</strong>
             </p>
 
@@ -741,7 +632,7 @@
                         stroke-width="2"
                         d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
                 </svg>
-                <span>Support 24/7</span>
+                <span>Support : 0721475019</span>
               </div>
               <div class="flex items-center gap-2">
                 <svg class="h-5 w-5"
@@ -753,21 +644,21 @@
                         stroke-width="2"
                         d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                 </svg>
-                <span>info@simphony.id</span>
+                <span>simphonydarah@gmail.com</span>
               </div>
               <div class="flex items-center gap-2">
                 <svg class="h-5 w-5"
-                     fill="none"
-                     stroke="currentColor"
-                     viewBox="0 0 24 24">
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24">
                   <path stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 111.314 0z" />
+                     stroke-linejoin="round"
+                     stroke-width="2"
+                     d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                   <path stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                     stroke-linejoin="round"
+                     stroke-width="2"
+                     d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                 </svg>
                 <span>Lampung, Indonesia</span>
               </div>

@@ -23,7 +23,7 @@
         </div>
       </div>
       <div class="rounded-2xl border border-amber-200 bg-amber-50 p-4">
-        <p class="text-xs font-medium text-amber-700">Stok Menipis</p>
+        <p class="text-xs font-medium text-amber-700">Stok Perhatian</p>
         <div class="mt-2 text-2xl font-semibold text-amber-800">
           <span id="sumLow">0</span> <span class="text-base font-medium">unit</span>
         </div>
@@ -93,8 +93,9 @@
                   <select id="statusSelect"
                           class="mt-1 w-full rounded-lg border border-neutral-200 bg-white px-3 py-2 text-sm">
                     <option value="all">Semua</option>
-                    <option value="low">Menipis (&lt; 50)</option>
-                    <option value="critical">Kritis (&lt; 20)</option>
+                    <option value="low">Perhatian (10-49)</option>
+                    <option value="critical">Kritis (1-9)</option>
+                    <option value="empty">Habis (0)</option>
                   </select>
                 </div>
                 <div class="flex items-center justify-between">
@@ -432,8 +433,8 @@
 
   {{-- ===== Data awal dari controller ===== --}}
   <script>
-    const LOW_TH = 50,
-      CRIT_TH = 20;
+    const LOW_TH = 10, // Perhatian: 10-49
+      CRIT_TH = 50; // Aman: >=50
     // Ambil data dari controller
     let products = @json($summary);
     let riwayatStok = @json($riwayat);
@@ -515,14 +516,18 @@
         bgColor = 'bg-emerald-100';
         textColor = 'text-emerald-700';
         borderColor = 'border-emerald-200';
-      } else if (value >= 20) {
+      } else if (value >= 10) {
         bgColor = 'bg-amber-100';
         textColor = 'text-amber-700';
         borderColor = 'border-amber-200';
-      } else {
+      } else if (value >= 1) {
         bgColor = 'bg-rose-100';
         textColor = 'text-rose-700';
         borderColor = 'border-rose-200';
+      } else {
+        bgColor = 'bg-slate-100';
+        textColor = 'text-slate-700';
+        borderColor = 'border-slate-200';
       }
 
       return `
@@ -540,8 +545,8 @@
         total += rowTotal(r);
         ['A', 'AB', 'B', 'O'].forEach(k => {
           const v = r[k] || 0;
-          if (v < CRIT_TH) critical += v;
-          else if (v < LOW_TH) low += v;
+          if (v < LOW_TH && v > 0) critical += v; // Kritis: 1-9
+          else if (v < CRIT_TH && v >= LOW_TH) low += v; // Perhatian: 10-49
         });
       });
       document.getElementById('sumTotal').textContent = total;
@@ -555,11 +560,14 @@
       const mode = document.getElementById('statusSelect')?.value || 'all';
       return products.filter(r => {
         const matchQ = !q || (r.produk || '').toLowerCase().includes(q);
-        const anyLow = ['A', 'AB', 'B', 'O'].some(k => (r[k] || 0) < LOW_TH && (r[k] || 0) >= CRIT_TH);
-        const anyCritical = ['A', 'AB', 'B', 'O'].some(k => (r[k] || 0) < CRIT_TH);
+        const anyLow = ['A', 'AB', 'B', 'O'].some(k => (r[k] || 0) >= LOW_TH && (r[k] || 0) <
+        CRIT_TH); // Perhatian: 10-49
+        const anyCritical = ['A', 'AB', 'B', 'O'].some(k => (r[k] || 0) < LOW_TH && (r[k] || 0) > 0); // Kritis: 1-9
+        const anyEmpty = ['A', 'AB', 'B', 'O'].some(k => (r[k] || 0) === 0); // Habis: 0
         let matchM = true;
         if (mode === 'low') matchM = anyLow;
         if (mode === 'critical') matchM = anyCritical;
+        if (mode === 'empty') matchM = anyEmpty;
         return matchQ && matchM;
       });
     }
@@ -621,27 +629,27 @@
                   <span class="text-xs text-neutral-500">(${totalUnits} unit)</span>
                 </div>
                 ${riwayat.length > 0 ? `
-                                <span class="text-xs text-neutral-500 flex items-center gap-1">
-                                  ${iconHistory}
-                                  ${riwayat.length} riwayat
-                                </span>
-                              ` : ''}
+                                  <span class="text-xs text-neutral-500 flex items-center gap-1">
+                                    ${iconHistory}
+                                    ${riwayat.length} riwayat
+                                  </span>
+                                ` : ''}
               </div>
               
               ${riwayat.length > 0 ? `
-                              <div class="rounded-lg border border-neutral-200 overflow-hidden">
-                                <table class="w-full text-xs">
-                                  <thead class="bg-neutral-50 text-neutral-600">
-                                    <tr>
-                                      <th class="px-3 py-2 text-left font-medium">ID</th>
-                                      <th class="px-3 py-2 text-left font-medium">Rhesus</th>
-                                      <th class="px-3 py-2 text-left font-medium">Jumlah</th>
-                                      <th class="px-3 py-2 text-left font-medium">Ditambahkan</th>
-                                      <th class="px-3 py-2 text-center font-medium">Aksi</th>
-                                    </tr>
-                                  </thead>
-                                  <tbody class="divide-y divide-neutral-100 bg-white">
-                                    ${riwayat.map(item => `
+                                <div class="rounded-lg border border-neutral-200 overflow-hidden">
+                                  <table class="w-full text-xs">
+                                    <thead class="bg-neutral-50 text-neutral-600">
+                                      <tr>
+                                        <th class="px-3 py-2 text-left font-medium">ID</th>
+                                        <th class="px-3 py-2 text-left font-medium">Rhesus</th>
+                                        <th class="px-3 py-2 text-left font-medium">Jumlah</th>
+                                        <th class="px-3 py-2 text-left font-medium">Ditambahkan</th>
+                                        <th class="px-3 py-2 text-center font-medium">Aksi</th>
+                                      </tr>
+                                    </thead>
+                                    <tbody class="divide-y divide-neutral-100 bg-white">
+                                      ${riwayat.map(item => `
                         <tr class="hover:bg-blue-50/30 transition-colors">
                           <td class="px-3 py-2 font-medium text-neutral-700">#${item.id}</td>
                           <td class="px-3 py-2">
@@ -663,14 +671,14 @@
                           </td>
                         </tr>
                       `).join('')}
-                                  </tbody>
-                                </table>
-                              </div>
-                            ` : `
-                              <div class="rounded-lg border border-dashed border-neutral-300 bg-neutral-50 px-4 py-6 text-center">
-                                <p class="text-sm text-neutral-500">Belum ada riwayat penambahan stok untuk golongan ${gol}</p>
-                              </div>
-                            `}
+                                    </tbody>
+                                  </table>
+                                </div>
+                              ` : `
+                                <div class="rounded-lg border border-dashed border-neutral-300 bg-neutral-50 px-4 py-6 text-center">
+                                  <p class="text-sm text-neutral-500">Belum ada riwayat penambahan stok untuk golongan ${gol}</p>
+                                </div>
+                              `}
             </div>
           `;
         }).join('');
@@ -739,8 +747,8 @@
               </div>
               
               ${riwayat.length > 0 ? `
-                              <div class="space-y-2 mt-2">
-                                ${riwayat.slice(0, 3).map(item => `
+                                <div class="space-y-2 mt-2">
+                                  ${riwayat.slice(0, 3).map(item => `
                     <div class="rounded-lg border border-neutral-200 bg-white p-2 text-xs">
                       <div class="flex justify-between items-start mb-1">
                         <span class="font-medium text-neutral-700">#${item.id}</span>
@@ -763,13 +771,13 @@
                       </div>
                     </div>
                   `).join('')}
-                                ${riwayat.length > 3 ? `
+                                  ${riwayat.length > 3 ? `
                     <p class="text-xs text-center text-neutral-500">+${riwayat.length - 3} lainnya</p>
                   ` : ''}
-                              </div>
-                            ` : `
-                              <p class="text-xs text-neutral-500 text-center py-2">Belum ada riwayat</p>
-                            `}
+                                </div>
+                              ` : `
+                                <p class="text-xs text-neutral-500 text-center py-2">Belum ada riwayat</p>
+                              `}
             </div>
           `;
         }).join('');

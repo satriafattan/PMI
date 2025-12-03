@@ -113,9 +113,9 @@
     }
 
     function renderTable() {
-      const filtered = data.filter(row => {
-        if (!search) return true;
-        const s = search.toLowerCase();
+        const filtered = data.filter(row => {
+          if (!search) return true;
+          const s = search.toLowerCase();
         return (row.id_darah || '').toLowerCase().includes(s) ||
           (row.komponen || '').toLowerCase().includes(s);
       });

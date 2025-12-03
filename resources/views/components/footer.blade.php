@@ -7,7 +7,7 @@
         ['label' => 'Stok Darah', 'href' => url('/stok')],
         ['label' => 'Tentang Kami', 'href' => url('/about')],
         ['label' => 'Penjadwalan Event', 'href' => url('/jadwal-event')],
-        ['label' => 'Kontak', 'href' => 'https://wa.me/628987311125'],
+        ['label' => 'Kontak', 'href' => 'https://wa.me/628117979972 '],
     ],
     'emergencyContact' => '119',
     'address' => 'Jl. Dr. Sam Ratulangi No.105, Penengahan, Kec. Tj. Karang Pusat, Kota Bandar Lampung',
@@ -40,7 +40,7 @@
                class="h-32 w-32 object-contain">
           <span class="text-lg font-semibold tracking-tight">SIMPHONY</span>
         </a>
-        <p class="mt-2 text-sm text-slate-600">Sistem Informasi Pemesanan dan Inventori - Platform terpadu untuk
+        <p class="mt-2 text-sm text-slate-600">Sistem Informasi Pemesanan dan Inventori Platform terpadu untuk
           mengelola pemesanan darah, stok, dan verifikasi dengan efisien.</p>
       </div>
 
@@ -62,7 +62,7 @@
         <h3 class="text-lg font-semibold text-slate-800">Informasi Kontak</h3>
         <div class="flex flex-col gap-3 text-sm text-slate-600">
           <p class="flex items-start gap-2">
-            <svg class="mt-0.5 h-5 w-5 text-red-600"
+            <svg class="mt-0.5 h-5 w-5 shrink-0 text-red-600"
                  fill="none"
                  stroke="currentColor"
                  viewBox="0 0 24 24">
@@ -78,7 +78,7 @@
             {{ $address }}
           </p>
           <p class="flex items-center gap-2">
-            <svg class="h-5 w-5 text-red-600"
+            <svg class="h-5 w-5 shrink-0 text-red-600"
                  fill="none"
                  stroke="currentColor"
                  viewBox="0 0 24 24">
@@ -87,7 +87,7 @@
                     stroke-width="2"
                     d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
             </svg>
-            Emergency: {{ $emergencyContact }}
+            Emergency: 0721475019
           </p>
         </div>
       </div>
@@ -100,7 +100,6 @@
           <p>Sabtu - Minggu: {{ $operationalHours['weekend'] }}</p>
         </div>
 
-        <h3 class="mt-4 text-lg font-semibold text-slate-800">Media Sosial</h3>
         <div class="flex gap-4">
           @foreach ($socialMedia as $social)
             <a href="{{ $social['href'] }}"

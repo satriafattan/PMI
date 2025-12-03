@@ -143,34 +143,6 @@
               </svg>
             </a>
           </div>
-
-          {{-- Stats --}}
-          <div class="mt-5 grid grid-cols-3 gap-2 sm:mt-6 sm:gap-3 lg:mt-8 lg:gap-4">
-            <div class="group text-center">
-              <div
-                   class="mx-auto mb-1.5 inline-flex h-10 w-10 items-center justify-center rounded-xl bg-white/10 text-lg ring-1 ring-white/20 backdrop-blur-sm transition group-hover:scale-110 group-hover:bg-white/20 sm:mb-2 sm:h-12 sm:w-12 sm:rounded-2xl sm:text-xl">
-                🩸
-              </div>
-              <div class="text-base font-extrabold tracking-tight sm:text-lg lg:text-xl xl:text-2xl">15,000+</div>
-              <div class="mt-0.5 text-xs text-white/80">Donor Aktif</div>
-            </div>
-            <div class="group text-center">
-              <div
-                   class="mx-auto mb-1.5 inline-flex h-10 w-10 items-center justify-center rounded-xl bg-white/10 text-lg ring-1 ring-white/20 backdrop-blur-sm transition group-hover:scale-110 group-hover:bg-white/20 sm:mb-2 sm:h-12 sm:w-12 sm:rounded-2xl sm:text-xl">
-                ❤️
-              </div>
-              <div class="text-base font-extrabold tracking-tight sm:text-lg lg:text-xl xl:text-2xl">50,000+</div>
-              <div class="mt-0.5 text-xs text-white/80">Nyawa Terselamatkan</div>
-            </div>
-            <div class="group text-center">
-              <div
-                   class="mx-auto mb-1.5 inline-flex h-10 w-10 items-center justify-center rounded-xl bg-white/10 text-lg ring-1 ring-white/20 backdrop-blur-sm transition group-hover:scale-110 group-hover:bg-white/20 sm:mb-2 sm:h-12 sm:w-12 sm:rounded-2xl sm:text-xl">
-                ⏱️
-              </div>
-              <div class="text-base font-extrabold tracking-tight sm:text-lg lg:text-xl xl:text-2xl">24/7</div>
-              <div class="mt-0.5 text-xs text-white/80">Layanan Darurat</div>
-            </div>
-          </div>
         </div>
 
         {{-- Right Content - Hero Image Gallery --}}
@@ -268,7 +240,7 @@
             Persediaan Darah Real-time
           </h2>
           <p class="mt-1.5 text-sm text-slate-600 sm:mt-2 sm:text-base">
-            Pantau ketersediaan stok darah per golongan dengan update otomatis setiap 30 detik
+            Pantau ketersediaan stok darah per golongan
           </p>
         </div>
         <a href="{{ url('/stok') }}"
@@ -290,7 +262,7 @@
       @php
         use App\Helpers\StokHelper;
         $stok = [
-            ['gol' => 'A', 'jumlah' => $stokA,  'rhesus' => '+'],
+            ['gol' => 'A', 'jumlah' => $stokA, 'rhesus' => '+'],
             ['gol' => 'B', 'jumlah' => $stokB, 'rhesus' => '+'],
             ['gol' => 'O', 'jumlah' => $stokO, 'rhesus' => '+'],
             ['gol' => 'AB', 'jumlah' => $stokAB, 'rhesus' => '+'],
@@ -304,8 +276,12 @@
         <div class="flex flex-col items-center justify-between gap-3 sm:flex-row sm:gap-4">
           <div class="flex items-center gap-3 sm:gap-4">
             <div
-                 class="flex h-12 w-12 items-center justify-center rounded-xl bg-red-600 text-2xl text-white shadow-lg sm:h-16 sm:w-16 sm:rounded-2xl sm:text-3xl">
-              🩸
+                 class="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-red-50 to-rose-100 shadow-lg sm:h-16 sm:w-16 sm:rounded-2xl">
+              <svg class="h-7 w-7 text-red-600 sm:h-9 sm:w-9"
+                   fill="currentColor"
+                   viewBox="0 0 24 24">
+                <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z" />
+              </svg>
             </div>
             <div class="text-center sm:text-left">
               <div class="text-xs font-medium text-slate-600 sm:text-sm">Total Stok Tersedia (PRC)</div>
@@ -326,7 +302,7 @@
         @foreach ($stok as $it)
           @php
             [$label, $cls] = StokHelper::badgeStatus($it['jumlah']);
-            $statusColor = $label === 'Aman' ? 'emerald' : ($label === 'Waspada' ? 'amber' : 'red');
+            $statusColor = $label === 'Aman' ? 'emerald' : ($label === 'Perhatian' ? 'amber' : 'red');
             $percentage = min(100, ($it['jumlah'] / 1500) * 100);
           @endphp
 
@@ -343,8 +319,12 @@
               <div class="flex items-start justify-between">
                 <div class="flex items-center gap-2 sm:gap-3">
                   <div
-                       class="grid h-12 w-12 place-items-center rounded-xl bg-gradient-to-br from-red-600 to-red-500 text-xl text-white shadow-lg ring-4 ring-white sm:h-14 sm:w-14 sm:rounded-2xl sm:text-2xl">
-                    🩸
+                       class="grid h-12 w-12 place-items-center rounded-xl bg-gradient-to-br from-red-50 to-rose-100 shadow-lg sm:h-14 sm:w-14 sm:rounded-2xl">
+                    <svg class="h-7 w-7 text-red-600 sm:h-8 sm:w-8"
+                         fill="currentColor"
+                         viewBox="0 0 24 24">
+                      <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z" />
+                    </svg>
                   </div>
                   <div>
                     <div class="rounded-lg bg-slate-100 px-2 py-0.5 text-xs font-bold text-slate-700 sm:px-2.5 sm:py-1">
@@ -390,17 +370,22 @@
           <span
                 class="inline-flex items-center gap-2 rounded-full bg-emerald-50 px-3 py-1.5 font-semibold text-emerald-700 ring-1 ring-emerald-200">
             <span class="h-2 w-2 rounded-full bg-emerald-500"></span>
-            Aman (≥1000)
+            Aman (≥50)
           </span>
           <span
                 class="inline-flex items-center gap-2 rounded-full bg-amber-50 px-3 py-1.5 font-semibold text-amber-700 ring-1 ring-amber-200">
             <span class="h-2 w-2 rounded-full bg-amber-500"></span>
-            Waspada (300-999)
+            Perhatian (10-49)
           </span>
           <span
                 class="inline-flex items-center gap-2 rounded-full bg-red-50 px-3 py-1.5 font-semibold text-red-700 ring-1 ring-red-200">
             <span class="h-2 w-2 rounded-full bg-red-500"></span>
-            Kritis (&lt;300)
+            Kritis (1-9)
+          </span>
+          <span
+                class="inline-flex items-center gap-2 rounded-full bg-slate-50 px-3 py-1.5 font-semibold text-slate-700 ring-1 ring-slate-200">
+            <span class="h-2 w-2 rounded-full bg-slate-500"></span>
+            Habis (0)
           </span>
         </div>
       </div>
@@ -616,8 +601,9 @@
 
               // Update status badge
               if (status) {
-                const newStatus = jumlah < 300 ? ['Kritis', 'red'] :
-                  jumlah < 1000 ? ['Waspada', 'amber'] : ['Aman', 'emerald'];
+                const newStatus = jumlah === 0 ? ['Habis', 'slate'] :
+                  jumlah < 10 ? ['Kritis', 'red'] :
+                  jumlah < 50 ? ['Perhatian', 'amber'] : ['Aman', 'emerald'];
                 status.textContent = newStatus[0];
                 status.className =
                   `rounded-full px-2 sm:px-3 py-1 sm:py-1.5 text-xs font-bold ring-1 bg-${newStatus[1]}-100 text-${newStatus[1]}-700 ring-${newStatus[1]}-200`;
