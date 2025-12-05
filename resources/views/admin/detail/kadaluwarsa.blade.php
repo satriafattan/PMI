@@ -45,7 +45,7 @@
         </select>
       </div>
 
-      {{-- Export --}}
+      {{-- Export Excel --}}
       <div class="flex items-center gap-2">
         <a href="{{ route('admin.detail-darah.kadaluwarsa.export') }}"
            class="inline-flex items-center gap-2 rounded-2xl border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm text-emerald-700 hover:bg-emerald-100">
