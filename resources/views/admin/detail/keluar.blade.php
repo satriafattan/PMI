@@ -182,7 +182,7 @@
       const start = total === 0 ? 0 : (page - 1) * size + 1;
       const end = Math.min(page * size, total);
       info.textContent = total > 0 ? `Menampilkan ${start}-${end} dari ${total} data` : 'Tidak ada data';
-      
+
       if (pages <= 1) {
         cont.innerHTML = '';
         return;
@@ -191,13 +191,14 @@
       const btn = (lab, goto, disabled = false, active = false) => `
         <button class="min-w-9 h-9 px-3 rounded-lg border text-sm ${active ? 'bg-neutral-900 text-white border-neutral-900' : 'bg-white border-neutral-200 text-neutral-700 hover:bg-neutral-50'} ${disabled ? 'opacity-50 cursor-not-allowed' : ''}"
                 ${disabled ? 'disabled' : ''} data-page="${goto}">${lab}</button>`;
-      
+
       let html = btn('«', page - 1, page === 1);
       const range = getPageRange(pages, page, 5);
-      range.forEach(p => html += (p === '…') ? `<span class="px-2 text-neutral-400">…</span>` : btn(p, p, false, p === page));
+      range.forEach(p => html += (p === '…') ? `<span class="px-2 text-neutral-400">…</span>` : btn(p, p, false, p ===
+        page));
       html += btn('»', page + 1, page === pages);
       cont.innerHTML = html;
-      
+
       cont.querySelectorAll('button[data-page]:not([disabled])').forEach(b => {
         b.addEventListener('click', (e) => {
           e.preventDefault();
@@ -205,7 +206,10 @@
           if (!isNaN(newPage) && newPage >= 1 && newPage <= pages && newPage !== page) {
             page = newPage;
             renderTable();
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+            window.scrollTo({
+              top: 0,
+              behavior: 'smooth'
+            });
           }
         });
       });
