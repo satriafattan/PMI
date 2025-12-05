@@ -12,6 +12,20 @@
       <p class="mt-1 text-sm text-gray-500">Silakan masuk untuk mengelola sistem</p>
     </div>
 
+    {{-- Success message --}}
+    @if (session('success'))
+      <div class="mb-6 rounded bg-green-100 p-3 text-sm text-green-700">
+        {{ session('success') }}
+      </div>
+    @endif
+
+    {{-- Info message for session expired --}}
+    @if (session('error'))
+      <div class="mb-6 rounded bg-yellow-100 p-3 text-sm text-yellow-700">
+        {{ session('error') }}
+      </div>
+    @endif
+
     {{-- Error message --}}
     @if ($errors->any())
       <div class="mb-6 rounded bg-red-100 p-3 text-sm text-red-700">
@@ -88,3 +102,17 @@
     </div>
   </div>
 </main>
+
+@push('scripts')
+  <script>
+    // Prevent going back to this page after successful login
+    (function() {
+      if (window.history && window.history.pushState) {
+        window.history.pushState(null, null, window.location.href);
+        window.addEventListener('popstate', function() {
+          window.history.pushState(null, null, window.location.href);
+        });
+      }
+    })();
+  </script>
+@endpush

@@ -102,26 +102,35 @@
 
     {{-- Table --}}
     <div class="overflow-x-auto rounded-2xl border border-neutral-200 bg-white shadow-sm">
-      <table class="min-w-full">
+      <table id="eventTable"
+             class="min-w-full">
         <thead class="text-left text-xs uppercase tracking-wider text-neutral-500">
           <tr class="border-b border-neutral-100">
-            <th class="px-4 py-3">Pemohon</th>
-            <th class="px-4 py-3">Institusi</th>
-            <th class="px-4 py-3">Jenis & Tanggal</th>
-            <th class="px-4 py-3">Lokasi</th>
-            <th class="px-4 py-3">Status</th>
+            <x-sortable-th column="pemohon"
+                           label="Pemohon" />
+            <x-sortable-th column="institusi"
+                           label="Institusi" />
+            <x-sortable-th column="jenis_tanggal"
+                           label="Jenis & Tanggal" />
+            <x-sortable-th column="lokasi"
+                           label="Lokasi" />
+            <x-sortable-th column="status"
+                           label="Status" />
             <th class="px-4 py-3"></th>
           </tr>
         </thead>
         <tbody class="divide-y divide-neutral-100 text-sm">
           @forelse ($items as $ev)
             <tr class="hover:bg-neutral-50/50">
-              <td class="px-4 py-3">
+              <td class="px-4 py-3"
+                  data-pemohon="{{ $ev->nama }}">
                 <div class="font-medium text-neutral-800">{{ $ev->nama }}</div>
                 <div class="text-xs text-neutral-500">{{ $ev->email }} • {{ $ev->nomor_telefon }}</div>
               </td>
-              <td class="px-4 py-3">{{ $ev->institusi_pemohon }}</td>
-              <td class="px-4 py-3">
+              <td class="px-4 py-3"
+                  data-institusi="{{ $ev->institusi_pemohon }}">{{ $ev->institusi_pemohon }}</td>
+              <td class="px-4 py-3"
+                  data-jenis_tanggal="{{ $ev->tanggal_event }} {{ $ev->jenis_event }}">
                 <div class="font-medium">{{ $ev->jenis_event }}</div>
                 <div class="text-xs text-neutral-500">
                   {{ \Illuminate\Support\Carbon::parse($ev->tanggal_event)->format('d M Y') }}
@@ -130,10 +139,12 @@
                   @endif
                 </div>
               </td>
-              <td class="px-4 py-3">
+              <td class="px-4 py-3"
+                  data-lokasi="{{ $ev->lokasi_lengkap }}">
                 <div class="line-clamp-2 max-w-[320px]">{{ $ev->lokasi_lengkap }}</div>
               </td>
-              <td class="px-4 py-3">
+              <td class="px-4 py-3"
+                  data-status="{{ $ev->status }}">
                 @php
                   $badge =
                       [
@@ -190,6 +201,11 @@
       });
 
       per.addEventListener('change', () => form.submit());
+
+      // Initialize Table Sorter
+      if (typeof TableSorter !== 'undefined') {
+        new TableSorter('#eventTable');
+      }
     })();
   </script>
 @endsection

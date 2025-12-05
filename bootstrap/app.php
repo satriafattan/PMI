@@ -13,6 +13,8 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->alias([
             'super.admin' => \App\Http\Middleware\EnsureSuperAdmin::class,
+            'prevent.back' => \App\Http\Middleware\PreventBackHistory::class,
+            'guest.admin' => \App\Http\Middleware\RedirectIfAuthenticated::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

@@ -7,6 +7,12 @@
         content="width=device-width, initial-scale=1">
   <meta name="csrf-token"
         content="{{ csrf_token() }}">
+  <meta http-equiv="Cache-Control"
+        content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma"
+        content="no-cache">
+  <meta http-equiv="Expires"
+        content="0">
   <title>{{ $title ?? 'Dashboard Admin' }} — {{ config('app.name') }}</title>
 
   {{-- Favicon --}}
@@ -453,6 +459,36 @@
 
       // Poll every 15 seconds
       setInterval(fetchNotifications, 15000);
+    })();
+
+    // ===== Prevent Back After Logout =====
+    (function() {
+      // Prevent browser back button after logout
+      window.history.pushState(null, "", window.location.href);
+      window.onpopstate = function() {
+        window.history.pushState(null, "", window.location.href);
+      };
+
+      // Check if session is valid on page load/focus
+      window.addEventListener('pageshow', function(event) {
+        if (event.persisted) {
+          // Page was loaded from cache, verify session
+          fetch('{{ route('admin.dashboard') }}', {
+              method: 'GET',
+              headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+              }
+            })
+            .then(response => {
+              if (response.redirected || response.status === 401) {
+                window.location.href = '{{ route('admin.login') }}';
+              }
+            })
+            .catch(() => {
+              window.location.href = '{{ route('admin.login') }}';
+            });
+        }
+      });
     })();
 
     // ===== User Menu Dropdown =====

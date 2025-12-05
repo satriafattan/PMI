@@ -333,17 +333,26 @@
     {{-- =================== TABLE (≥ md) =================== --}}
     <div class="hidden overflow-hidden rounded-2xl border border-neutral-200 bg-white md:block">
       <div class="overflow-x-auto">
-        <table class="min-w-full text-sm">
+        <table id="riwayatTable"
+               class="min-w-full text-sm">
           <thead class="bg-neutral-50 text-neutral-600">
             <tr class="text-left">
-              <th class="px-4 py-3 font-medium">Nama Pasien</th>
-              <th class="px-4 py-3 font-medium">Rumah Sakit Pemesan</th>
-              <th class="px-4 py-3 font-medium">Golongan Darah</th>
-              <th class="px-4 py-3 font-medium">Rhesus</th>
-              <th class="px-4 py-3 font-medium">Tanggal Pemesanan</th>
-              <th class="px-4 py-3 font-medium">Produk Darah</th>
-              <th class="px-4 py-3 font-medium">Tanggal Verifikasi</th>
-              <th class="px-4 py-3 font-medium">Status</th>
+              <x-sortable-th column="nama_pasien"
+                             label="Nama Pasien" />
+              <x-sortable-th column="rs_pemesan"
+                             label="Rumah Sakit Pemesan" />
+              <x-sortable-th column="golongan_darah"
+                             label="Golongan Darah" />
+              <x-sortable-th column="rhesus"
+                             label="Rhesus" />
+              <x-sortable-th column="tanggal_pemesanan"
+                             label="Tanggal Pemesanan" />
+              <x-sortable-th column="produk_darah"
+                             label="Produk Darah" />
+              <x-sortable-th column="tanggal_verifikasi"
+                             label="Tanggal Verifikasi" />
+              <x-sortable-th column="status"
+                             label="Status" />
               <th class="px-4 py-3 font-medium">Aksi</th>
             </tr>
           </thead>
@@ -670,14 +679,14 @@
         const payload = JSON.stringify(o.payload || {});
         return `
       <tr class="border-t border-neutral-100 hover:bg-neutral-50/60">
-        <td class="px-4 py-3">${nama}</td>
-        <td class="px-4 py-3">${rs}</td>
-        <td class="px-4 py-3">${gol ? `${bloodPill(gol)}` : '-'}</td>
-        <td class="px-4 py-3">${rh ? `${rhesusPill(rh)}` : '-'}</td>
-        <td class="px-4 py-3">${tgl}</td>
-        <td class="px-4 py-3">${prod ? `${productPill(prod)}` : '-'}</td>
-        <td class="px-4 py-3"><span class="text-sm font-medium text-neutral-700">${waktu}</span></td>
-        <td class="px-4 py-3"><span class="inline-flex items-center rounded-full px-2.5 py-1 text-xs font-medium ${statusBadgeClass(stat)}">${String(stat).charAt(0).toUpperCase()+String(stat).slice(1)}</span></td>
+        <td class="px-4 py-3" data-nama_pasien="${nama}">${nama}</td>
+        <td class="px-4 py-3" data-rs_pemesan="${rs}">${rs}</td>
+        <td class="px-4 py-3" data-golongan_darah="${gol}">${gol ? `${bloodPill(gol)}` : '-'}</td>
+        <td class="px-4 py-3" data-rhesus="${rh}">${rh ? `${rhesusPill(rh)}` : '-'}</td>
+        <td class="px-4 py-3" data-tanggal_pemesanan="${tgl}">${tgl}</td>
+        <td class="px-4 py-3" data-produk_darah="${prod}">${prod ? `${productPill(prod)}` : '-'}</td>
+        <td class="px-4 py-3" data-tanggal_verifikasi="${waktu}"><span class="text-sm font-medium text-neutral-700">${waktu}</span></td>
+        <td class="px-4 py-3" data-status="${stat}"><span class="inline-flex items-center rounded-full px-2.5 py-1 text-xs font-medium ${statusBadgeClass(stat)}">${String(stat).charAt(0).toUpperCase()+String(stat).slice(1)}</span></td>
         <td class="px-4 py-3">
           <button type="button" class="lihat-detail-btn inline-flex w-full items-center justify-center gap-2 rounded-xl border border-neutral-200 bg-white px-3 py-2 text-sm font-medium text-neutral-700 shadow-sm transition hover:bg-neutral-50 focus:outline-none focus:ring-2 focus:ring-navy-200"
                   data-payload='${payload}'>
@@ -1164,6 +1173,11 @@
       pageSize = Number(@json($perPage)) || 10; // sync pageSize dari GET
       page = 1;
       masterRender();
+
+      // Initialize Table Sorter
+      if (typeof TableSorter !== 'undefined') {
+        new TableSorter('#riwayatTable');
+      }
 
       // Klik detail (delegasi untuk table & cards)
       document.addEventListener('click', (e) => {

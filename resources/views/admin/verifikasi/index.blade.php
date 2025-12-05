@@ -344,16 +344,24 @@
     {{-- =================== TABLE (≥ md) =================== --}}
     <div class="hidden overflow-hidden rounded-2xl border border-neutral-200 bg-white md:block">
       <div class="overflow-x-auto">
-        <table class="min-w-full text-sm">
+        <table id="verifikasiTable"
+               class="min-w-full text-sm">
           <thead class="bg-neutral-50 text-neutral-600">
             <tr class="text-left">
-              <th class="px-4 py-3 font-medium">Nama Pasien</th>
-              <th class="px-4 py-3 font-medium">Rumah Sakit Pemesan</th>
-              <th class="px-4 py-3 font-medium">Golongan Darah</th>
-              <th class="px-4 py-3 font-medium">Rhesus</th>
-              <th class="px-4 py-3 font-medium">Tanggal Pemesanan</th>
-              <th class="px-4 py-3 font-medium">Produk Darah</th>
-              <th class="px-4 py-3 font-medium">Status</th>
+              <x-sortable-th column="nama_pasien"
+                             label="Nama Pasien" />
+              <x-sortable-th column="rs_pemesan"
+                             label="Rumah Sakit Pemesan" />
+              <x-sortable-th column="golongan_darah"
+                             label="Golongan Darah" />
+              <x-sortable-th column="rhesus"
+                             label="Rhesus" />
+              <x-sortable-th column="tanggal_pemesanan"
+                             label="Tanggal Pemesanan" />
+              <x-sortable-th column="produk_darah"
+                             label="Produk Darah" />
+              <x-sortable-th column="status"
+                             label="Status" />
               <th class="px-4 py-3 font-medium">Aksi</th>
             </tr>
           </thead>
@@ -402,14 +410,22 @@
                 ];
               @endphp
               <tr class="border-t border-neutral-100 hover:bg-neutral-50/60">
-                <td class="px-4 py-3">{{ $o->nama_pasien }}</td>
-                <td class="px-4 py-3">{{ $o->rs_pemesan }}</td>
-                <td class="px-4 py-3">{!! $o->gol_darah ? blood_pill($o->gol_darah) : '-' !!}</td>
-                <td class="px-4 py-3">{!! $o->rhesus ? rhesus_pill($o->rhesus) : '-' !!}</td>
-                <td class="px-4 py-3">{{ \Illuminate\Support\Carbon::parse($tglBaris)->format('d-m-Y') }}
+                <td class="px-4 py-3"
+                    data-nama_pasien="{{ $o->nama_pasien }}">{{ $o->nama_pasien }}</td>
+                <td class="px-4 py-3"
+                    data-rs_pemesan="{{ $o->rs_pemesan }}">{{ $o->rs_pemesan }}</td>
+                <td class="px-4 py-3"
+                    data-golongan_darah="{{ $o->gol_darah }}">{!! $o->gol_darah ? blood_pill($o->gol_darah) : '-' !!}</td>
+                <td class="px-4 py-3"
+                    data-rhesus="{{ $o->rhesus }}">{!! $o->rhesus ? rhesus_pill($o->rhesus) : '-' !!}</td>
+                <td class="px-4 py-3"
+                    data-tanggal_pemesanan="{{ $tglBaris }}">
+                  {{ \Illuminate\Support\Carbon::parse($tglBaris)->format('d-m-Y') }}
                 </td>
-                <td class="px-4 py-3">{!! $o->produk ? product_pill($o->produk) : '-' !!}</td>
-                <td class="px-4 py-3">
+                <td class="px-4 py-3"
+                    data-produk_darah="{{ $o->produk }}">{!! $o->produk ? product_pill($o->produk) : '-' !!}</td>
+                <td class="px-4 py-3"
+                    data-status="{{ $o->status }}">
                   <span
                         class="{{ $statusClass }} inline-flex items-center rounded-full px-2.5 py-1 text-xs font-medium">{{ ucfirst($o->status) }}</span>
                 </td>
@@ -1344,6 +1360,11 @@
         },
         'reject'
       ));
+
+      // Initialize Table Sorter
+      if (typeof TableSorter !== 'undefined') {
+        new TableSorter('#verifikasiTable');
+      }
     });
   </script>
 

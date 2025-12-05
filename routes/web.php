@@ -65,22 +65,30 @@ Route::get('/api/stok-golongan', [StokController::class, 'getStokGolongan'])->na
 | Admin Auth
 |--------------------------------------------------------------------------
 */
-Route::get('/admin/login', [AuthController::class, 'showLoginForm'])->name('admin.login');
-Route::post('/admin/login', [AuthController::class, 'login'])->name('admin.login.submit');
-Route::post('/admin/logout', [AuthController::class, 'logout'])->name('admin.logout');
+// Alias route 'login' untuk keperluan Laravel default redirect
+Route::get('/login', function () {
+    return redirect()->route('admin.login');
+})->name('login');
 
-// Forget Password Routes
-Route::get('/admin/forgot-password', [AuthController::class, 'showForgotPasswordForm'])->name('admin.forgot-password');
-Route::post('/admin/forgot-password', [AuthController::class, 'sendResetLinkEmail'])->name('admin.forgot-password.submit');
-Route::get('/admin/reset-password/{token}', [AuthController::class, 'showResetPasswordForm'])->name('admin.reset-password');
-Route::post('/admin/reset-password', [AuthController::class, 'resetPassword'])->name('admin.reset-password.submit');
+Route::middleware('guest.admin:admin')->group(function () {
+    Route::get('/admin/login', [AuthController::class, 'showLoginForm'])->name('admin.login');
+    Route::post('/admin/login', [AuthController::class, 'login'])->name('admin.login.submit');
+
+    // Forget Password Routes
+    Route::get('/admin/forgot-password', [AuthController::class, 'showForgotPasswordForm'])->name('admin.forgot-password');
+    Route::post('/admin/forgot-password', [AuthController::class, 'sendResetLinkEmail'])->name('admin.forgot-password.submit');
+    Route::get('/admin/reset-password/{token}', [AuthController::class, 'showResetPasswordForm'])->name('admin.reset-password');
+    Route::post('/admin/reset-password', [AuthController::class, 'resetPassword'])->name('admin.reset-password.submit');
+});
+
+Route::post('/admin/logout', [AuthController::class, 'logout'])->name('admin.logout');
 
 /*
 |--------------------------------------------------------------------------
 | Admin Area (guard: admin)
 |--------------------------------------------------------------------------
 */
-Route::middleware('auth:admin')->prefix('admin')->name('admin.')->group(function () {
+Route::middleware(['auth:admin', 'prevent.back'])->prefix('admin')->name('admin.')->group(function () {
 
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 

@@ -66,15 +66,22 @@
     {{-- Table --}}
     <div class="overflow-hidden rounded-xl border border-neutral-200 bg-white shadow-sm">
       <div class="overflow-x-auto">
-        <table class="w-full text-sm">
+        <table id="kadaluwarsaTable"
+               class="w-full text-sm">
           <thead class="border-b border-neutral-200 bg-neutral-50">
             <tr>
-              <th class="px-4 py-3 text-left font-medium text-neutral-700">ID Darah</th>
-              <th class="px-4 py-3 text-left font-medium text-neutral-700">Golongan</th>
-              <th class="px-4 py-3 text-left font-medium text-neutral-700">Rhesus</th>
-              <th class="px-4 py-3 text-left font-medium text-neutral-700">Produk</th>
-              <th class="px-4 py-3 text-left font-medium text-neutral-700">Tgl Masuk</th>
-              <th class="px-4 py-3 text-left font-medium text-neutral-700">Tgl Kadaluwarsa</th>
+              <x-sortable-th column="id_darah"
+                             label="ID Darah" />
+              <x-sortable-th column="golongan"
+                             label="Golongan" />
+              <x-sortable-th column="rhesus"
+                             label="Rhesus" />
+              <x-sortable-th column="produk"
+                             label="Produk" />
+              <x-sortable-th column="tgl_masuk"
+                             label="Tgl Masuk" />
+              <x-sortable-th column="tgl_kadaluwarsa"
+                             label="Tgl Kadaluwarsa" />
             </tr>
           </thead>
           <tbody id="tableBody"
@@ -126,18 +133,18 @@
       } else {
         tbody.innerHTML = slice.map(row => `
           <tr class="hover:bg-neutral-50">
-            <td class="px-4 py-3">${row.id || '-'}</td>
-            <td class="px-4 py-3">
+            <td class="px-4 py-3" data-id_darah="${row.id || ''}">${row.id || '-'}</td>
+            <td class="px-4 py-3" data-golongan="${row.gol || ''}">
               <span class="inline-flex h-8 w-8 items-center justify-center rounded-full bg-pink-50 text-sm font-semibold text-pink-600">
                 ${row.gol || '-'}
               </span>
             </td>
-            <td class="px-4 py-3">${row.rh || '-'}</td>
-            <td class="px-4 py-3">
+            <td class="px-4 py-3" data-rhesus="${row.rh || ''}">${row.rh || '-'}</td>
+            <td class="px-4 py-3" data-produk="${row.produk || ''}">
               <span class="inline-flex rounded-md bg-blue-50 px-2 py-1 text-xs font-medium text-blue-700">${row.produk || '-'}</span>
             </td>
-            <td class="px-4 py-3">${formatDate(row.masuk)}</td>
-            <td class="px-4 py-3">
+            <td class="px-4 py-3" data-tgl_masuk="${row.masuk || ''}">${formatDate(row.masuk)}</td>
+            <td class="px-4 py-3" data-tgl_kadaluwarsa="${row.exp || ''}">
               <span class="inline-flex rounded-md bg-rose-50 px-2 py-1 text-xs font-medium text-rose-700">${formatDate(row.exp)}</span>
             </td>
           </tr>
@@ -147,22 +154,60 @@
       document.getElementById('pageInfo').textContent =
         `Menampilkan ${start + 1}-${Math.min(start + size, total)} dari ${total} data`;
 
-      const pagination = document.getElementById('pagination');
-      pagination.innerHTML = '';
+      renderPagination(total, pages);
+    }
 
-      if (pages > 1) {
-        for (let i = 1; i <= pages; i++) {
-          const btn = document.createElement('button');
-          btn.textContent = i;
-          btn.className =
-            `px-3 py-1 rounded-md text-sm ${i === page ? 'bg-neutral-900 text-white' : 'bg-white border border-neutral-200 text-neutral-700 hover:bg-neutral-50'}`;
-          btn.addEventListener('click', () => {
-            page = i;
-            renderTable();
-          });
-          pagination.appendChild(btn);
-        }
+    function getPageRange(totalPages, current, max = 5) {
+      const out = [];
+      const half = Math.floor(max / 2);
+      let start = Math.max(1, current - half),
+        end = Math.min(totalPages, start + max - 1);
+      if (end - start + 1 < max) start = Math.max(1, end - max + 1);
+      if (start > 1) {
+        out.push(1);
+        if (start > 2) out.push('…');
       }
+      for (let i = start; i <= end; i++) out.push(i);
+      if (end < totalPages) {
+        if (end < totalPages - 1) out.push('…');
+        out.push(totalPages);
+      }
+      return out;
+    }
+
+    function renderPagination(total, pages) {
+      const cont = document.getElementById('pagination');
+      const info = document.getElementById('pageInfo');
+      const start = total === 0 ? 0 : (page - 1) * size + 1;
+      const end = Math.min(page * size, total);
+      info.textContent = total > 0 ? `Menampilkan ${start}-${end} dari ${total} data` : 'Tidak ada data';
+      
+      if (pages <= 1) {
+        cont.innerHTML = '';
+        return;
+      }
+
+      const btn = (lab, goto, disabled = false, active = false) => `
+        <button class="min-w-9 h-9 px-3 rounded-lg border text-sm ${active ? 'bg-neutral-900 text-white border-neutral-900' : 'bg-white border-neutral-200 text-neutral-700 hover:bg-neutral-50'} ${disabled ? 'opacity-50 cursor-not-allowed' : ''}"
+                ${disabled ? 'disabled' : ''} data-page="${goto}">${lab}</button>`;
+      
+      let html = btn('«', page - 1, page === 1);
+      const range = getPageRange(pages, page, 5);
+      range.forEach(p => html += (p === '…') ? `<span class="px-2 text-neutral-400">…</span>` : btn(p, p, false, p === page));
+      html += btn('»', page + 1, page === pages);
+      cont.innerHTML = html;
+      
+      cont.querySelectorAll('button[data-page]:not([disabled])').forEach(b => {
+        b.addEventListener('click', (e) => {
+          e.preventDefault();
+          const newPage = parseInt(b.dataset.page);
+          if (!isNaN(newPage) && newPage >= 1 && newPage <= pages && newPage !== page) {
+            page = newPage;
+            renderTable();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          }
+        });
+      });
     }
 
     document.getElementById('searchInput').addEventListener('input', (e) => {
@@ -178,5 +223,10 @@
     });
 
     renderTable();
+
+    // Initialize Table Sorter
+    if (typeof TableSorter !== 'undefined') {
+      new TableSorter('#kadaluwarsaTable');
+    }
   </script>
 @endsection

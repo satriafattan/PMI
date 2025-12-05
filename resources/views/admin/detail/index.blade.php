@@ -80,15 +80,22 @@
 
       <div class="overflow-hidden rounded-xl border border-neutral-200 bg-white shadow-sm">
         <div class="overflow-x-auto">
-          <table class="w-full text-sm">
+          <table id="tersediaTable"
+                 class="w-full text-sm">
             <thead class="border-b border-neutral-200 bg-neutral-50">
               <tr>
-                <th class="px-4 py-3 text-left font-medium text-neutral-700">ID Darah</th>
-                <th class="px-4 py-3 text-left font-medium text-neutral-700">Golongan</th>
-                <th class="px-4 py-3 text-left font-medium text-neutral-700">Rhesus</th>
-                <th class="px-4 py-3 text-left font-medium text-neutral-700">Produk</th>
-                <th class="px-4 py-3 text-left font-medium text-neutral-700">Tgl Masuk</th>
-                <th class="px-4 py-3 text-left font-medium text-neutral-700">Tgl Kadaluwarsa</th>
+                <x-sortable-th column="id_darah"
+                               label="ID Darah" />
+                <x-sortable-th column="golongan"
+                               label="Golongan" />
+                <x-sortable-th column="rhesus"
+                               label="Rhesus" />
+                <x-sortable-th column="produk"
+                               label="Produk" />
+                <x-sortable-th column="tgl_masuk"
+                               label="Tgl Masuk" />
+                <x-sortable-th column="tgl_kadaluwarsa"
+                               label="Tgl Kadaluwarsa" />
               </tr>
             </thead>
             <tbody id="tableBody"
@@ -142,16 +149,24 @@
 
       <div class="overflow-hidden rounded-xl border border-neutral-200 bg-white shadow-sm">
         <div class="overflow-x-auto">
-          <table class="w-full text-sm">
+          <table id="keluarTable"
+                 class="w-full text-sm">
             <thead class="border-b border-neutral-200 bg-neutral-50">
               <tr>
-                <th class="px-4 py-3 text-left font-medium text-neutral-700">ID Darah</th>
-                <th class="px-4 py-3 text-left font-medium text-neutral-700">Golongan</th>
-                <th class="px-4 py-3 text-left font-medium text-neutral-700">Rhesus</th>
-                <th class="px-4 py-3 text-left font-medium text-neutral-700">Produk</th>
-                <th class="px-4 py-3 text-left font-medium text-neutral-700">Rumah Sakit</th>
-                <th class="px-4 py-3 text-left font-medium text-neutral-700">Tgl Keluar</th>
-                <th class="px-4 py-3 text-left font-medium text-neutral-700">Status</th>
+                <x-sortable-th column="id_darah"
+                               label="ID Darah" />
+                <x-sortable-th column="golongan"
+                               label="Golongan" />
+                <x-sortable-th column="rhesus"
+                               label="Rhesus" />
+                <x-sortable-th column="produk"
+                               label="Produk" />
+                <x-sortable-th column="rumah_sakit"
+                               label="Rumah Sakit" />
+                <x-sortable-th column="tgl_keluar"
+                               label="Tgl Keluar" />
+                <x-sortable-th column="status"
+                               label="Status" />
               </tr>
             </thead>
             <tbody id="tableBody2"
@@ -205,15 +220,22 @@
 
       <div class="overflow-hidden rounded-xl border border-neutral-200 bg-white shadow-sm">
         <div class="overflow-x-auto">
-          <table class="w-full text-sm">
+          <table id="kadaluwarsaTable"
+                 class="w-full text-sm">
             <thead class="border-b border-neutral-200 bg-neutral-50">
               <tr>
-                <th class="px-4 py-3 text-left font-medium text-neutral-700">ID Darah</th>
-                <th class="px-4 py-3 text-left font-medium text-neutral-700">Golongan</th>
-                <th class="px-4 py-3 text-left font-medium text-neutral-700">Rhesus</th>
-                <th class="px-4 py-3 text-left font-medium text-neutral-700">Produk</th>
-                <th class="px-4 py-3 text-left font-medium text-neutral-700">Tgl Masuk</th>
-                <th class="px-4 py-3 text-left font-medium text-neutral-700">Tgl Kadaluwarsa</th>
+                <x-sortable-th column="id_darah"
+                               label="ID Darah" />
+                <x-sortable-th column="golongan"
+                               label="Golongan" />
+                <x-sortable-th column="rhesus"
+                               label="Rhesus" />
+                <x-sortable-th column="produk"
+                               label="Produk" />
+                <x-sortable-th column="tgl_masuk"
+                               label="Tgl Masuk" />
+                <x-sortable-th column="tgl_kadaluwarsa"
+                               label="Tgl Kadaluwarsa" />
               </tr>
             </thead>
             <tbody id="tableBody3"
@@ -323,18 +345,18 @@
       } else {
         tbody.innerHTML = slice.map(row => `
             <tr class="hover:bg-neutral-50">
-                <td class="px-4 py-3">${row.id_darah || '-'}</td>
-                <td class="px-4 py-3">
+                <td class="px-4 py-3" data-id_darah="${row.id_darah || ''}">${row.id_darah || '-'}</td>
+                <td class="px-4 py-3" data-golongan="${row.gol_darah || ''}">
                     <span class="inline-flex h-8 w-8 items-center justify-center rounded-full bg-pink-50 text-sm font-semibold text-pink-600">
                         ${row.gol_darah || '-'}
                     </span>
                 </td>
-                <td class="px-4 py-3">${row.rhesus || '-'}</td>
-                <td class="px-4 py-3">
+                <td class="px-4 py-3" data-rhesus="${row.rhesus || ''}">${row.rhesus || '-'}</td>
+                <td class="px-4 py-3" data-produk="${row.komponen || ''}">
                     <span class="inline-flex rounded-md bg-blue-50 px-2 py-1 text-xs font-medium text-blue-700">${row.komponen || '-'}</span>
                 </td>
-                <td class="px-4 py-3">${formatDate(row.tgl_masuk)}</td>
-                <td class="px-4 py-3">${formatDate(row.tgl_kadaluarsa)}</td>
+                <td class="px-4 py-3" data-tgl_masuk="${row.tgl_masuk || ''}">${formatDate(row.tgl_masuk)}</td>
+                <td class="px-4 py-3" data-tgl_kadaluwarsa="${row.tgl_kadaluarsa || ''}">${formatDate(row.tgl_kadaluarsa)}</td>
             </tr>
         `).join('');
       }
@@ -397,19 +419,19 @@
       } else {
         tbody.innerHTML = slice.map(row => `
             <tr class="hover:bg-neutral-50">
-                <td class="px-4 py-3">${row.id || '-'}</td>
-                <td class="px-4 py-3">
+                <td class="px-4 py-3" data-id_darah="${row.id || ''}">${row.id || '-'}</td>
+                <td class="px-4 py-3" data-golongan="${row.gol || ''}">
                     <span class="inline-flex h-8 w-8 items-center justify-center rounded-full bg-pink-50 text-sm font-semibold text-pink-600">
                         ${row.gol || '-'}
                     </span>
                 </td>
-                <td class="px-4 py-3">${row.rh || '-'}</td>
-                <td class="px-4 py-3">
+                <td class="px-4 py-3" data-rhesus="${row.rh || ''}">${row.rh || '-'}</td>
+                <td class="px-4 py-3" data-produk="${row.produk || ''}">
                     <span class="inline-flex rounded-md bg-blue-50 px-2 py-1 text-xs font-medium text-blue-700">${row.produk || '-'}</span>
                 </td>
-                <td class="px-4 py-3">${row.penerima || '-'}</td>
-                <td class="px-4 py-3">${formatDate(row.keluar)}</td>
-                <td class="px-4 py-3">
+                <td class="px-4 py-3" data-rumah_sakit="${row.penerima || ''}">${row.penerima || '-'}</td>
+                <td class="px-4 py-3" data-tgl_keluar="${row.keluar || ''}">${formatDate(row.keluar)}</td>
+                <td class="px-4 py-3" data-status="${row.status || ''}">
                     <span class="inline-flex rounded-md px-2 py-1 text-xs font-medium ${row.status === 'Dispensed' ? 'bg-green-50 text-green-700' : 'bg-neutral-50 text-neutral-700'}">${row.status || '-'}</span>
                 </td>
             </tr>
@@ -475,18 +497,18 @@
       } else {
         tbody.innerHTML = slice.map(row => `
             <tr class="hover:bg-neutral-50">
-                <td class="px-4 py-3">${row.id || '-'}</td>
-                <td class="px-4 py-3">
+                <td class="px-4 py-3" data-id_darah="${row.id || ''}">${row.id || '-'}</td>
+                <td class="px-4 py-3" data-golongan="${row.gol || ''}">
                     <span class="inline-flex h-8 w-8 items-center justify-center rounded-full bg-pink-50 text-sm font-semibold text-pink-600">
                         ${row.gol || '-'}
                     </span>
                 </td>
-                <td class="px-4 py-3">${row.rh || '-'}</td>
-                <td class="px-4 py-3">
+                <td class="px-4 py-3" data-rhesus="${row.rh || ''}">${row.rh || '-'}</td>
+                <td class="px-4 py-3" data-produk="${row.produk || ''}">
                     <span class="inline-flex rounded-md bg-blue-50 px-2 py-1 text-xs font-medium text-blue-700">${row.produk || '-'}</span>
                 </td>
-                <td class="px-4 py-3">${formatDate(row.masuk)}</td>
-                <td class="px-4 py-3">
+                <td class="px-4 py-3" data-tgl_masuk="${row.masuk || ''}">${formatDate(row.masuk)}</td>
+                <td class="px-4 py-3" data-tgl_kadaluwarsa="${row.exp || ''}">
                     <span class="text-red-600 font-medium">${formatDate(row.exp)}</span>
                 </td>
             </tr>
@@ -529,6 +551,13 @@
     // Initialize
     document.addEventListener('DOMContentLoaded', () => {
       switchTab('avail');
+
+      // Initialize Table Sorters
+      if (typeof TableSorter !== 'undefined') {
+        new TableSorter('#tersediaTable');
+        new TableSorter('#keluarTable');
+        new TableSorter('#kadaluwarsaTable');
+      }
     });
   </script>
 @endsection
