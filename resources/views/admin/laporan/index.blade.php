@@ -426,85 +426,80 @@
       </table>
     </div>
 
-    {{-- ===================== Pagination (gaya chip biru) ===================== --}}
-    @php
-      $current = $items->currentPage();
-      $totalPages = $items->lastPage();
-      $hasPrev = !$items->onFirstPage();
-      $hasNext = $items->hasMorePages();
-      $url = fn(int $p) => $items->url($p);
-
-      $max = 5;
-      $half = intdiv($max, 2);
-      $start = max(1, $current - $half);
-      $end = min($totalPages, $start + $max - 1);
-
-      if ($end - $start + 1 < $max) {
-          $start = max(1, $end - $max + 1);
-      }
-    @endphp
-
-    <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-      <div class="text-sm text-neutral-600">
-        Menampilkan {{ $items->firstItem() }}-{{ $items->lastItem() }} dari
-        {{ $items->total() }} data
-      </div>
-
-      <div class="flex items-center gap-2">
-        {{-- Prev --}}
-        <a href="{{ $hasPrev ? $url($current - 1) : '#' }}"
-           class="{{ $hasPrev
-               ? 'bg-white text-neutral-700 border-neutral-200 hover:bg-neutral-50 hover:border-neutral-300 focus:outline-none focus:ring-2 focus:ring-sky-200'
-               : 'bg-white text-neutral-400 border-neutral-200 cursor-not-allowed' }} flex h-9 min-w-9 items-center justify-center rounded-2xl border px-3 text-sm">
-          «
-        </a>
-
-        {{-- First + Ellipsis --}}
-        @if ($start > 1)
-          <a href="{{ $url(1) }}"
-             class="flex h-9 min-w-9 items-center justify-center rounded-2xl border border-neutral-200 bg-white px-3 text-sm text-neutral-700 hover:border-neutral-300 hover:bg-neutral-50 focus:outline-none focus:ring-2 focus:ring-sky-200">
-            1
-          </a>
-          @if ($start > 2)
-            <span class="px-1 text-neutral-400">…</span>
-          @endif
-        @endif
-
-        {{-- Page numbers --}}
-        @for ($i = $start; $i <= $end; $i++)
-          @if ($i === $current)
-            <span
-                  class="flex h-9 min-w-9 items-center justify-center rounded-2xl border border-sky-600 bg-sky-600 px-3 text-sm text-white shadow-sm hover:bg-sky-700 focus:outline-none focus:ring-2 focus:ring-sky-200">
-              {{ $i }}
-            </span>
+    {{-- ===================== Pagination ===================== --}}
+    @if ($items->hasPages())
+      <div class="flex flex-col justify-between gap-3 sm:flex-row sm:items-center">
+        <div class="text-sm text-neutral-600">
+          @if ($items->total() > 0)
+            Menampilkan {{ $items->firstItem() }}–{{ $items->lastItem() }} dari {{ $items->total() }} data
           @else
-            <a href="{{ $url($i) }}"
-               class="flex h-9 min-w-9 items-center justify-center rounded-2xl border border-neutral-200 bg-white px-3 text-sm text-neutral-700 hover:border-neutral-300 hover:bg-neutral-50 focus:outline-none focus:ring-2 focus:ring-sky-200">
-              {{ $i }}
+            Tidak ada data
+          @endif
+        </div>
+
+        <div class="flex items-center gap-2">
+          {{-- Previous --}}
+          @if ($items->onFirstPage())
+            <button disabled
+                    class="h-9 min-w-9 cursor-not-allowed rounded-lg border border-neutral-200 bg-white px-3 text-sm text-neutral-700 opacity-50">
+              «
+            </button>
+          @else
+            <a href="{{ $items->previousPageUrl() }}"
+               class="inline-flex h-9 min-w-9 items-center justify-center rounded-lg border border-neutral-200 bg-white px-3 text-sm text-neutral-700 hover:bg-neutral-50">
+              «
             </a>
           @endif
-        @endfor
 
-        {{-- Ellipsis + Last --}}
-        @if ($end < $totalPages)
-          @if ($end < $totalPages - 1)
-            <span class="px-1 text-neutral-400">…</span>
+          {{-- Page Numbers --}}
+          @php
+            $current = $items->currentPage();
+            $last = $items->lastPage();
+            $range = [];
+
+            if ($last <= 7) {
+                $range = range(1, $last);
+            } else {
+                if ($current <= 3) {
+                    $range = array_merge(range(1, 4), ['…'], [$last]);
+                } elseif ($current >= $last - 2) {
+                    $range = array_merge([1], ['…'], range($last - 3, $last));
+                } else {
+                    $range = array_merge([1], ['…'], range($current - 1, $current + 1), ['…'], [$last]);
+                }
+            }
+          @endphp
+
+          @foreach ($range as $page)
+            @if ($page === '…')
+              <span class="px-2 text-neutral-400">…</span>
+            @elseif ($page == $current)
+              <button class="h-9 min-w-9 rounded-lg border border-neutral-900 bg-neutral-900 px-3 text-sm text-white">
+                {{ $page }}
+              </button>
+            @else
+              <a href="{{ $items->url($page) }}"
+                 class="inline-flex h-9 min-w-9 items-center justify-center rounded-lg border border-neutral-200 bg-white px-3 text-sm text-neutral-700 hover:bg-neutral-50">
+                {{ $page }}
+              </a>
+            @endif
+          @endforeach
+
+          {{-- Next --}}
+          @if ($items->hasMorePages())
+            <a href="{{ $items->nextPageUrl() }}"
+               class="inline-flex h-9 min-w-9 items-center justify-center rounded-lg border border-neutral-200 bg-white px-3 text-sm text-neutral-700 hover:bg-neutral-50">
+              »
+            </a>
+          @else
+            <button disabled
+                    class="h-9 min-w-9 cursor-not-allowed rounded-lg border border-neutral-200 bg-white px-3 text-sm text-neutral-700 opacity-50">
+              »
+            </button>
           @endif
-          <a href="{{ $url($totalPages) }}"
-             class="flex h-9 min-w-9 items-center justify-center rounded-2xl border border-neutral-200 bg-white px-3 text-sm text-neutral-700 hover:border-neutral-300 hover:bg-neutral-50 focus:outline-none focus:ring-2 focus:ring-sky-200">
-            {{ $totalPages }}
-          </a>
-        @endif
-
-        {{-- Next --}}
-        <a href="{{ $hasNext ? $url($current + 1) : '#' }}"
-           class="{{ $hasNext
-               ? 'bg-white text-neutral-700 border-neutral-200 hover:bg-neutral-50 hover:border-neutral-300 focus:outline-none focus:ring-2 focus:ring-sky-200'
-               : 'bg-white text-neutral-400 border-neutral-200 cursor-not-allowed' }} flex h-9 min-w-9 items-center justify-center rounded-2xl border px-3 text-sm">
-          »
-        </a>
+        </div>
       </div>
-    </div>
+    @endif
   </div>
 
   {{-- ===== JS kecil untuk dropdown filter & page size ===== --}}
