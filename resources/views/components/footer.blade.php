@@ -41,7 +41,7 @@
           <span class="text-lg font-semibold tracking-tight">SIMPHONY</span>
         </a>
         <p class="mt-2 text-sm text-slate-600">Sistem Informasi Pemesanan dan Inventori Platform terpadu untuk
-          mengelola pemesanan darah, stok, dan verifikasi dengan efisien.</p>
+          mengelola pemesanan darah, stok, dan verifikasi dengan mudah.</p>
       </div>
 
       {{-- Column 2: Quick Links --}}

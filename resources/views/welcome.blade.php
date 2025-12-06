@@ -430,10 +430,10 @@
                 </svg>
               </div>
               <div class="flex-1">
-                <h3 class="text-sm font-bold text-slate-900 sm:text-base">Standar Keamanan Tinggi</h3>
+                <h3 class="text-sm font-bold text-slate-900 sm:text-base">Prosedur Standar Keamanan</h3>
                 <p class="mt-0.5 text-xs text-slate-600 sm:mt-1 sm:text-sm">
-                  Seluruh proses screening dan pengolahan darah mengikuti protokol WHO dan standar internasional untuk
-                  menjamin keamanan maksimal.
+                  Proses screening dan pengolahan darah mengikuti protokol dan standar nasional untuk memastikan keamanan
+                  darah.
                 </p>
               </div>
             </li>
@@ -452,10 +452,10 @@
                 </svg>
               </div>
               <div class="flex-1">
-                <h3 class="text-sm font-bold text-slate-900 sm:text-base">Teknologi Terdepan</h3>
+                <h3 class="text-sm font-bold text-slate-900 sm:text-base">Sistem Digital Terintegrasi</h3>
                 <p class="mt-0.5 text-xs text-slate-600 sm:mt-1 sm:text-sm">
-                  Sistem manajemen digital dan peralatan medis terkini untuk keandalan dan traceability yang
-                  sempurna.
+                  Menggunakan sistem manajemen digital dan peralatan medis untuk mendukung pencatatan dan pelacakan data
+                  darah.
                 </p>
               </div>
             </li>
@@ -474,9 +474,9 @@
                 </svg>
               </div>
               <div class="flex-1">
-                <h3 class="text-sm font-bold text-slate-900 sm:text-base">Layanan 24/7</h3>
+                <h3 class="text-sm font-bold text-slate-900 sm:text-base">Layanan Siaga</h3>
                 <p class="mt-0.5 text-xs text-slate-600 sm:mt-1 sm:text-sm">
-                  Tim medis profesional dan berpengalaman siap melayani kebutuhan darurat Anda kapan saja, tanpa henti.
+                  Tim medis siap melayani kebutuhan darah untuk kondisi darurat sesuai jam operasional layanan kesehatan.
                 </p>
               </div>
             </li>
