@@ -111,7 +111,7 @@
 
           <p class="mt-3 text-sm leading-relaxed text-white/90 sm:mt-4 sm:text-base lg:text-lg">
             Bergabunglah dengan misi mulia untuk menyediakan darah berkualitas bagi yang membutuhkan.
-            <strong class="font-semibold text-white">Setiap tetes darah dapat menyelamatkan hingga 3 nyawa.</strong>
+            <strong class="font-semibold text-white">Setiap kantong darah dapat menyelamatkan hingga 3 nyawa.</strong>
           </p>
 
           {{-- CTA Buttons --}}
@@ -454,7 +454,7 @@
               <div class="flex-1">
                 <h3 class="text-sm font-bold text-slate-900 sm:text-base">Teknologi Terdepan</h3>
                 <p class="mt-0.5 text-xs text-slate-600 sm:mt-1 sm:text-sm">
-                  Sistem manajemen digital dan peralatan medis terkini untuk keandalan, efisiensi, dan traceability yang
+                  Sistem manajemen digital dan peralatan medis terkini untuk keandalan dan traceability yang
                   sempurna.
                 </p>
               </div>

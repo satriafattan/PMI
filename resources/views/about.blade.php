@@ -71,7 +71,7 @@
               <p>
                 Sebagai <strong class="font-semibold text-slate-900">platform sistem informasi terdepan</strong>, SIMPHONY
                 berkomitmen untuk memberikan solusi digital berkualitas tinggi dalam mengelola pemesanan darah dan
-                inventori dengan mengintegrasikan teknologi modern dan pendekatan yang efisien.
+                inventori .
               </p>
               <p>
                 SIMPHONY (Sistem Informasi Pemesanan dan Inventori) dirancang untuk <strong
@@ -81,7 +81,7 @@
               <p>
                 Didukung oleh <strong class="font-semibold text-slate-900">teknologi terkini</strong> dan antarmuka yang
                 user-friendly, kami memastikan setiap proses pemesanan dan pengelolaan stok darah berjalan lancar, aman,
-                dan efisien sesuai standar kesehatan.
+                dan sesuai standar kesehatan.
               </p>
             </div>
 
@@ -293,7 +293,7 @@
                 </div>
                 <h3 class="text-xl font-bold text-slate-900">Sistem Terintegrasi</h3>
                 <p class="mt-3 leading-relaxed text-slate-600">Menyediakan platform terpadu untuk mengelola pemesanan
-                  darah, inventori stok, dan verifikasi secara efisien.</p>
+                  darah, inventori stok, dan verifikasi secara handal.</p>
               </div>
             </div>
 

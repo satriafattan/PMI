@@ -16,7 +16,7 @@ class GenerateBloodUnits
     {
         if ($jumlah <= 0) return;
 
-        // Masa simpan per produk (silakan sesuaikan kebijakan UDD)
+        // Masa simpan per produk 
         $shelf = [
             'WB' => 35, // Whole Blood
             'PRC' => 42, // Packed Red Cells
