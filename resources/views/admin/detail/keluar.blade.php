@@ -105,7 +105,20 @@
     const data = @json($rows);
     let page = 1,
       size = 10,
-      search = '';
+      search = '',
+      sortColumn = 'tgl_keluar',
+      sortDirection = 'desc';
+
+    // Column mapping for sorting
+    const columnMap = {
+      'id_darah': 'id',
+      'golongan': 'gol',
+      'rhesus': 'rh',
+      'produk': 'produk',
+      'rumah_sakit': 'penerima',
+      'tgl_keluar': 'keluar',
+      'status': 'status'
+    };
 
     function formatDate(d) {
       if (!d) return '-';
@@ -113,12 +126,77 @@
       return parts.length === 3 ? `${parts[2]}-${parts[1]}-${parts[0]}` : d;
     }
 
+    function sortData(dataArray) {
+      const key = columnMap[sortColumn] || sortColumn;
+      return [...dataArray].sort((a, b) => {
+        let aVal = a[key] || '';
+        let bVal = b[key] || '';
+
+        // Handle date comparison
+        if (sortColumn.includes('tgl')) {
+          aVal = aVal ? new Date(aVal).getTime() : 0;
+          bVal = bVal ? new Date(bVal).getTime() : 0;
+        } else {
+          aVal = aVal.toString().toLowerCase();
+          bVal = bVal.toString().toLowerCase();
+        }
+
+        if (aVal < bVal) return sortDirection === 'asc' ? -1 : 1;
+        if (aVal > bVal) return sortDirection === 'asc' ? 1 : -1;
+        return 0;
+      });
+    }
+
+    function updateSortHeaders() {
+      document.querySelectorAll('#keluarTable thead th[data-sort]').forEach(th => {
+        const col = th.dataset.sort;
+        const isActive = col === sortColumn;
+        const icon = th.querySelector('svg');
+
+        if (isActive) {
+          th.dataset.direction = sortDirection === 'asc' ? 'desc' : 'asc';
+          th.setAttribute('aria-sort', sortDirection === 'asc' ? 'ascending' : 'descending');
+          if (icon) {
+            icon.classList.remove('text-neutral-400', 'opacity-0');
+            icon.classList.add('text-red-600');
+            icon.innerHTML = sortDirection === 'asc' ?
+              '<path fill-rule="evenodd" d="M14.707 12.707a1 1 0 01-1.414 0L10 9.414l-3.293 3.293a1 1 0 01-1.414-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 010 1.414z" clip-rule="evenodd"/>' :
+              '<path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"/>';
+          }
+        } else {
+          th.dataset.direction = 'asc';
+          th.setAttribute('aria-sort', 'none');
+          if (icon) {
+            icon.classList.add('text-neutral-400', 'opacity-0');
+            icon.classList.remove('text-red-600');
+            icon.innerHTML =
+              '<path d="M5 12a1 1 0 102 0V6.414l1.293 1.293a1 1 0 001.414-1.414l-3-3a1 1 0 00-1.414 0l-3 3a1 1 0 001.414 1.414L5 6.414V12zM15 8a1 1 0 10-2 0v5.586l-1.293-1.293a1 1 0 00-1.414 1.414l3 3a1 1 0 001.414 0l3-3a1 1 0 00-1.414-1.414L15 13.586V8z"/>';
+          }
+        }
+      });
+    }
+
+    function handleSort(column) {
+      if (sortColumn === column) {
+        sortDirection = sortDirection === 'asc' ? 'desc' : 'asc';
+      } else {
+        sortColumn = column;
+        sortDirection = 'asc';
+      }
+      page = 1;
+      updateSortHeaders();
+      renderTable();
+    }
+
     function renderTable() {
-      const filtered = data.filter(row => {
+      let filtered = data.filter(row => {
         if (!search) return true;
         const s = search.toLowerCase();
         return (row.id || '').toLowerCase().includes(s);
       });
+
+      // Apply sorting
+      filtered = sortData(filtered);
 
       const total = filtered.length;
       const pages = Math.ceil(total / size) || 1;
@@ -227,11 +305,19 @@
       renderTable();
     });
 
-    renderTable();
+    // Initialize sort header click handlers
+    document.querySelectorAll('#keluarTable thead th[data-sort]').forEach(th => {
+      th.addEventListener('click', () => handleSort(th.dataset.sort));
+      th.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          handleSort(th.dataset.sort);
+        }
+      });
+    });
 
-    // Initialize Table Sorter
-    if (typeof TableSorter !== 'undefined') {
-      new TableSorter('#keluarTable');
-    }
+    // Initial render with default sort
+    updateSortHeaders();
+    renderTable();
   </script>
 @endsection

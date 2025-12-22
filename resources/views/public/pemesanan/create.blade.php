@@ -247,9 +247,8 @@
 
                   <div class="relative">
                     <label class="block text-sm font-medium text-slate-700">Apakah Pernah Diperiksa
-                      Serologi Darah <span class="text-red-600">*</span></label>
+                      Serologi Darah</label>
                     <select name="pernah_serologi"
-                            required
                             class="{{ $select }}">
                       <option value=""
                               disabled
@@ -274,10 +273,8 @@
                   </div>
 
                   <div class="relative">
-                    <label class="block text-sm font-medium text-slate-700">Lokasi Di Periksa Serologi
-                      <span class="text-red-600">*</span></label>
+                    <label class="block text-sm font-medium text-slate-700">Lokasi Di Periksa Serologi</label>
                     <select name="lokasi_serologi"
-                            required
                             class="{{ $select }}">
                       <option value=""
                               disabled
@@ -300,12 +297,10 @@
                   </div>
 
                   <div>
-                    <label class="block text-sm font-medium text-slate-700">Tanggal serologi <span
-                            class="text-red-600">*</span></label>
+                    <label class="block text-sm font-medium text-slate-700">Tanggal serologi</label>
                     <input type="date"
                            name="tanggal_serologi"
                            value="{{ old('tanggal_serologi') }}"
-                           required
                            class="{{ $field }}">
                   </div>
 
@@ -319,11 +314,9 @@
                   </div>
 
                   <div class="sm:col-span-1">
-                    <label class="block text-sm font-medium text-slate-700">Hasil Periksa Serologi
-                      <span class="text-red-600">*</span></label>
+                    <label class="block text-sm font-medium text-slate-700">Hasil Periksa Serologi</label>
                     <textarea name="hasil_serologi"
                               class="{{ $textarea }}"
-                              required
                               placeholder="Ringkasan hasil serologi…">{{ old('hasil_serologi') }}</textarea>
                   </div>
                 </div>
@@ -860,13 +853,9 @@
 
     function validateStep2() {
       const tanggalDiperlukan = document.querySelector('[name="tanggal_diperlukan"]');
-      const pernahSerologi = document.querySelector('[name="pernah_serologi"]');
       const diagnosaKlinik = document.querySelector('[name="diagnosa_klinik"]');
-      const lokasiSerologi = document.querySelector('[name="lokasi_serologi"]');
       const tanggalTransfusi = document.querySelectorAll('[name="tanggal_transfusi"]');
-      const tanggalSerologi = document.querySelectorAll('[name="tanggal_serologi"]');
       const alasanTransfusi = document.querySelector('[name="alasan_transfusi"]');
-      const hasilSerologi = document.querySelector('[name="hasil_serologi"]');
 
       let isValid = true;
 
@@ -876,45 +865,12 @@
       } else {
         tanggalDiperlukan.style.borderColor = '';
       }
-      if (!pernahSerologi.value.trim()) {
-        pernahSerologi.style.borderColor = 'red';
-        isValid = false;
-      } else {
-        pernahSerologi.style.borderColor = '';
-      }
+
       if (!diagnosaKlinik.value.trim()) {
         diagnosaKlinik.style.borderColor = 'red';
         isValid = false;
       } else {
         diagnosaKlinik.style.borderColor = '';
-      }
-
-      if (pernahSerologi.value === 'Ya') {
-        if (!lokasiSerologi.value.trim()) {
-          lokasiSerologi.style.borderColor = 'red';
-          isValid = false;
-        } else {
-          lokasiSerologi.style.borderColor = '';
-        }
-        const tanggalSerologiInput = tanggalSerologi[tanggalSerologi.length - 1];
-        if (!tanggalSerologiInput.value.trim()) {
-          tanggalSerologiInput.style.borderColor = 'red';
-          isValid = false;
-        } else {
-          tanggalSerologiInput.style.borderColor = '';
-        }
-        if (!hasilSerologi.value.trim()) {
-          hasilSerologi.style.borderColor = 'red';
-          isValid = false;
-        } else {
-          hasilSerologi.style.borderColor = '';
-        }
-      } else {
-        // ✅ perbaikan: bersihkan style pada input tanggal serologi (pakai tanggalSerologi, bukan tanggalTransfusi)
-        const tanggalSerologiInput = tanggalSerologi[tanggalSerologi.length - 1];
-        if (tanggalSerologiInput) tanggalSerologiInput.style.borderColor = '';
-        hasilSerologi.style.borderColor = '';
-        lokasiSerologi.style.borderColor = '';
       }
 
       if (!alasanTransfusi.value.trim()) {

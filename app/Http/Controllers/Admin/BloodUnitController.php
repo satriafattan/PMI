@@ -24,9 +24,10 @@ class BloodUnitController extends Controller
         $perPage = $r->integer('per_page', 100);
 
         // Tab 1: Tersedia (belum exp) - dengan pagination
+        // Urutkan berdasarkan tgl_masuk DESC agar data terbaru tampil di atas
         $availQuery = BloodUnit::available()
             ->select('kode_unit', 'gol_darah', 'rhesus', 'produk', 'tgl_masuk', 'tgl_kadaluarsa')
-            ->orderBy('tgl_kadaluarsa'); // FEFO
+            ->orderByDesc('tgl_masuk'); // Data terbaru di atas
 
         // Untuk client-side filtering, ambil semua data tapi batasi jika terlalu banyak
         $totalAvailable = $availQuery->count();
