@@ -11,7 +11,7 @@ class EventScheduleController extends Controller
 {
     public function create()
     {
-        $eventTypes     = ['Donor Darah', 'Penyuluhan', 'Mobil Unit Kunjungan', 'Bakti Sosial', 'Lainnya'];
+        $eventTypes     = ['Donor Darah', 'Penyuluhan', 'Mobil Unit Kunjungan', 'Bakti Sosial'];
         $targetOptions  = ['Mahasiswa', 'Pelajar', 'Karyawan', 'Komunitas', 'Umum'];
         $facilityHints  = ['Ruang tunggu', 'Meja & kursi', 'Akses listrik', 'Area parkir'];
 
