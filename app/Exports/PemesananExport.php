@@ -7,8 +7,17 @@ use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
 use Maatwebsite\Excel\Concerns\WithProperties;
+use Maatwebsite\Excel\Concerns\WithStyles;
+use Maatwebsite\Excel\Concerns\WithColumnWidths;
+use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
-class PemesananExport implements FromCollection, WithHeadings, WithMapping, WithProperties
+class PemesananExport implements
+    FromCollection,
+    WithHeadings,
+    WithMapping,
+    WithProperties,
+    WithStyles,
+    WithColumnWidths
 {
     public function __construct(
         private Collection $rows,
@@ -62,6 +71,35 @@ class PemesananExport implements FromCollection, WithHeadings, WithMapping, With
             'category'    => 'Laporan',
             'manager'     => 'SIMPHONY',
             'company'     => 'SIMPHONY - Sistem Informasi Pemesanan dan Inventori',
+        ];
+    }
+
+    public function styles(Worksheet $sheet)
+    {
+        return [
+            1 => [
+                'font' => ['bold' => true],
+                'fill' => [
+                    'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID,
+                    'startColor' => ['rgb' => 'E3F2FD']
+                ]
+            ],
+        ];
+    }
+
+    public function columnWidths(): array
+    {
+        return [
+            'A' => 8,   // ID
+            'B' => 18,  // Dibuat Pada
+            'C' => 18,  // Tanggal Pemesanan
+            'D' => 30,  // RS Pemesan
+            'E' => 25,  // Nama Pasien
+            'F' => 15,  // Produk
+            'G' => 8,   // Gol
+            'H' => 10,  // Rhesus
+            'I' => 15,  // Jumlah Kantong
+            'J' => 15,  // Status
         ];
     }
 }

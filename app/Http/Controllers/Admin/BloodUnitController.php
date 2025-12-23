@@ -9,6 +9,7 @@ use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\DarahTersediaExport;
 use App\Exports\DarahKeluarExport;
 use App\Exports\DarahKadaluwarsaExport;
+use Illuminate\Support\Facades\Log;
 
 class BloodUnitController extends Controller
 {
@@ -192,73 +193,106 @@ class BloodUnitController extends Controller
 
     public function exportTersedia(Request $r)
     {
-        $availQuery = BloodUnit::available()
-            ->select('kode_unit', 'gol_darah', 'rhesus', 'produk', 'tgl_masuk', 'tgl_kadaluarsa')
-            ->orderBy('tgl_kadaluarsa');
+        try {
+            $availQuery = BloodUnit::available()
+                ->select('kode_unit', 'gol_darah', 'rhesus', 'produk', 'tgl_masuk', 'tgl_kadaluarsa')
+                ->orderBy('tgl_kadaluarsa');
 
-        $totalAvailable = $availQuery->count();
-        $avail = ($totalAvailable > 5000
-            ? $availQuery->limit(5000)->get()
-            : $availQuery->get()
-        )->map(fn($u) => [
-            'id_darah'       => $u->kode_unit,
-            'gol_darah'      => $u->gol_darah,
-            'rhesus'         => $u->rhesus,
-            'komponen'       => $u->produk,
-            'tgl_masuk'      => $u->tgl_masuk?->format('d-m-Y'),
-            'tgl_kadaluarsa' => $u->tgl_kadaluarsa?->format('d-m-Y'),
-        ]);
+            $totalAvailable = $availQuery->count();
+            $avail = ($totalAvailable > 5000
+                ? $availQuery->limit(5000)->get()
+                : $availQuery->get()
+            )->map(fn($u) => [
+                'id_darah'       => $u->kode_unit,
+                'gol_darah'      => $u->gol_darah,
+                'rhesus'         => $u->rhesus,
+                'komponen'       => $u->produk,
+                'tgl_masuk'      => $u->tgl_masuk?->format('d-m-Y'),
+                'tgl_kadaluarsa' => $u->tgl_kadaluarsa?->format('d-m-Y'),
+            ]);
 
-        $export = new DarahTersediaExport($avail);
-        return Excel::download($export, 'darah-tersedia-' . now()->format('Ymd_His') . '.xlsx');
+            $export = new DarahTersediaExport($avail);
+            return Excel::download($export, 'darah-tersedia-' . now()->format('Ymd_His') . '.xlsx');
+        } catch (\Exception $e) {
+            Log::error('Export Darah Tersedia error: ' . $e->getMessage(), [
+                'user' => auth('admin')->id(),
+                'trace' => $e->getTraceAsString(),
+            ]);
+
+            return redirect()
+                ->route('admin.detail-darah.tersedia')
+                ->with('error', 'Gagal membuat file Excel. Silakan coba lagi.');
+        }
     }
 
     public function exportKeluar(Request $r)
     {
-        $riwayatQuery = BloodUnit::query()
-            ->select('kode_unit', 'gol_darah', 'rhesus', 'produk', 'tgl_masuk', 'tgl_kadaluarsa', 'penerima', 'status', 'updated_at')
-            ->whereIn('status', ['dispensed', 'reserved', 'discarded'])
-            ->orderByDesc('updated_at');
+        try {
+            $riwayatQuery = BloodUnit::query()
+                ->select('kode_unit', 'gol_darah', 'rhesus', 'produk', 'tgl_masuk', 'tgl_kadaluarsa', 'penerima', 'status', 'updated_at')
+                ->whereIn('status', ['dispensed', 'reserved', 'discarded'])
+                ->orderByDesc('updated_at');
 
-        $totalRiwayat = $riwayatQuery->count();
-        $riwayat = ($totalRiwayat > 5000
-            ? $riwayatQuery->limit(5000)->get()
-            : $riwayatQuery->get()
-        )->map(fn($u) => [
-            'id'       => $u->kode_unit,
-            'gol'      => $u->gol_darah,
-            'rh'       => $u->rhesus,
-            'produk'   => $u->produk,
-            'keluar'   => $u->updated_at?->format('d-m-Y'),
-            'exp'      => $u->tgl_kadaluarsa?->format('d-m-Y'),
-            'penerima' => $u->penerima ?? '-',
-            'status'   => ucfirst($u->status),
-        ]);
+            $totalRiwayat = $riwayatQuery->count();
+            $riwayat = ($totalRiwayat > 5000
+                ? $riwayatQuery->limit(5000)->get()
+                : $riwayatQuery->get()
+            )->map(fn($u) => [
+                'id'       => $u->kode_unit,
+                'gol'      => $u->gol_darah,
+                'rh'       => $u->rhesus,
+                'produk'   => $u->produk,
+                'keluar'   => $u->updated_at?->format('d-m-Y'),
+                'exp'      => $u->tgl_kadaluarsa?->format('d-m-Y'),
+                'penerima' => $u->penerima ?? '-',
+                'status'   => ucfirst($u->status),
+            ]);
 
-        $export = new DarahKeluarExport($riwayat);
-        return Excel::download($export, 'darah-keluar-' . now()->format('Ymd_His') . '.xlsx');
+            $export = new DarahKeluarExport($riwayat);
+            return Excel::download($export, 'darah-keluar-' . now()->format('Ymd_His') . '.xlsx');
+        } catch (\Exception $e) {
+            Log::error('Export Darah Keluar error: ' . $e->getMessage(), [
+                'user' => auth('admin')->id(),
+                'trace' => $e->getTraceAsString(),
+            ]);
+
+            return redirect()
+                ->route('admin.detail-darah.keluar')
+                ->with('error', 'Gagal membuat file Excel. Silakan coba lagi.');
+        }
     }
 
     public function exportKadaluwarsa(Request $r)
     {
-        $expiredQuery = BloodUnit::expired()
-            ->select('kode_unit', 'gol_darah', 'rhesus', 'produk', 'tgl_masuk', 'tgl_kadaluarsa')
-            ->orderBy('tgl_kadaluarsa');
+        try {
+            $expiredQuery = BloodUnit::expired()
+                ->select('kode_unit', 'gol_darah', 'rhesus', 'produk', 'tgl_masuk', 'tgl_kadaluarsa')
+                ->orderBy('tgl_kadaluarsa');
 
-        $totalExpired = $expiredQuery->count();
-        $expired = ($totalExpired > 5000
-            ? $expiredQuery->limit(5000)->get()
-            : $expiredQuery->get()
-        )->map(fn($u) => [
-            'id'     => $u->kode_unit,
-            'gol'    => $u->gol_darah,
-            'rh'     => $u->rhesus,
-            'produk' => $u->produk,
-            'masuk'  => $u->tgl_masuk?->format('d-m-Y'),
-            'exp'    => $u->tgl_kadaluarsa?->format('d-m-Y'),
-        ]);
+            $totalExpired = $expiredQuery->count();
+            $expired = ($totalExpired > 5000
+                ? $expiredQuery->limit(5000)->get()
+                : $expiredQuery->get()
+            )->map(fn($u) => [
+                'id'     => $u->kode_unit,
+                'gol'    => $u->gol_darah,
+                'rh'     => $u->rhesus,
+                'produk' => $u->produk,
+                'masuk'  => $u->tgl_masuk?->format('d-m-Y'),
+                'exp'    => $u->tgl_kadaluarsa?->format('d-m-Y'),
+            ]);
 
-        $export = new DarahKadaluwarsaExport($expired);
-        return Excel::download($export, 'darah-kadaluwarsa-' . now()->format('Ymd_His') . '.xlsx');
+            $export = new DarahKadaluwarsaExport($expired);
+            return Excel::download($export, 'darah-kadaluwarsa-' . now()->format('Ymd_His') . '.xlsx');
+        } catch (\Exception $e) {
+            Log::error('Export Darah Kadaluwarsa error: ' . $e->getMessage(), [
+                'user' => auth('admin')->id(),
+                'trace' => $e->getTraceAsString(),
+            ]);
+
+            return redirect()
+                ->route('admin.detail-darah.kadaluwarsa')
+                ->with('error', 'Gagal membuat file Excel. Silakan coba lagi.');
+        }
     }
 }

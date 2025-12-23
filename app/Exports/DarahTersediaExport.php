@@ -8,9 +8,16 @@ use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
 use Maatwebsite\Excel\Concerns\WithProperties;
 use Maatwebsite\Excel\Concerns\WithStyles;
+use Maatwebsite\Excel\Concerns\WithColumnWidths;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
-class DarahTersediaExport implements FromCollection, WithHeadings, WithMapping, WithProperties, WithStyles
+class DarahTersediaExport implements
+    FromCollection,
+    WithHeadings,
+    WithMapping,
+    WithProperties,
+    WithStyles,
+    WithColumnWidths
 {
     public function __construct(
         private Collection $rows
@@ -61,7 +68,25 @@ class DarahTersediaExport implements FromCollection, WithHeadings, WithMapping, 
     public function styles(Worksheet $sheet)
     {
         return [
-            1 => ['font' => ['bold' => true]],
+            1 => [
+                'font' => ['bold' => true],
+                'fill' => [
+                    'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID,
+                    'startColor' => ['rgb' => 'E8F5E9']
+                ]
+            ],
+        ];
+    }
+
+    public function columnWidths(): array
+    {
+        return [
+            'A' => 15,  // ID Darah
+            'B' => 18,  // Golongan Darah
+            'C' => 12,  // Rhesus
+            'D' => 20,  // Produk
+            'E' => 18,  // Tanggal Masuk
+            'F' => 20,  // Tanggal Kadaluwarsa
         ];
     }
 }
